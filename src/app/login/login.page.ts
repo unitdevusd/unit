@@ -17,9 +17,7 @@ password: any;
 
 
   constructor(
-    private fb: FormBuilder,
     public authService: AuthService,
-    private alertController: AlertController,
     private router: Router,
     private loadingController: LoadingController
   ) { }
@@ -36,7 +34,13 @@ password: any;
        await loading.dismiss();
     })
   }
+  registerpage(){
+    this.router.navigateByUrl('/register', { replaceUrl: true });
+  }
 }
+
+
+
   // constructor(
   //   public fireAuth: AuthService
   // ) {}
@@ -45,14 +49,7 @@ password: any;
   // }
 
 
-  // registerUser(){
-  //   this.fireAuth.register('test@yopmail.com', 'Test@12345').then(user =>{
-  //     console.log('user', user);
-  //   }).catch(error =>{
-  //     console.log('error', error);
-  //   });
-  // }
-
+ 
   // login(){
   //   this.fireAuth.loginUser('test@yopmail.com', 'Test@12345').then(resposne =>{
   //     console.log('Res-->',resposne);
