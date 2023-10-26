@@ -1,18 +1,42 @@
-<ion-header>
-    <ion-toolbar color="primary">
-        <ion-title>Unit Application</ion-title>
-    </ion-toolbar>
-</ion-header>
-<ion-content>
-    <ion-item>
-        <ion-label position="floating">Email</ion-label>
-        <ion-input placeholder="Enter text" [(ngModel)]="email"></ion-input>
-    </ion-item>
-    <ion-item>
-        <ion-label position="floating">Password</ion-label>
-        <ion-input placeholder="Enter text" [(ngModel)]="password"></ion-input>
-    </ion-item>
-    <ion-button (click)="login()" expand="block">login</ion-button>
-    <ion-button type="button" expand="block" fill="clear" (click)="registerpage()">Not yet a member? Sign up!
-    </ion-button>
+<ion-content fullscreen class="ion-padding">
+    <div class="logo">
+        <img src="../../../../assets/imgs/logo.png">
+    </div>
+    <ion-grid>
+        <ion-row>
+            <ion-col size="12" class="ion-text-center">
+                <form class="form"  [formGroup]="loginForm">
+                    <ion-list mode="md">
+                        <ion-item mode="md">
+                            <ion-input id="email" placeholder="Email Address" type="email" formControlName="emailId">
+                            </ion-input>
+                        </ion-item>
+                    </ion-list>
+                    <ion-list mode="md">
+                        <ion-item mode="md">
+                            <ion-input id="pass" type="password" placeholder="Password" formControlName="password">
+                            </ion-input>
+                        </ion-item>
+                    </ion-list>
+                    <ion-grid>
+                        <ion-row>
+                            <ion-col size="15" size-lg offset="3" class="ion-align-self-end">
+                                <p class="forgot-pass">
+                                    <a routerLink="/forgot-password">Forgot Password?</a>
+                                </p>
+                            </ion-col>
+                        </ion-row>
+                    </ion-grid>
+                </form>
+                <ion-button class="button-h" fill="solid" size="default" shape="round" expand="block" color="primary"
+                    [disabled]="!loginForm.valid" (click)="login()">
+                    Login
+                </ion-button>
+                <p class="have">
+                    Don't have an account? <br>
+                    <a  class="signup-text" (click)="registerpage()"> Sign up </a>
+                </p>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
 </ion-content>

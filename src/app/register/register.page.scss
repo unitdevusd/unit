@@ -1,0 +1,66 @@
+.logo{
+    margin: auto;
+    width: 25%;
+    margin-top: 10%;
+  }
+
+//   .logo {
+//     margin: 20px auto 0px;
+//     width: 20%;
+//   }
+
+  .content {
+    background-color: "secondary";
+    height: 100%;
+    border-radius: 20px;
+  }
+  
+
+   
+  b {
+    font-weight: 500;
+  }
+  
+  p {
+    font-family: medium;
+    color: #8E8E8E;
+    font-size: 17px;
+    margin-top: 25px;
+    line-height: 20px;
+    text-align: center;
+  }
+  
+  ion-label {
+    color: #656565 !important;
+    font-size: 17px !important;
+  }
+
+
+  .login-text{
+    font-size: 17px;
+    font-family: medium;
+  }
+  .cancel {
+    margin-right: 5px;
+    font-size: x-large;
+  }
+  
+  .sc-ion-input-ios-h {
+    font-size: 14px !important;
+  }
+  
+  a {
+    color: #ed1b25;
+  }
+
+
+  ion-button {
+    text-transform: capitalize;
+    height: 44px;
+    font-size: 16px;  
+    margin: 0 !important;  
+    margin-left: 30px !important;
+    margin-right: 30px !important;
+    margin-top: 40px !important;
+    font-family: helveticaneuebold;
+  }

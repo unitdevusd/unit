@@ -1,0 +1,12 @@
+<ion-content fullscreen class="ion-padding">
+  <div class="logo">
+      <img src="../../../../assets/imgs/logo.png">
+  </div>
+  <div class="content">
+    <div *ngFor="let item of roles">
+    <div class="img-card" (click)="type(item.role)">
+      <img src="{{item.image}}" />
+    </div>
+  </div>
+  </div>
+  </ion-content>

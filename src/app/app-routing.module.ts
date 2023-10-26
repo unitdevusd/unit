@@ -12,13 +12,21 @@ const routes: Routes = [
     loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
   },
   {
-    path: 'register',
+    path: 'register-role',
+    loadChildren: () => import('./register-role/register-role.module').then( m => m.RegisterRolePageModule)
+  },
+  {
+    path: 'register/:role',
     loadChildren: () => import('./register/register.module').then(m => m.RegisterPageModule)
   },
 
   {
     path: 'login',
     loadChildren: () => import('./login/login.module').then(m => m.LoginPageModule)
+  },
+  {
+    path: 'intro',
+    loadChildren: () => import('./intro/intro.module').then( m => m.IntroPageModule)
   },
   {
     path: '**',

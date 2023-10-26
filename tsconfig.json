@@ -16,6 +16,8 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
+    "strictPropertyInitialization": false,
+    "skipLibCheck": true,
     "target": "es2022",
     "module": "es2020",
     "lib": [
@@ -28,7 +30,6 @@
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
-    "strictTemplates": true,
-    
+    "strictTemplates": false
   }
 }
