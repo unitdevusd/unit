@@ -1,0 +1,44 @@
+<!-- <div style="position: absolute;top: 42%;left: 0px;font-size: 25px;z-index: 2;" (click)="slidePrev()"
+  *ngIf="units.length > 1">
+  <ion-icon name="chevron-back-outline" color="unit-btn"></ion-icon>
+</div>
+<div style="position: absolute;top: 42%;right: 0px;font-size: 25px;z-index: 2;" (click)="slideNext()"
+  *ngIf="units.length > 1">
+  <ion-icon name="chevron-forward-outline" color="unit-btn"></ion-icon>
+</div> -->
+<ion-slides #slides *ngIf="units.length; else noPlaces" [options]="slideOpts">
+  <ion-slide *ngFor="let item of units" (click)="place(item)"
+    style="width: 100px; height: 370px; border: 2px solid #f8f8f8">
+    <ion-grid class="card-grid">
+      <ion-row>
+        <ion-col>
+          <ion-card class="card_features ion-no-padding">
+            <img *ngIf="item?.images?.length; else noimage" src="{{item.images[0]}}" />
+            <ng-template #noimage>
+              <img src="../../../../assets/imgs/dummy_space1.png" />
+            </ng-template>
+            <ion-card-header>
+              <ion-card-subtitle>{{item?.name}}</ion-card-subtitle>
+              <ion-card-title>{{item?.spaceName}} ({{item?.storedItemInfo?.name}})</ion-card-title>
+            </ion-card-header>
+            <ion-card-content class="no-padding">
+              <div class="card-content">
+                ${{item?.pricing?.daily}}/<span>day</span>
+
+                <ion-icon name="share-social-outline" color="dark" style="font-size: 20px;" class="mr-l"
+                (click)="shareByFacebook(space)"></ion-icon>
+
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-slide>
+</ion-slides>
+<ng-template #noPlaces>
+  <div class="no-item">
+    <img src="../../../../assets/imgs/emptyList.png" />
+    <h5> No Units Found...</h5>
+  </div>
+</ng-template>

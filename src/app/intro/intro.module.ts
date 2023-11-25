@@ -16,7 +16,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
     CommonModule,
     FormsModule,
     IonicModule.forRoot(),
-    IntroPageRoutingModule
+    IntroPageRoutingModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   declarations: [IntroPage]

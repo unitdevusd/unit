@@ -1,14 +1,88 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Tab 1
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-grid class="user-details pad-lr">
+    <ion-row>
+      <ion-col size="12">
+        <h2 class="name-txt"> Welcome, {{ firstName }}</h2>
+        <p class="find-txt">Here are all the units available to you!</p>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-grid class="ion-no-padding pad-lr">
+    <ion-row class="ion-no-padding">
+      <ion-col size-sm="6" offset-sm="3" class="ion-no-padding" [size]="10">
+        <ion-searchbar color="black" [(ngModel)]="autocomplete.input" #searchbar placeholder="Search for Location" searchIcon=" "
+          (ionInput)="searchLocation()" clearIcon=" " (ionFocus)="checkFocus()" (ionClear)="clearAutocomplete()">
+          <img src="../../../../assets/imgs/feather-search.png" />
+        </ion-searchbar>
+      </ion-col>
+      <ion-col [size]="2" class="noti">
+        <ion-icon *ngIf="!hasFilter" name="funnel" (click)="openFilter()"
+          style="margin-right: 14px; margin-top: 14px;"> </ion-icon>
+        <ion-icon *ngIf="hasFilter" color="unit-btn" name="funnel"
+          (click)="openFilter()" style="margin-right: 14px; margin-top: 14px;"> </ion-icon>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <div [hidden]="autocompleteItems.length == 0" class="search_list">
+    <ion-list (click)="useCurrentLocation()" lines="none">
+      <ion-item>
+        <ion-label>
+          <img  class="image-loc" style="margin-inline-end: 0px !important;" slot="start"
+            src="../../../../assets/imgs/material-location-on.png" />
+          <p class="main_text">Current Location</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+    <ion-list [hidden]="autocompleteItems.length == 0" lines="none">
+      <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
+        <ion-label>
+          <p class="secondary_text"> {{ item.structured_formatting.secondary_text }} </p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+  <shared-space-type-slider [spaces]="spaceType" (clearAll)="clearFilters()" (spaceSelected)="spaceClick($event)">
+  </shared-space-type-slider>
+  <!-- <div class="content" *ngIf="displayName"> -->
+  <div class="content">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <h3 class="top-heading">Featured</h3>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <div *ngIf="placesList.length">
+      <unit-listing [units]="placesList" (unitClicked)='place($event)'></unit-listing>
+    </div>
+  </div>
+  <ion-grid class="ion-no-padding" *ngIf="displayName">
+    <ion-row class="ion-no-padding">
+      <ion-col>
+        <h3 class="top-heading-popular">Popular</h3>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <!-- <div *ngIf="displayName"> -->
+  <div>
+    <!-- <unit-listing [units]="placesList" (unitClicked)='place($event)'></unit-listing> -->
+  </div>
+  <!--filter Results-->
+  <!-- <div class="content" *ngIf="!displayName"> -->
+  <div class="content" *ngIf="!displayName">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <h3 class="top-heading">
+            Found {{placesList.length}}
+            <span *ngIf="placesList.length == 0 || placesList.length == 1 ">unit</span>
+            <span *ngIf="placesList.length > 1 ">unit's</span>
+          </h3>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <div *ngIf="placesList">
+      <unit-listing [units]="placesList" (unitClicked)='place($event)'></unit-listing>
+    </div>
+  </div>
 </ion-content>

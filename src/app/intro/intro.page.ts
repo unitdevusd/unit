@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-intro',
@@ -18,7 +19,7 @@ export class IntroPage implements OnInit {
     'https://images.unsplash.com/photo-1488229297570-58520851e868',
   ];
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
   }
@@ -29,6 +30,10 @@ export class IntroPage implements OnInit {
 
   swiperReady() {
     this.swiper = this.swiperRef?.nativeElement.swiper;
+  }
+
+  skip(){
+    this.router.navigate(['tabs/tab1']);
   }
  
 }

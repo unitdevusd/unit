@@ -3,6 +3,8 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 import { Router } from '@angular/router';
 import { AlertController, LoadingController } from '@ionic/angular';
 import { AuthService } from '../services/auth.service';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -16,11 +18,14 @@ export class LoginPage implements OnInit {
     private formBuilder: FormBuilder,
     public authService: AuthService,
     private router: Router,
-    private loadingController: LoadingController
-  ) {
+    private loadingController: LoadingController,
+    private alertController: AlertController,
+    private afs: AngularFirestore,
+    private userService: UserService
+    ) {
 
     this.loginForm = this.formBuilder.group({
-      emailId: new FormControl(
+      email: new FormControl(
         "",
         Validators.compose([
           Validators.required,
@@ -39,17 +44,49 @@ export class LoginPage implements OnInit {
     console.log(this.loginForm.value);
     if (this.loginForm.value) {
       let loginData = this.loginForm.value;
-      this.authService.loginUser(loginData.email, loginData.password).then(async resposne => {
-        await loading.dismiss();
+      console.log(loginData.email);
+      this.authService.loginUser(loginData.email, loginData.password).then(async response => {
+      await loading.dismiss();
+
+        this.afs.collection('users').doc(response.user.uid).valueChanges().subscribe((userDetails: any) => {       
+          
+          if (userDetails) {
+            const firstName = userDetails?.firstName;
+            this.userService.setUserDetails(userDetails);
+            console.log(firstName);
+          }
+
         this.router.navigateByUrl('/tabs', { replaceUrl: true });
+        this.showSuccessAlert(); 
+        });
       }).catch(async error => {
         console.log(error);
         await loading.dismiss();
+        this.showErrorAlert();
       });
     }
   }
   registerpage() {
     this.router.navigateByUrl('/register-role', { replaceUrl: true });
+  }
+
+  async showSuccessAlert() {
+    const alert = await this.alertController.create({
+      header: 'Success',
+      message: 'Login successful!',
+      buttons: ['OK']
+    });
+
+    await alert.present();
+  }
+
+  async showErrorAlert() {
+    const alert = await this.alertController.create({
+      header: 'Error',
+      message: 'Login failed. Please check your credentials and try again.',
+      buttons: ['OK']
+    });
+
   }
 }
 

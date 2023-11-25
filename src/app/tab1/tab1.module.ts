@@ -6,6 +6,7 @@ import { Tab1Page } from './tab1.page';
 
 
 import { Tab1PageRoutingModule } from './tab1-routing.module';
+import { SharedSpaceTypeSliderComponent } from '../component/shared-space-type-slider/shared-space-type-slider.component';
 
 @NgModule({
   imports: [
@@ -14,6 +15,6 @@ import { Tab1PageRoutingModule } from './tab1-routing.module';
     FormsModule,
     Tab1PageRoutingModule
   ],
-  declarations: [Tab1Page]
+  declarations: [Tab1Page, SharedSpaceTypeSliderComponent]
 })
 export class Tab1PageModule {}

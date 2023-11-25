@@ -1,4 +1,4 @@
-<ion-content scrollY="false">
+<!-- <ion-content scrollY="false">
     <swiper-container
       #swiper
       (afterinit)="swiperReady()"
@@ -13,4 +13,41 @@
         </div>
       </swiper-slide>
     </swiper-container>
+  </ion-content> -->
+
+
+  <ion-content fullscreen scroll-y="false">
+    <ion-slides pager="true">
+      <ion-slide class="bg_one" [style.backgroundImage]="'url(../../assets/imgs/intro.jpg)'">
+        <div class="slide caseone">
+          <h2>Welcome to Unit!</h2>
+          <p>
+            Welcome to the modern day session app. Hosts and renters on Unit Session are everyday people like you and
+            me.
+          </p>
+          <a class="clickable" (click)="skip()">Skip</a>
+        </div>
+        <div class="wel-bg"></div>
+      </ion-slide>
+      <ion-slide class="bg_two" style="background-image: url(../../../assets/imgs/intro.jpg)">
+        <div class="casetwo">
+          <h2>Need a Space</h2>
+          <p>
+            Coming Soon : Save your search criteria and subscribe to notifications when suitable Units come up for rent.
+          </p>
+          <a class="clickable" (click)="skip()">Skip</a>
+        </div>
+      </ion-slide>
+      <ion-slide class="bg_three" style="background-image: url(../../../assets/imgs/intro.jpg)">
+        <div class="casethree">
+          <h2>Rent a Space</h2>
+          <p>
+            Coming Soon : Connect with friends & colleagues in closely-knit societies called Unit Groups
+          </p>
+          <a class="clickable" (click)="skip()">Go</a>
+  
+        </div>
+        <div class="rent-bg"></div>
+      </ion-slide>
+    </ion-slides>
   </ion-content>

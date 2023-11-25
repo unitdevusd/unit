@@ -1,0 +1,44 @@
+<!-- <ion-slides> -->
+<!-- <swiper-container>
+  <swiper-slide *ngFor="let item of spaces" (click)="spaceClick(item)">
+      <ion-row>
+          <ion-row>
+              <ion-col>
+                  <div class="main">
+                      <img class="img-spacetype" *ngIf="item?.images?.length; else noImage"
+                          src="{{item.images[0]}}" />
+                      <ng-template #noImage>
+                          <img class="img-spacetype" src="../../../../assets/imgs/dummys.png"/>
+                      </ng-template>
+                  </div>
+                  <span class="space-span"
+                      [ngStyle]="{'color':item.status === true ? 'red' : '' }">{{item.spaceType}}</span>
+              </ion-col>
+          </ion-row>
+      </ion-row>
+  </swiper-slide>
+</swiper-container>
+<div class="clear" *ngIf="clearFilter">
+  <p>
+      <a style="color: red;" (click)="clearFilters()">clear filters </a>
+  </p>
+</div> -->
+
+<ion-toolbar color="light">
+    <div class="button-bar">
+        <ion-button *ngFor="let item of spaces; let i = index"
+        (click)="spaceClick(item)" size="small">
+        
+        <div class="main">
+            <img class="img-spacetype" *ngIf="item?.images?.length; else noImage"
+                src="{{item.images[0]}}" />
+            <ng-template #noImage>
+                <img class="img-spacetype" src="../../../../assets/imgs/dummys.png"/>
+            </ng-template>
+        </div>
+        <span class="space-span"
+            [ngStyle]="{'color':item.status === true ? 'red' : '' }">{{item.spaceType}}</span>
+
+    </ion-button>
+    </div>
+</ion-toolbar>

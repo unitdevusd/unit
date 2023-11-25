@@ -32,7 +32,12 @@ const routes: Routes = [
     path: '**',
     redirectTo: '',
     pathMatch: 'full'
+  },  {
+    path: 'filters',
+    loadChildren: () => import('./filters/filters.module').then( m => m.FiltersPageModule)
   }
+
+
 ];
 @NgModule({
   imports: [
