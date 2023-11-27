@@ -1,14 +1,9 @@
-<!-- <div style="position: absolute;top: 42%;left: 0px;font-size: 25px;z-index: 2;" (click)="slidePrev()"
-  *ngIf="units.length > 1">
-  <ion-icon name="chevron-back-outline" color="unit-btn"></ion-icon>
-</div>
-<div style="position: absolute;top: 42%;right: 0px;font-size: 25px;z-index: 2;" (click)="slideNext()"
-  *ngIf="units.length > 1">
-  <ion-icon name="chevron-forward-outline" color="unit-btn"></ion-icon>
-</div> -->
-<ion-slides #slides *ngIf="units.length; else noPlaces" [options]="slideOpts">
-  <ion-slide *ngFor="let item of units" (click)="place(item)"
-    style="width: 100px; height: 370px; border: 2px solid #f8f8f8">
+
+<b>We're here</b>
+<swiper-container *ngIf="units && units.length > 0; else noUnits">
+    <swiper-slide *ngFor="let item of units" (click)="place(item)"
+  style="width: 100px; height: 370px; border: 2px solid #f8f8f8">
+    <div (click)="place(item)">
     <ion-grid class="card-grid">
       <ion-row>
         <ion-col>
@@ -34,11 +29,15 @@
         </ion-col>
       </ion-row>
     </ion-grid>
-  </ion-slide>
-</ion-slides>
-<ng-template #noPlaces>
-  <div class="no-item">
-    <img src="../../../../assets/imgs/emptyList.png" />
-    <h5> No Units Found...</h5>
+    </div>
+  </swiper-slide>
+  </swiper-container>
+
+<ng-template #noUnits>
+  <img class="img-spacetype-unit" src="../../../../assets/imgs/emptyList.png" />
+
+  <div class="no-item-unit">
+    <p><b><h5>No Data for now. Please try again later</h5></b></p>
   </div>
 </ng-template>
+

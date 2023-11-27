@@ -1,0 +1,310 @@
+:host {
+    --min-height: 35px !important;
+  }
+  
+  ion-content {
+    transform: translate3d(0, 12px, 0);
+    --offset-bottom: auto !important;
+    --overflow: hidden;
+    overflow: auto;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  
+  .content {
+    background-color: "secondary";
+    border-radius: 25px 25px 0px 0px;
+    padding-top: 0px;
+    box-shadow: 0px 0px 10px #a3a4a7;
+    margin-top: 20px;
+    height: auto;
+  }
+  
+  .swiper-slide {
+    width: 100% !important;
+    img {
+      width: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: cover;
+      border-radius: 15px;
+      height: 280px;
+    }
+  }
+  .card-grid {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+  }
+  .card-grid-new{
+    padding-top: 0px !important;
+    padding-bottom: 30px !important;
+  } 
+  
+  .card_features {
+    margin-inline-start: 10px !important;
+    margin-inline-end: 10px !important;
+    ion-card-header {
+      padding-bottom: 5px !important;
+      padding: 0;
+      ion-card-subtitle {
+        text-align: left;
+        font-size: 13px;
+        font-weight: 2;
+        margin-top: 8px;
+        padding-top: 0;
+        font-family: "helveticaneuebold";
+        color: "tertiary";
+        margin-bottom: 0;
+        padding-bottom: 3px;
+      }
+      ion-card-title {
+        text-align: left;
+        color: "tertiary";
+        font-size: 11px;
+        font-family: "medium";
+        font-weight: 400;
+        span {
+          color: "tertiary";
+        }
+      }
+    }
+    ion-card-content {
+      .rating {
+        text-align: left !important;
+      }
+      .card-content {
+        text-align: left !important;
+        color: "tertiary";
+        font-size: 11px !important;
+        margin-top: 6px;
+        margin-bottom: 6px;
+        font-family: "medium";
+        span {
+          color: #9b9b9b;
+        }
+      }
+      .card-content-popular{
+        text-align: left !important;
+        color: "#000";
+        font-size: 11px !important;
+        font-family: "medium";
+        span {
+          color: #9b9b9b;
+        }
+      }
+    }
+  }
+  
+  .sc-ion-card-md-h,
+  .sc-ion-card-ios-h {
+    margin-top: 0;
+    margin-bottom: 0;
+    -webkit-margin-start: 0;
+    margin-inline-start: 0;
+    -webkit-margin-end: 0;
+    margin-inline-end: 0;
+  }
+  
+  .top-heading {
+    margin-left: 15px;
+    margin-top: 20px;
+    margin-bottom: 0px;
+    font-size: 18px;
+    font-family: "helveticaneuebold";
+    color: #000;
+  }
+  .top-heading-popular{
+    margin-left: 15px;
+    margin-top: 20px;
+    margin-bottom: 15px;
+    font-size: 18px;
+    font-family: "helveticaneuebold";
+    color: #000;
+  }
+  
+  .category {
+    ion-col {
+      text-align: center;
+      div {
+        border-radius: 18px;
+        border: 1px solid #ed1b25;
+        padding: 6px;
+        width: 65px;
+        display: inline-block;
+      }
+      span {
+        display: block;
+        font-size: 12px;
+        color: #9b9b9b;
+        margin-top: 7px;
+        font-family: "medium";
+      }
+    }
+  }
+  .user-details {
+    ion-col {
+      p {
+        padding-top: 0px;
+        margin-top: 0px;
+      }
+    }
+  }
+  
+  .noti {
+    text-align: right;
+    ion-icon {
+      font-size: 24px;
+      margin-top: 20px;
+      margin-right: 5px;
+    }
+  }
+  .noti_main{
+    ion-icon {
+      font-size: 24px;
+      margin-top: 12px;
+      margin-right: 10px;
+    }
+  }
+  
+  ion-searchbar {
+    --icon-color: #ed1b25;
+    --border-radius: 20px;
+    --box-shadow: 0px 0px 5px #e0dbdb;
+    width: 104% !important;
+    padding-top: 0;
+    --placeholder-color: #989797;
+    --box-shadow: 0px 0px 10px #d6d5d5;
+    --placeholder-opacity: 1;
+    padding-left: 0px;
+    padding-top: 0;
+    --background: #F7F7F7;
+    img {
+      position: absolute;
+      right: 25px;
+      top: 18px;
+      z-index: 999
+    }
+  }
+  
+  .img-spacetype-data{
+    max-width: 80% !important;
+    margin-left: 70px;
+  }
+
+  .img-spacetype-unit{
+    max-width: 80% !important;
+    margin-left: 70px;
+  }
+  .no-item-unit {
+    text-align: center;
+    margin-top: 50px;
+    h5{
+      padding-bottom: 20px;
+    }
+  }
+  .name-txt {
+    font-size: 23px;
+    color: #000;
+    font-family: "helveticaneuebold";
+  }
+  .find-txt {
+    font-size: 12px;
+    color: #000;
+  }
+  .card_features {
+    box-shadow: none;
+  }
+  .no-padding {
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+  }
+  
+  .search_list {
+    background: #f7f7f7;
+    border-radius: 15px;
+    box-shadow: 0px 0px 5px #e0dbdb;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+  ion-list {
+    ion-item {
+      --min-height: 35px;
+      ion-label {
+        border-bottom: 1px solid #cacaca;
+        padding-bottom: 10px;
+        padding-left: 12px;
+        font-size: 10px;
+        margin-bottom: 0px;
+        margin-top: 0px;
+        padding-top: 0px;
+      }
+      .main_text {
+        font-size: 11px;
+        font-family: "medium";
+        color: "tertiary";
+        display: inline-block;
+        margin-left: 8px;
+        vertical-align: middle;
+      }
+      .secondary_text {
+        color: "tertiary";
+        font-size: 11px;
+        font-family: "medium";
+      }
+    }
+  }
+  
+  .placelist {
+    .card_features {
+      img {
+        width: 100%;
+        border-radius: 15px;
+      }
+    }
+    .card-content-ios {
+      padding-left: 0px !important;
+      padding-right: 0px !important;
+      padding-top: 0px !important;
+      padding-bottom: 0px !important;
+      font-size: 16px;
+      line-height: 1.4;
+    }
+  }
+  .rating_main {
+    text-align: right !important;
+  }
+  .pricing_full {
+    position: absolute;
+    right: 10px;
+    z-index: 9999;
+    background: red;
+    top: 217px;
+    color: "secondary";
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-size: 11px;
+    font-family: "medium";
+  }
+  
+  .pad-lr{
+    padding: 0 15px;
+  }
+  .image-loc{
+    height: 10px;
+    width: 10px;
+  }
+  .clear{
+    text-align: end;
+    margin-right: 20px;
+  }
+
+.img-spacetype{
+  max-width: 80% !important;
+}
+
+.share-social-outline{
+  position: absolute;
+  right: 25px;
+}

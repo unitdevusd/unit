@@ -17,4 +17,8 @@ export class UserService {
     const storedDetails = localStorage.getItem(this.userDetailsKey);
     return storedDetails ? JSON.parse(storedDetails) : null;
   }
+
+  clearUserDetails(): any {
+    localStorage.removeItem(this.userDetailsKey);
+  }
 }

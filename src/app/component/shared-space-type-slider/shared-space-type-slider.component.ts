@@ -1,7 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { register } from 'swiper/element/bundle';
-
-register();
 
 @Component({
   selector: 'shared-space-type-slider',
@@ -13,7 +10,8 @@ export class SharedSpaceTypeSliderComponent implements OnInit {
   @Output() spaceSelected = new EventEmitter();
   @Output() clearAll = new EventEmitter();
 
-  options = {
+
+  swiperConfig = {
     slidesPerView : 4.5,
     spaceBetween: 10,
     slideOffsetBefore: 0

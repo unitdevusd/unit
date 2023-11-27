@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser'
 import { RouteReuseStrategy } from '@angular/router';
 
@@ -25,12 +25,11 @@ import { AppVersion } from '@ionic-native/app-version/ngx';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { Tab1PageModule } from './tab1/tab1.module';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
 
 
 @NgModule({
   declarations: [AppComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
     BrowserModule,
     IonicModule.forRoot({hardwareBackButton: false}), 
@@ -41,7 +40,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
     AngularFirestoreModule,
     AngularFireStorageModule,
     AngularFireDatabaseModule,   
-    IonicStorageModule.forRoot(),    
+    IonicStorageModule.forRoot(),
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [
@@ -54,6 +53,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
     Network,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule {}

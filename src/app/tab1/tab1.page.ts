@@ -1,6 +1,6 @@
-import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, NgZone, OnInit, ViewChild } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
-import { IonicSlides, IonSearchbar, ModalController } from '@ionic/angular';
+import { IonicSlides, IonSearchbar, ModalController, ToastController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api-service.service';
 import { GlobalService } from 'src/app/services/global.service';
 import { ToastService } from 'src/app/services/toast.service';
@@ -16,7 +16,7 @@ import { FiltersPage } from '../filters/filters.page';
 import { Platform } from '@ionic/angular';
 import { LoaderService } from '../services/loader-service.service';
 import { UserService } from '../services/user.service';
-import { SharedSpaceTypeSliderComponent } from '../component/shared-space-type-slider/shared-space-type-slider.component';
+import { async } from 'rxjs';
 
 
 declare var google: any;
@@ -30,11 +30,13 @@ declare var google: any;
 export class Tab1Page implements OnInit {
   
   @ViewChild(IonicSlides) slides: any;
+  @ViewChild('swiper') swiperRef: ElementRef;
   @ViewChild('searchbar', { static: false }) searchbar: IonSearchbar;
   
   url: any = 'https://gur.sandbox.imkloud.com';
   spaceType: any[];
   placesList: any = [];
+  units: any = [];
   today: any = Date.now();
   filters: any = {};
   spaceFilters: any = [];
@@ -59,6 +61,7 @@ export class Tab1Page implements OnInit {
 
   constructor(
     private router: Router,
+    private toastController: ToastController,
     private _apiService: ApiService,
     private _loader: LoaderService,
     private _gs: GlobalService,
@@ -175,16 +178,17 @@ export class Tab1Page implements OnInit {
     const params = {
       filters,
     };
-    console.log(params);
+    console.log('Param is '+params);
+    console.log('Sending places list request');
     this._apiService.postRequest(this.url + '/api/v1/unit/spaces',
       params)
       .subscribe(
         async (result) => {
-          console.log(result);
+          console.log('Result is '+result.status);
           if (result.success) {
             this._loader.dismiss();
             this.placesList = result.data.list;
-            console.log(this.placesList);
+            console.log('Places list is '+this.placesList);
           }else{
             this._loader.dismiss();
             console.log('err', result);
@@ -197,11 +201,13 @@ export class Tab1Page implements OnInit {
   }
   
   placeMeta() {
+    console.log('Checking place meta');
     const params = {
       apiKey: 'rGpTKMEZjs3RR5vcfwg6pujoA54i33'
     };
     this._apiService.postRequest(this.url + '/api/v1/unit/placeMeta', params).subscribe(
       async (result) => {
+        console.log('Result is '+result);
         if (result.success) {
           console.log(result);
           this.spaceType = result.data.list.spaceType;
@@ -323,6 +329,7 @@ export class Tab1Page implements OnInit {
     })  
   }
 
+
   clearFilters(){
     this.zone.run(()=>{
        this.spaceType.map( x=> x.status = false);
@@ -333,5 +340,37 @@ export class Tab1Page implements OnInit {
     });
   }
 
+  logout() {
+    this.userService.clearUserDetails();
+    this.router.navigate(['/login']);
+  }
+
+  addClicked() {
+    console.log('Add button clicked!');
+  }
+
+  optionClicked(optionNumber: number) {
+    switch (optionNumber) {
+      case 1:
+        this.showToast('Try to add new space!');
+        break;
+      case 2:
+        this.showToast('Try to star new space!');
+        break;
+      default:
+        break;
+    }
  
+  }
+
+    async showToast(message: any) {
+      const toast = await this.toastController.create({
+        message: message,
+        duration: 2000,
+        position: 'bottom',
+      });
+      toast.present();
+    }
+  
 }
+
