@@ -38,34 +38,34 @@ export class LoginPage implements OnInit {
 
   ngOnInit() { }
 
-  async login() {
-    const loading = await this.loadingController.create();
-    await loading.present();
-    console.log(this.loginForm.value);
-    if (this.loginForm.value) {
-      let loginData = this.loginForm.value;
-      console.log(loginData.email);
-      this.authService.loginUser(loginData.email, loginData.password).then(async response => {
-      await loading.dismiss();
+  // async login() {
+  //   const loading = await this.loadingController.create();
+  //   await loading.present();
+  //   console.log(this.loginForm.value);
+  //   if (this.loginForm.value) {
+  //     let loginData = this.loginForm.value;
+  //     console.log(loginData.email);
+  //     this.authService.loginUser(loginData.email, loginData.password).then(async response => {
+  //     await loading.dismiss();
 
-        this.afs.collection('users').doc(response.user.uid).valueChanges().subscribe((userDetails: any) => {       
+  //       this.afs.collection('users').doc(response.user.uid).valueChanges().subscribe((userDetails: any) => {       
           
-          if (userDetails) {
-            const firstName = userDetails?.firstName;
-            this.userService.setUserDetails(userDetails);
-            console.log(firstName);
-          }
+  //         if (userDetails) {
+  //           const firstName = userDetails?.firstName;
+  //           this.userService.setUserDetails(userDetails);
+  //           console.log(firstName);
+  //         }
 
-        this.router.navigateByUrl('/tabs', { replaceUrl: true });
-        this.showSuccessAlert(); 
-        });
-      }).catch(async error => {
-        console.log(error);
-        await loading.dismiss();
-        this.showErrorAlert();
-      });
-    }
-  }
+  //       this.router.navigateByUrl('/tabs', { replaceUrl: true });
+  //       this.showSuccessAlert(); 
+  //       });
+  //     }).catch(async error => {
+  //       console.log(error);
+  //       await loading.dismiss();
+  //       this.showErrorAlert('Unexpected Error occurred. Try again later');
+  //     });
+  //   }
+  // }
   registerpage() {
     this.router.navigateByUrl('/register-role', { replaceUrl: true });
   }
@@ -80,13 +80,48 @@ export class LoginPage implements OnInit {
     await alert.present();
   }
 
-  async showErrorAlert() {
+  async showErrorAlert(message: any) {
     const alert = await this.alertController.create({
       header: 'Error',
-      message: 'Login failed. Please check your credentials and try again.',
+      message: message,
       buttons: ['OK']
     });
 
+  }
+
+
+  async loginUser() {
+    try {
+      const loading = await this.loadingController.create();
+      await loading.present();
+  
+      if (this.loginForm.value) {
+        const loginData = this.loginForm.value;
+        this.authService.authenticateUser(loginData).subscribe(
+          (response: any) => {
+            loading.dismiss();
+            console.log('Response is '+response.email);
+  
+            if (!response.email) {
+              this.showErrorAlert(response.message);    
+            } else {
+              this.userService.setUserDetails(response);
+              this.showSuccessAlert();
+              setTimeout(() => {
+                this.router.navigateByUrl('/tabs', { replaceUrl: true });             
+              }, 2000);              
+            }
+          },
+          (error: any) => {
+            console.error(error);
+            loading.dismiss();
+            this.showErrorAlert('Unexpected error occurred');
+          }
+        );
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
 

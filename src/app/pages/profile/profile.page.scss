@@ -1,0 +1,149 @@
+ion-content {
+    --ion-background-color: "primary";
+  }
+  .circle-pic {
+    width: 100px;
+    height: 100px;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    object-fit: cover;
+  }
+  .icon-style {
+    color: "senary";
+    width: 25px;
+    height: 25px;
+  }
+  ion-item {
+    ion-label {
+      h2 {
+        font-size: medium;
+        font-weight: bold;
+        color: "quaternary";
+      }
+    }
+    ion-button {
+      height: 100%;
+    }
+  }
+  ion-list {
+    ion-label {
+      color: "tertiary" !important;
+      font-size: 16px !important;
+      font-family: "medium";
+      margin-bottom: 0px;
+      padding-left: 6px;
+      margin-top: 0;
+    }
+    ion-item {
+      padding-right: 17px !important;
+      --border-color: "medium";
+    }
+    h4 {
+      padding-left: 5px !important;
+    }
+  }
+  .p-text {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ion-color-step-600, "quaternary");
+    a {
+      text-decoration: none;
+      color: "primary";
+    }
+  }
+  .hydrated img {
+    margin-bottom: 0px;
+    margin-right: -10px;
+  }
+  .break {
+    padding: 4px;
+    background-color: "quinary";
+  }
+  .main-div {
+    // background: "primary-rgb";
+    // background: rgb(186,34,64);
+    
+    // background: linear-gradient(
+    //   90deg,
+    //   rgba(237, 27, 37, 1) 39%,
+    //   rgba(255, 114, 121, 1) 60%,
+    //   rgba(255, 114, 121, 1) 74%,
+    //   rgba(255, 114, 121, 1) 100%
+    // );
+
+    background: rgba(237, 27, 37, 1);
+    height: 100px;
+    position: relative;
+  }
+  .account-title {
+    font-size: 17px;
+    color: "primary";
+    font-family: "helveticaneuebold";
+    margin-bottom: 2px;
+  }
+  .logout {
+    font-size: 16px !important;
+    font-family: "helveticaneuebold";
+    padding-left: 8px;
+    margin-top: 10px;
+  }
+  .main-title {
+    font-family: helveticaneuebold;
+    margin-bottom: 0;
+    padding-bottom: 0;
+    margin-top: 45px;
+  }
+  .main-email {
+    margin-top: 5px;
+    color: "senary";
+    font-family: medium;
+  }
+  .edit-profile {
+    color: "secondary";
+    font-family: medium;
+  }
+  ion-item {
+    .item-native {
+      background-color: inherit;
+    }
+  }
+  .main-heading {
+    background: inherit;
+    background-color: inherit;
+    position: relative;
+    z-index: 999;
+    margin: -42px 26px -10px;
+  }
+  
+  .profile_img {
+    height: 80px;
+    width: 300px;
+    display: block;
+    max-width: 80px;
+  }
+  .edit-profile1 {
+    position: absolute;
+    right: 0;
+    top: -7px;
+  }
+  .edit-profile {
+    color: #fff;
+    font-family: medium;
+    font-size: 14px;
+  }
+  .edit_img {
+    height: auto;
+    width: auto;
+    display: inline-block;
+    max-width: 80px;
+    margin-top: -9px;
+  }
+  .top-heading{
+    color: "tertiary";
+  }
+  .top-heading-popular{
+    color: "tertiary";
+  }

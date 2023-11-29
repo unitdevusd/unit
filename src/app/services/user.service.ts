@@ -7,7 +7,7 @@ export class UserService {
 
   constructor() { }
 
-  private userDetailsKey: 'userDetails';
+  private userDetailsKey: 'response';
 
   setUserDetails(details: any) {
     localStorage.setItem(this.userDetailsKey, JSON.stringify(details));

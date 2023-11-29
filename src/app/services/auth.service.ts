@@ -1,7 +1,9 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { Observable } from 'rxjs/internal/Observable';
 
 
 @Injectable({
@@ -9,9 +11,12 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 })
 export class AuthService {
   userdata: any;
+  private signUpUrl = 'http://localhost:8088/users/create';
+  private loginUrl = 'http://localhost:8088/users/authenticate';
+
 
   constructor(
-     public fireAuth: AngularFireAuth,public f: AngularFirestore
+     public fireAuth: AngularFireAuth,public f: AngularFirestore, private http: HttpClient
      ) { 
     this.fireAuth.authState.subscribe((user) => {
       this.userdata = user ? user : null;
@@ -33,6 +38,8 @@ export class AuthService {
     });
   }
 
+
+
   async loginUser(
     email: string,
     password: string
@@ -49,6 +56,14 @@ export class AuthService {
     .catch((error) => {
       console.error('Error saving additional data:', error);
     });
+  }
+
+  createUser(payload: any): Observable<any> {
+    return this.http.post(this.signUpUrl, payload);
+  }
+
+  authenticateUser(payload: any): Observable<any> {
+    return this.http.post(this.loginUrl, payload);
   }
 
 }

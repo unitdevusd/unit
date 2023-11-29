@@ -24,11 +24,15 @@ public signupForm!: FormGroup;
     private loadingController: LoadingController,
     private alertController: AlertController
   ) { 
-    this.role = this.route.snapshot.paramMap.get('role');
+    const roleParam = this.route.snapshot.paramMap.get('role');
+    if(roleParam !== null) {
+      console.log('Role is '+roleParam);
+      this.role = roleParam.toUpperCase();
+    }
     this.signupForm = this.formBuilder.group({
       firstName: new FormControl('', Validators.required),
       lastName: new FormControl('', Validators.required),
-      phoneno: new FormControl('', Validators.nullValidator),
+      role: new FormControl(this.role, Validators.nullValidator),
       email: new FormControl(
         '',
         Validators.compose([
@@ -56,16 +60,21 @@ public signupForm!: FormGroup;
         this.authService.register(registerData.email,registerData.password).then(async response =>{
           await loading.dismiss();
           console.log(response);
-          this.showSuccessAlert();
-          const user = response.user;
-          console.log('User is ' +user);
-          const uid = user.uid;
-          console.log('UID is '+uid);
-          this.custom(user,uid,registerData);
-          // this.router.navigateByUrl('/login', { replaceUrl: true });
-          setTimeout(() => {
-            this.router.navigateByUrl('/login', { replaceUrl: true });
-          }, 2000);
+          if(response.user == undefined) {
+            this.showFailureAlert('User already exists');
+          }
+          else {
+            this.showSuccessAlert();
+            const user = response.user;
+            console.log('User is ' +user);
+            const uid = user.uid;
+            console.log('UID is '+uid);
+            this.custom(user,uid,registerData);
+            setTimeout(() => {
+              this.router.navigateByUrl('/login', { replaceUrl: true });
+            }, 2000);
+          }
+
         }).catch(async error => {
           await loading.dismiss();
        });
@@ -94,4 +103,47 @@ public signupForm!: FormGroup;
     await alert.present();
   }
 
+  async showFailureAlert(message: any) {
+    const alert = await this.alertController.create({
+      header: 'Failure',
+      message: message,
+      buttons: ['OK']
+    });
+  
+    await alert.present();
+  }
+
+
+  async createUser() {
+    try {
+      const loading = await this.loadingController.create();
+      await loading.present();
+  
+      if (this.signupForm.value) {
+        const registerData = this.signupForm.value;
+        this.authService.createUser(registerData).subscribe(
+          (response) => {
+            loading.dismiss();
+            console.log('Response is '+response.code);
+  
+            if (response && response.code !== '00') {
+              this.showFailureAlert(response.message);
+            } else {
+              this.showSuccessAlert();
+              setTimeout(() => {
+                this.router.navigateByUrl('/login', { replaceUrl: true });
+              }, 2000);
+            }
+          },
+          (error) => {
+            console.error(error);
+            loading.dismiss();
+            this.showFailureAlert('Unexpected error occurred');
+          }
+        );
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
 }

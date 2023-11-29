@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 export class RegisterRolePage implements OnInit {
 
   roles : any = [
-    {text : "Rent a Unit", image : '.../../../../assets/imgs/tanent.png', role : 'renter'},
+    {text : "Rent a Unit", image : '.../../../../assets/imgs/tanent.png', role : 'tenant'},
     {text : "Host your Unit", image : '.../../../../assets/imgs/owner.png', role : 'host'}
   ];
   constructor(private router: Router) { }

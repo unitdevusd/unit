@@ -9,7 +9,9 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+
+
+<ion-content [fullscreen]="true" *ngIf="role === 'TENANT'">
   <ion-grid class="user-details pad-lr">
     <ion-row>
       <ion-col size="12">    
@@ -167,3 +169,149 @@
     </ion-fab-list>
   </ion-fab>
 </ion-content>
+
+
+
+
+
+
+
+<ion-content [fullscreen]="true" *ngIf="role === 'HOST'">
+  <ion-grid class="user-details pad-lr">
+    <ion-row>
+      <ion-col size="12">    
+        <!-- <h2 class="name-txt"> Welcome, {{ firstName }}</h2> -->
+        <p class="find-txt">Here are all your spaces!</p>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-grid class="ion-no-padding pad-lr">
+    <ion-row class="ion-no-padding">
+      <ion-col size-sm="6" offset-sm="3" class="ion-no-padding" [size]="10">
+        <ion-searchbar color="black" [(ngModel)]="autocomplete.input" #searchbar placeholder="Search for Location" searchIcon=" "
+          (ionInput)="searchLocation()" clearIcon=" " (ionFocus)="checkFocus()" (ionClear)="clearAutocomplete()">
+          <img src="../../../../assets/imgs/feather-search.png" />
+        </ion-searchbar>
+      </ion-col>
+      <ion-col [size]="2" class="noti">
+        <ion-icon *ngIf="!hasFilter" name="funnel" (click)="openFilter()"
+          style="margin-right: 14px; margin-top: 14px;"> </ion-icon>
+        <ion-icon *ngIf="hasFilter" color="unit-btn" name="funnel"
+          (click)="openFilter()" style="margin-right: 14px; margin-top: 14px;"> </ion-icon>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <div [hidden]="autocompleteItems.length == 0" class="search_list">
+    <!-- <ion-list (click)="useCurrentLocation()" lines="none">
+      <ion-item>
+        <ion-label>
+          <img  class="image-loc" style="margin-inline-end: 0px !important;" slot="start"
+            src="../../../../assets/imgs/material-location-on.png" />
+          <p class="main_text">Current Location</p>
+        </ion-label>
+      </ion-item>
+    </ion-list> -->
+    <ion-list [hidden]="autocompleteItems.length == 0" lines="none">
+      <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
+        <ion-label>
+          <p class="secondary_text"> {{ item.structured_formatting.secondary_text }} </p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+
+    <shared-space-type-slider [spaces]="spaceType" (clearAll)="clearFilters()" (spaceSelected)="spaceClick($event)">
+    </shared-space-type-slider> 
+  <div class="content">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <h3 class="top-heading">Featured</h3>        
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <div>
+      <swiper-container *ngIf="units && units.length > 0; else noUnits">
+        <swiper-slide *ngFor="let item of units" (click)="place(item)"
+      style="width: 100px; height: 370px; border: 2px solid #f8f8f8">
+        <div (click)="place(item)">
+        <ion-grid class="card-grid">
+          <ion-row>
+            <ion-col>
+              <ion-card class="card_features ion-no-padding">
+                <img *ngIf="item?.images?.length; else noimage" src="{{item.images[0]}}" />
+                <ng-template #noimage>
+                  <img src="../../../../assets/imgs/dummy_space1.png" />
+                </ng-template>
+                <ion-card-header>
+                  <ion-card-subtitle>{{item?.name}}</ion-card-subtitle>
+                  <ion-card-title>{{item?.spaceName}} ({{item?.storedItemInfo?.name}})</ion-card-title>
+                </ion-card-header>
+                <ion-card-content class="no-padding">
+                  <div class="card-content">
+                    ${{item?.pricing?.daily}}/<span>day</span>
+    
+                    <ion-icon name="share-social-outline" color="dark" style="font-size: 20px;" class="mr-l"
+                    (click)="shareByFacebook(space)"></ion-icon>
+    
+                  </div>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        </div>
+      </swiper-slide>
+      </swiper-container>
+    
+    <ng-template #noUnits>
+      <img class="img-spacetype-unit" src="../../../../assets/imgs/emptyList.png" />
+    
+      <div class="no-item-unit">
+        <p><b><h5>No Units...</h5></b></p>
+      </div>
+    </ng-template>
+    
+  </div>
+  </div>
+  <div>
+  </div>
+  <div class="content" *ngIf="!displayName">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <h3 class="top-heading">
+            Found {{placesList.length}}
+            <span *ngIf="placesList.length == 0 || placesList.length == 1 ">unit</span>
+            <span *ngIf="placesList.length > 1 ">unit's</span>
+          </h3>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <div *ngIf="placesList">
+      <unit-listing [units]="placesList" (unitClicked)='place($event)'></unit-listing>
+    </div>
+  </div>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <!-- Main FAB button -->
+    <ion-fab-button>
+      <ion-icon name="chevron-up-outline"></ion-icon>
+    </ion-fab-button>
+
+    <!-- FAB list for options -->
+    <ion-fab-list side="top">
+      <!-- Option 1 -->
+      <ion-fab-button (click)="optionClicked(1)">
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+
+      <!-- Option 2 -->
+      <ion-fab-button (click)="optionClicked(2)">
+        <ion-icon name="star"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+</ion-content>
+

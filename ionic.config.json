@@ -1,7 +1,8 @@
 {
   "name": "unit",
   "integrations": {
-    "capacitor": {}
+    "capacitor": {},
+    "cordova": {}
   },
   "type": "angular"
 }

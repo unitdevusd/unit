@@ -28,13 +28,22 @@ const routes: Routes = [
     path: 'intro',
     loadChildren: () => import('./intro/intro.module').then( m => m.IntroPageModule)
   },
+  // {
+  //   path: '**',
+  //   redirectTo: '',
+  //   pathMatch: 'full'
+  // },
   {
-    path: '**',
-    redirectTo: '',
-    pathMatch: 'full'
-  },  {
     path: 'filters',
     loadChildren: () => import('./filters/filters.module').then( m => m.FiltersPageModule)
+  },
+  {
+    path: 'profile',
+    loadChildren: () => import('./pages/profile/profile.module').then( m => m.ProfilePageModule)
+  },
+  {
+    path: 'spaces',
+    loadChildren: () => import('./pages/spaces/spaces.module').then( m => m.SpacesPageModule)
   }
 
 

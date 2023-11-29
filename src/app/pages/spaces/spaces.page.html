@@ -1,0 +1,88 @@
+<ion-content fullscreen class="ion-padding">
+  <div class="logo">
+      <img src="../../../../assets/imgs/logo.png">
+  </div>
+  <ion-grid>
+      <ion-row>
+          <ion-col size="12" class="ion-text-center">
+              <form class="form"  [formGroup]="spaceForm">
+
+                <ion-list mode="md">
+                  <ion-item mode="md">
+                    <ion-input
+                      formControlName="spaceLocation"
+                      placeholder="Search for Location"
+                      searchIcon=" "
+                      (ionInput)="searchLocation()"
+                      clearIcon=" "
+                      (ionFocus)="checkFocus()"
+                      (ionClear)="clearAutocomplete()"
+                    >
+                      <img src="../../../../assets/imgs/feather-search.png" />
+                    </ion-input>
+                  </ion-item>
+                </ion-list>
+              
+                    <div [hidden]="autocompleteItems.length == 0" class="search_list">
+                      <ion-list (click)="useCurrentLocation()" lines="none">
+                        <ion-item>
+                          <ion-label>
+                            <img  class="image-loc" style="margin-inline-end: 0px !important;" slot="start"
+                              src="../../../../assets/imgs/material-location-on.png" />
+                            <p class="main_text">Current Location</p>
+                          </ion-label>
+                        </ion-item>
+                      </ion-list>
+                      <ion-list [hidden]="autocompleteItems.length == 0" lines="none">
+                        <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
+                          <ion-label>
+                            <p class="secondary_text"> {{ item.structured_formatting.secondary_text }} </p>
+                          </ion-label>
+                        </ion-item>
+                      </ion-list>
+                    </div>
+                  
+              
+
+
+
+                    <ion-list mode="md">
+                      <ion-item mode="md">
+                        <ion-label>Space Type</ion-label>
+                        <ion-select formControlName="spaceType">
+                          <ion-select-option value="" selected disabled>Select Space Type</ion-select-option>
+                          <ion-select-option value="SMOOTH">Smooth Field</ion-select-option>
+                          <ion-select-option value="FIELD">Open Field</ion-select-option>
+                          <ion-select-option value="TILED">Tiled Space</ion-select-option>
+                        </ion-select>
+                      </ion-item>
+                    </ion-list>
+
+                  <ion-list mode="md">
+                    <ion-item mode="md">
+                      <ion-label position="floating">Upload Space Image</ion-label>
+                      <ion-input
+                        id="spaceImage"
+                        type="file"
+                        accept="image/*"
+                        (change)="onFileChange($event)"
+                        formControlName="spaceImage"
+                        style="margin-top: 16px;">
+                      
+                      </ion-input>
+                    </ion-item>
+                    
+                    <!-- <ion-item>
+    <ion-button (click)="openCamera()">Open Camera</ion-button>
+  </ion-item> -->
+</ion-list>
+
+  </form>
+              <ion-button class="button-h" fill="solid" size="default" shape="round" expand="block" color="primary"
+                  [disabled]="!spaceForm.valid" (click)="uploadSpace()">
+                  Add Space
+              </ion-button>
+          </ion-col>
+      </ion-row>
+  </ion-grid>
+</ion-content>

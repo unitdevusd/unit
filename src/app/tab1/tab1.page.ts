@@ -57,6 +57,8 @@ export class Tab1Page implements OnInit {
   user : string = 'User';
   clearFilter: boolean = false;
   firstName: string;
+  role: string;
+  userId: any;
 
 
   constructor(
@@ -76,7 +78,9 @@ export class Tab1Page implements OnInit {
       
       const userDetails = this.userService.getUserDetails();
       this.firstName = userDetails?.firstName || 'Guest';
-      console.log('First Name is '+this.firstName);
+      this.role = userDetails?.role;
+      this.userId = userDetails?.userId;
+      console.log('First Name is '+this.firstName+ ' and role is '+this.role);
     
       // get current location
     setTimeout(() =>{ 
@@ -87,28 +91,6 @@ export class Tab1Page implements OnInit {
     this.autocomplete = { input: '' };
     this.autocompleteItems = [];
 
-     // logout status
-     this._gs.getLogOut().subscribe(status =>{
-      if(status){
-        this.placeMeta();
-        this.displayName = true;
-        this.getPlacesList(this.filters);
-      }
-    });
-    
-    // this._gs.getData().subscribe(status =>{
-    //   if(status){
-    //     this.user = status.firstName +' '+ status.lastName;
-    //   }
-    // });
-
-    this._gs.getUpdatedTabs().subscribe(status => {
-      if(status){
-        this.token = status.token;
-        this.orgId = status.orgId;
-        this.displayName = true;
-      }
-    });
     this._gs.applyFilters().subscribe(filters =>{
       if(filters){
         console.log(filters);
@@ -121,14 +103,6 @@ export class Tab1Page implements OnInit {
       }
     });
 
-
-    // if(this.user == 'User'){
-    //   this.storage.get('user').then((user) => {
-    //     if (user) {
-    //       this.user = user.firstName +''+ user.lastName;
-    //     }
-    //   });
-    // }
   }
   getCurrentLocation() {
     this.geolocation.getCurrentPosition().then((resp) => {
@@ -352,7 +326,7 @@ export class Tab1Page implements OnInit {
   optionClicked(optionNumber: number) {
     switch (optionNumber) {
       case 1:
-        this.showToast('Try to add new space!');
+        this.router.navigate(['/spaces']);
         break;
       case 2:
         this.showToast('Try to star new space!');
@@ -371,6 +345,12 @@ export class Tab1Page implements OnInit {
       });
       toast.present();
     }
+  
+    getAllSpaces() {
+      const payload = { id: this.userId };
+      this._apiService.viewAllSpacesByUser(payload);
+    }
+
   
 }
 

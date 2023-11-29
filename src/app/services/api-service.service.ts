@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +9,9 @@ import { throwError } from 'rxjs';
 export class ApiService {
 
   jsonData: any;
+  private viewSpaces = 'http://localhost:8088/spaces/getSpaces';
+  private addSpaces = 'http://localhost:8088/spaces/add-space';
+
 
   constructor(public http: HttpClient) { }
 
@@ -74,6 +77,15 @@ export class ApiService {
           resolve({ success: false, message: error });
         });
     });
+  }
+
+
+  viewAllSpacesByUser(payload: any): Observable<any> {
+    return this.http.post(this.viewSpaces, payload);
+  }
+
+  uploadSpace(payload: any): Observable<any> {
+    return this.http.post(this.addSpaces, payload);
   }
 
 
