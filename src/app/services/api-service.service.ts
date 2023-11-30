@@ -11,6 +11,8 @@ export class ApiService {
   jsonData: any;
   private viewSpaces = 'http://localhost:8088/spaces/getSpaces';
   private addSpaces = 'http://localhost:8088/spaces/add-space';
+  private spacesAround = 'http://localhost:8088/map/getnearestlocations';
+  private findSpace = 'http://localhost:8088/spaces/findById';
 
 
   constructor(public http: HttpClient) { }
@@ -86,6 +88,14 @@ export class ApiService {
 
   uploadSpace(payload: any): Observable<any> {
     return this.http.post(this.addSpaces, payload);
+  }
+
+  getSpacesAround(payload: any): Observable<any> {
+    return this.http.post(this.spacesAround, payload);
+  }
+
+  getSpaceBySpaceId(payload: any): Observable<any> {
+    return this.http.post(this.findSpace, payload);
   }
 
 

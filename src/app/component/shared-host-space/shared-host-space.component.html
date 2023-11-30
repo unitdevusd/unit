@@ -1,3 +1,37 @@
-<p>
-  shared-host-space works!
-</p>
+<!-- <ng-container *ngIf="spaces && spaces.length > 0; else noSpaces"> -->
+  <swiper-container *ngIf="spaces && spaces.length > 0; else noSpaces" [slidesPerView]="3" [loop]="true" [spaceBetween]="10">
+    <!-- <ng-container *ngFor="let item of spaces"> -->
+    <swiper-slide *ngFor="let item of spaces">
+      <!-- <div (click)="spaceClick(item)"> -->
+        <div>
+        <ion-row>
+          <ion-col>
+            <div class="main">
+              <img class="img-spacetype" *ngIf="item?.images !== null; else noImage" 
+              [src]="item.spaceImage" />
+              <ng-template #noImage>
+                <img class="img-spacetype" src="../../../../assets/imgs/dummys.png" />
+              </ng-template>
+            </div>
+            <span class="space-span">{{ item.spaceLocation }}</span>
+          </ion-col>
+        </ion-row>
+      </div>
+      </swiper-slide>
+    </swiper-container>
+    <!-- </ng-container>
+  </ng-container> -->
+  
+  <ng-template #noSpaces>
+    <img class="img-spacetype-data" src="../../../../assets/imgs/dummy_space.png" />
+  
+    <div class="no-item">
+      <p><b><h5>No Data for now. Please try again later</h5></b></p>
+    </div>
+  </ng-template>
+  
+  <div class="clear" *ngIf="clearFilter">
+    <p>
+      <a style="color: red;" (click)="clearFilters()">clear filters</a>
+    </p>
+  </div>

@@ -1,4 +1,4 @@
-<swiper-container *ngIf="units && units.length > 0; else noUnits">
+<swiper-container *ngIf="units && units.length > 0; else noUnits" [slidesPerView]="1" [loop]="true" [spaceBetween]="10">
     <swiper-slide *ngFor="let item of units" (click)="place(item)"
   style="width: 100px; height: 370px; border: 2px solid #f8f8f8">
     <div (click)="place(item)">
@@ -6,17 +6,17 @@
       <ion-row>
         <ion-col>
           <ion-card class="card_features ion-no-padding">
-            <img *ngIf="item?.images?.length; else noimage" src="{{item.images[0]}}" />
+            <img *ngIf="item?.images !== null; else noimage" [src]="item.spaceImage" />
             <ng-template #noimage>
               <img src="../../../../assets/imgs/dummy_space1.png" />
             </ng-template>
             <ion-card-header>
-              <ion-card-subtitle>{{item?.name}}</ion-card-subtitle>
-              <ion-card-title>{{item?.spaceName}} ({{item?.storedItemInfo?.name}})</ion-card-title>
+              <ion-card-subtitle>{{item?.description}}</ion-card-subtitle>
+              <ion-card-title>{{item?.spaceType}} ({{item?.spaceLocation}})</ion-card-title>
             </ion-card-header>
             <ion-card-content class="no-padding">
               <div class="card-content">
-                ${{item?.pricing?.daily}}/<span>day</span>
+                <span>$</span>${{item?.chargePerDay}}/<span>day</span>
 
                 <ion-icon name="share-social-outline" color="dark" style="font-size: 20px;" class="mr-l"
                 (click)="shareByFacebook(space)"></ion-icon>
@@ -35,7 +35,7 @@
   <img class="img-spacetype-unit" src="../../../../assets/imgs/emptyList.png" />
 
   <div class="no-item-unit">
-    <p><b><h5>No Data for now. Please try again later</h5></b></p>
+    <p><b><h5>No Units</h5></b></p>
   </div>
 </ng-template>
 

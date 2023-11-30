@@ -1,6 +1,6 @@
 import { Component, ElementRef, NgZone, OnInit, ViewChild } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
-import { IonicSlides, IonSearchbar, ModalController, ToastController } from '@ionic/angular';
+import { IonicSlides, IonSearchbar, LoadingController, ModalController, ToastController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api-service.service';
 import { GlobalService } from 'src/app/services/global.service';
 import { ToastService } from 'src/app/services/toast.service';
@@ -35,7 +35,9 @@ export class Tab1Page implements OnInit {
   
   url: any = 'https://gur.sandbox.imkloud.com';
   spaceType: any[];
+  spaces: any[];
   placesList: any = [];
+  placesAround: any = [];
   units: any = [];
   today: any = Date.now();
   filters: any = {};
@@ -73,7 +75,8 @@ export class Tab1Page implements OnInit {
     private nativeGeocoder: NativeGeocoder,
     public zone: NgZone,
     public modalCtrl : ModalController,
-    private userService : UserService
+    private userService : UserService,
+    private loadingController : LoadingController
     ) {
       
       const userDetails = this.userService.getUserDetails();
@@ -86,22 +89,24 @@ export class Tab1Page implements OnInit {
     setTimeout(() =>{ 
       this.getCurrentLocation();
     }, 1500);
-    
+
+    this.getMySpaces();
+    this.getSpacesAround();
     this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
     this.autocomplete = { input: '' };
     this.autocompleteItems = [];
 
-    this._gs.applyFilters().subscribe(filters =>{
-      if(filters){
-        console.log(filters);
-        this.zone.run(()=>{
-            this.filters = filters.refresh;
-          this.getPlacesList(this.filters);
-         this.displayName = true;
-         this.clearFilter= false;
-       });
-      }
-    });
+    // this._gs.applyFilters().subscribe(filters =>{
+    //   if(filters){
+    //     console.log(filters);
+    //     this.zone.run(()=>{
+    //         this.filters = filters.refresh;
+    //       this.getPlacesList(this.filters);
+    //      this.displayName = true;
+    //      this.clearFilter= false;
+    //    });
+    //   }
+    // });
 
   }
   getCurrentLocation() {
@@ -110,14 +115,10 @@ export class Tab1Page implements OnInit {
       this.lat = resp.coords.latitude;
       this.long = resp.coords.longitude;
       this.getAddressFromCoords(resp.coords.latitude, resp.coords.longitude);
+
     });
   }
 
-  useCurrentLocation(){
-    if(this.lat && this.long){
-      this.filters['location'] = [this.lat,this.long];
-    }
-  }
 
   getAddressFromCoords(latitude: number, longitude: number) {
     console.log("getAddressFromCoords " + latitude + " " + longitude);
@@ -146,6 +147,14 @@ export class Tab1Page implements OnInit {
         this.address = "Address Not Available!";
       });
   }
+
+
+  useCurrentLocation(){
+    if(this.lat && this.long){
+      this.filters['location'] = [this.lat,this.long];
+    }
+  }
+
 
   getPlacesList(filters: any) {
     this._loader.present();
@@ -242,12 +251,15 @@ export class Tab1Page implements OnInit {
   }
 
   place(place: any) {
+    console.log('Place is '+place.spaceLocation);
     let navigationExtras: NavigationExtras = {
-      queryParams: {
-        special: JSON.stringify(place)
+      state: {
+        place: place
       }
     };
-    this.router.navigate(['place-detail'], navigationExtras);
+    this.router.navigateByUrl(`/space-detail/${place.spaceId}`, { replaceUrl: true });
+
+    // this.router.navigate(['place-detail'], navigationExtras);
   }
 
 
@@ -320,7 +332,7 @@ export class Tab1Page implements OnInit {
   }
 
   addClicked() {
-    console.log('Add button clicked!');
+    this.router.navigate(['/spaces']);
   }
 
   optionClicked(optionNumber: number) {
@@ -351,6 +363,72 @@ export class Tab1Page implements OnInit {
       this._apiService.viewAllSpacesByUser(payload);
     }
 
+
+
+    async getMySpaces() {
+
+      try {
+        console.log('Retrieving list of spaces created')
+        const loading = await this.loadingController.create();
+        await loading.present();
+    
+        if (this.userId) {
+          const spaceData = {"userId" : this.userId};
+          this._apiService.viewAllSpacesByUser(spaceData).subscribe(
+            (response: any) => {
+              loading.dismiss();
+              console.log('Response is '+response[0].spaceImage);
+              this.spaces = response
+            },
+            (error: any) => {
+              console.error(error);
+              loading.dismiss();
+              this.showToast('Unable to fetch spaces');
+              
+              // this.showErrorAlert('Unexpected error occurred');
+            }
+          );
+        }
+      } catch (error) {
+        console.error(error);
+      }
+  
+  
+    }
+
+
+
+    async getSpacesAround() {
+
+      try {
+        console.log('Retrieving list of spaces around me')
+        const loading = await this.loadingController.create();
+        await loading.present();
+    
+        if (this.userId) {
+          const spaceData = {"latitude" : this.lat, "longitude" : this.long};
+          this._apiService.getSpacesAround(spaceData).subscribe(
+            (response: any) => {
+              loading.dismiss();
+              console.log('Space around me is '+response[0].spaceLocation);
+              this.placesAround = response
+            },
+            (error: any) => {
+              console.error(error);
+              loading.dismiss();
+              this.showToast('Unable to fetch spaces');             
+              // this.showErrorAlert('Unexpected error occurred');
+            }
+          );
+        }
+      } catch (error) {
+        console.error(error);
+      }
+  
+  
+    }
+
+  
   
 }
 

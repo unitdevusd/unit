@@ -1,0 +1,74 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Property Details</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Card with image and "Click to book slot" button -->
+  <ion-card>
+    <ion-img [src]="place.spaceImage"></ion-img>
+    <ion-card-content>
+      <ion-card-title>Lit garage - 10 minute walk from Redbull</ion-card-title>
+      <ion-button expand="full">Click to book slot</ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Card with Description and Read more -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Description</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <!-- Your content goes here -->
+      <!-- Example content -->
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+      Curabitur sed velit nec metus fringilla hendrerit.
+      <ion-button >Read more</ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Card with House Rules -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>House Rules</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <!-- List of house rules -->
+      <ion-list>
+        <ion-item>
+          <ion-label>No smoking</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>No pets allowed</ion-label>
+        </ion-item>
+        <!-- Add more rules as needed -->
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Card with dummy map -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Location</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <!-- Add your map component here (e.g., Google Maps) -->
+      <!-- Example: -->
+      <ion-img src="path/to/dummy/map.png"></ion-img>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Card with user image, host name, and "Contact Host" button -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Hosted By</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-img src="path/to/user/image.jpg"></ion-img>
+      <ion-label>Hosted By Alex</ion-label>
+      <ion-button fill="outline" slot="end">Contact Host</ion-button>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

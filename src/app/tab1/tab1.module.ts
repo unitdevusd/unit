@@ -6,6 +6,7 @@ import { Tab1Page } from './tab1.page';
 import { Tab1PageRoutingModule } from './tab1-routing.module';
 import { SharedSpaceTypeSliderComponent } from '../component/shared-space-type-slider/shared-space-type-slider.component';
 import { UnitListingComponent } from '../component/unit-listing/unit-listing.component';
+import { SharedHostSpaceComponent } from '../component/shared-host-space/shared-host-space.component';
 
 @NgModule({
   imports: [
@@ -14,7 +15,7 @@ import { UnitListingComponent } from '../component/unit-listing/unit-listing.com
     FormsModule,
     Tab1PageRoutingModule
   ],
-  declarations: [Tab1Page, SharedSpaceTypeSliderComponent, UnitListingComponent],
+  declarations: [Tab1Page, SharedSpaceTypeSliderComponent, UnitListingComponent, SharedHostSpaceComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 
 })

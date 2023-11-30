@@ -44,7 +44,12 @@ const routes: Routes = [
   {
     path: 'spaces',
     loadChildren: () => import('./pages/spaces/spaces.module').then( m => m.SpacesPageModule)
+  },
+  {
+    path: 'space-detail/:spaceId',
+    loadChildren: () => import('./pages/space-detail/space-detail.module').then( m => m.SpaceDetailPageModule)
   }
+
 
 
 ];
