@@ -57,6 +57,8 @@ export class SpacesPage implements OnInit {
       userId: this.userId,
       spaceType: new FormControl("", Validators.required),
       spaceImage: new FormControl(""),
+      description: new FormControl("", Validators.required),
+      chargePerDay: new FormControl("", Validators.required),
     });
     setTimeout(() =>{ 
       this.getCurrentLocation();

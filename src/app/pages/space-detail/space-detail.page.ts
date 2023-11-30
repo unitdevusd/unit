@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoadingController, ToastController } from '@ionic/angular';
+import { LoadingController, ModalController, ToastController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api-service.service';
+import { ContactHostModalPage } from '../contact-host-modal/contact-host-modal.page';
+
+
 
 @Component({
   selector: 'app-space-detail',
@@ -10,21 +14,28 @@ import { ApiService } from 'src/app/services/api-service.service';
 })
 export class SpaceDetailPage implements OnInit {
 
+  public sanitizedUrl: SafeResourceUrl;
   spaceId: any;
   place: any;
+  owner: any;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private _apiService: ApiService,
     private toastController: ToastController,
-    private loadingController: LoadingController
+    private loadingController: LoadingController,
+    private sanitizer: DomSanitizer,
+    private modalController: ModalController,
   ) { 
     this.spaceId = this.route.snapshot.paramMap.get('spaceId');
-
     console.log('Space ID is '+this.spaceId);
-
     this.getSpaceById();
+    // const url = `https://www.google.com/maps/embed/v1/view?key=AIzaSyCZme7cYLG7jnK4Cn8ZFnQJDUKPNwIsfqI&center=41.8781136,-87.6297982&zoom=15&output=embed`;
+    const url = `https://maps.google.com/maps?q=41.8781136,-87.6297982&z=10&output=embed`;
+
+    this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+
 
   }
 
@@ -44,7 +55,8 @@ export class SpaceDetailPage implements OnInit {
           (response: any) => {
             loading.dismiss();
             console.log('Space Location is '+response.spaceLocation);
-            this.place = response
+            console.log('Space image is '+response.spaceImage);
+            this.place = response;
           },
           (error: any) => {
             console.error(error);
@@ -60,6 +72,7 @@ export class SpaceDetailPage implements OnInit {
 
   }
 
+
   async showToast(message: any) {
     const toast = await this.toastController.create({
       message: message,
@@ -67,6 +80,16 @@ export class SpaceDetailPage implements OnInit {
       position: 'bottom',
     });
     toast.present();
+  }
+
+
+  async openContactHostModal() {
+    const modal = await this.modalController.create({
+      component: ContactHostModalPage,
+      cssClass: 'half-modal',
+    });
+  
+    return await modal.present();
   }
 
 

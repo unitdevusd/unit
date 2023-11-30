@@ -13,6 +13,7 @@
   },
   "private": true,
   "dependencies": {
+    "@agm/core": "^3.0.0-beta.0",
     "@angular/animations": "^16.0.0",
     "@angular/common": "^16.0.0",
     "@angular/compiler": "^16.0.0",
@@ -43,7 +44,6 @@
     "@ionic/storage": "^4.0.0",
     "@ionic/storage-angular": "^4.0.0",
     "@ngtools/webpack": "^17.0.3",
-    "@types/googlemaps": "^3.43.3",
     "@types/swiper": "^6.0.0",
     "firebase": "^9.16.0",
     "ion2-calendar": "^3.5.0",
@@ -66,6 +66,7 @@
     "@angular/language-service": "^16.0.0",
     "@capacitor/cli": "5.4.1",
     "@ionic/angular-toolkit": "^9.0.0",
+    "@types/googlemaps": "^3.39.13",
     "@types/jasmine": "~4.3.0",
     "@types/node": "^12.20.55",
     "@typescript-eslint/eslint-plugin": "5.3.0",

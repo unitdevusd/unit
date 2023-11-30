@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { SpaceDetailPageRoutingModule } from './space-detail-routing.module';
 
 import { SpaceDetailPage } from './space-detail.page';
+import { AgmCoreModule } from '@agm/core';
+
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    SpaceDetailPageRoutingModule
+    SpaceDetailPageRoutingModule,
   ],
   declarations: [SpaceDetailPage]
 })
