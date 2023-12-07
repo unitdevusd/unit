@@ -257,7 +257,7 @@ export class Tab1Page implements OnInit {
         place: place
       }
     };
-    this.router.navigateByUrl(`/space-detail/${place.spaceId}`, { replaceUrl: true });
+    this.router.navigateByUrl(`/space-detail/${place.spaceId}`);
 
     // this.router.navigate(['place-detail'], navigationExtras);
   }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ModalController, NavParams } from '@ionic/angular';
 
 @Component({
   selector: 'app-contact-host-modal',
@@ -7,7 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ContactHostModalPage implements OnInit {
 
-  constructor() { }
+  place: any;
+
+
+  constructor(
+    private modalController: ModalController,
+    private navParams: NavParams,
+  ) { 
+    this.place = this.navParams.get('place');
+  }
+
+  dismiss() {
+    this.modalController.dismiss();
+  }
 
   ngOnInit() {
   }

@@ -1,4 +1,4 @@
-<swiper-container *ngIf="units && units.length > 0; else noUnits" [slidesPerView]="1" [loop]="true" [spaceBetween]="10">
+<swiper-container *ngIf="units && units.length > 0; else noUnits" [slidesPerView]="1" [loop]="true" [spaceBetween]="4">
     <swiper-slide *ngFor="let item of units" (click)="place(item)"
   style="width: 100px; height: 370px; border: 2px solid #f8f8f8">
     <div (click)="place(item)">

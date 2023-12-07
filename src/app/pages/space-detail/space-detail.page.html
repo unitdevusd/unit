@@ -1,8 +1,12 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
     <ion-title class="title-class">Property Details</ion-title>
   </ion-toolbar>
 </ion-header>
+
 
 <ion-content>
   <!-- Card with image and "Click to book slot" button -->
@@ -25,13 +29,14 @@
     <ion-card-header>
       <ion-card-title>Description</ion-card-title>
     </ion-card-header>
-    <ion-card-content *ngIf="place.description !== null">
+    <ion-card-content *ngIf="place?.description !== null && place?.description; else nodescription">
       {{ place.description }}
+      <ng-template #nodescription>
+        <b>No Content available</b>
+      </ng-template>
       <a href="#" ion-text color="primary">Read more</a>
     </ion-card-content>
-    <ion-card-content *ngIf="place.description === null">
-      No description available
-    </ion-card-content>  </ion-card>
+  </ion-card>
 
   <!-- Card with House Rules -->
   <ion-card no-padding>

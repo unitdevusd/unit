@@ -183,7 +183,8 @@ export class SpacesPage implements OnInit {
             console.log('Response is '+response.code);
   
             if (response.code !== "00") {
-              this.showErrorAlert(response.message);    
+              this.showErrorAlert(response.message); 
+              this.router.navigateByUrl('/tabs', { replaceUrl: true });                
             } else {
               this.showSuccessAlert(response.message);
               setTimeout(() => {

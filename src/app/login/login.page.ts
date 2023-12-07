@@ -97,7 +97,7 @@ export class LoginPage implements OnInit {
   
       if (this.loginForm.value) {
         const loginData = this.loginForm.value;
-        this.authService.authenticateUser(loginData).subscribe(
+        await this.authService.authenticateUser(loginData).subscribe(
           (response: any) => {
             loading.dismiss();
             console.log('Response is '+response.email);
@@ -107,9 +107,7 @@ export class LoginPage implements OnInit {
             } else {
               this.userService.setUserDetails(response);
               this.showSuccessAlert();
-              setTimeout(() => {
-                this.router.navigateByUrl('/tabs', { replaceUrl: true });             
-              }, 2000);              
+                this.router.navigateByUrl('/tabs');               
             }
           },
           (error: any) => {

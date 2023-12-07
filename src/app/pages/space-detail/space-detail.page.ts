@@ -18,6 +18,7 @@ export class SpaceDetailPage implements OnInit {
   spaceId: any;
   place: any;
   owner: any;
+  nodescription: boolean;
 
   constructor(
     private router: Router,
@@ -29,7 +30,6 @@ export class SpaceDetailPage implements OnInit {
     private modalController: ModalController,
   ) { 
     this.spaceId = this.route.snapshot.paramMap.get('spaceId');
-    console.log('Space ID is '+this.spaceId);
     this.getSpaceById();
     // const url = `https://www.google.com/maps/embed/v1/view?key=AIzaSyCZme7cYLG7jnK4Cn8ZFnQJDUKPNwIsfqI&center=41.8781136,-87.6297982&zoom=15&output=embed`;
     const url = `https://maps.google.com/maps?q=41.8781136,-87.6297982&z=10&output=embed`;
@@ -54,8 +54,6 @@ export class SpaceDetailPage implements OnInit {
         this._apiService.getSpaceBySpaceId(spaceData).subscribe(
           (response: any) => {
             loading.dismiss();
-            console.log('Space Location is '+response.spaceLocation);
-            console.log('Space image is '+response.spaceImage);
             this.place = response;
           },
           (error: any) => {
@@ -86,10 +84,15 @@ export class SpaceDetailPage implements OnInit {
   async openContactHostModal() {
     const modal = await this.modalController.create({
       component: ContactHostModalPage,
-      cssClass: 'half-modal',
+      breakpoints: [0,5],
+      initialBreakpoint: 0.5,
+      handle: false,
+      componentProps: {
+        place: this.place,
+      },
     });
   
-    return await modal.present();
+    await modal.present();
   }
 
 
