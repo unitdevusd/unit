@@ -148,6 +148,12 @@
         --ion-color-headercolor-shade:#455585;
         --ion-color-headercolor-tint:#455585;
       }
+
+      // Dark mode
+    .dark-theme {
+      --ion-background-color: #121212;
+      --ion-text-color: #ffffff;
+    }
       
       .ion-color-headercolor {
         --ion-color-base: var(--ion-color-headercolor);

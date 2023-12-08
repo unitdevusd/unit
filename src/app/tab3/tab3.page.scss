@@ -1,0 +1,10 @@
+.title-and-logo {
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo img {
+    width: 32px; /* Adjust the width as needed */
+    height: 32px; /* Adjust the height as needed */
+    margin-left: 8px; /* Add some spacing between title and logo */
+  }
