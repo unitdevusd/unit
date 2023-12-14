@@ -5,6 +5,7 @@ import { LoadingController, ModalController, ToastController } from '@ionic/angu
 import { ApiService } from 'src/app/services/api-service.service';
 import { ContactHostModalPage } from '../contact-host-modal/contact-host-modal.page';
 import { StripeService } from 'src/app/services/stripe.service';
+import { UserService } from 'src/app/services/user.service';
 
 
 
@@ -21,6 +22,8 @@ export class SpaceDetailPage implements OnInit {
   owner: any;
   nodescription: boolean;
   bookingButtonText: string;
+  userDetails: any;
+  userId: any;
 
   constructor(
     private router: Router,
@@ -31,7 +34,11 @@ export class SpaceDetailPage implements OnInit {
     private sanitizer: DomSanitizer,
     private modalController: ModalController,
     private stripeService: StripeService,
+    private userService : UserService,
   ) { 
+    this.userDetails = this.userService.getUserDetails();
+    this.userId = this.userDetails?.userId;
+
     this.spaceId = this.route.snapshot.paramMap.get('spaceId');
     this.getSpaceById();
     // const url = `https://www.google.com/maps/embed/v1/view?key=AIzaSyCZme7cYLG7jnK4Cn8ZFnQJDUKPNwIsfqI&center=41.8781136,-87.6297982&zoom=15&output=embed`;
@@ -58,7 +65,7 @@ export class SpaceDetailPage implements OnInit {
           (response: any) => {
             loading.dismiss();
             this.place = response;
-            this.bookingButtonText = 'Click to book space';
+            this.bookingButtonText = 'Click to book space'
           },
           (error: any) => {
             console.error(error);
@@ -91,12 +98,11 @@ export class SpaceDetailPage implements OnInit {
 
 
 async bookSpace() {
-  const spaceData = {"spaceId" : this.spaceId, "bookingStatus" : "BOOKED"};
+  const spaceData = {"spaceId" : this.spaceId, "bookingStatus" : "BOOKED", "userId" : this.userDetails?.userId};
   this._apiService.bookSpace(spaceData).subscribe(
     (response: any) => {
       console.log(response.message);
       this.bookingButtonText = 'Successfully booked';
-      this.router.navigateByUrl('/tabs');
     },
     (error: any) => {
       console.error(error);

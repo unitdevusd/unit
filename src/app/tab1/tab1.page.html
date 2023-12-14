@@ -55,8 +55,13 @@
     </ion-list>
   </div>
 
+  <!-- <div class="content" *ngIf="userDetails?.role === 'HOST'">
+
     <shared-space-type-slider [spaces]="spaceType" (clearAll)="clearFilters()" (spaceSelected)="spaceClick($event)">
     </shared-space-type-slider> 
+
+    </div> -->
+
   <div class="content">
     <ion-grid>
       <ion-row>
@@ -66,62 +71,12 @@
       </ion-row>
     </ion-grid>
 
-    <!-- <div *ngIf="placesList.length"> -->
     <div>
       <app-unit-listing [units]="placesAround" (unitClicked)='place($event)'></app-unit-listing>
     </div>
   </div>
-  <!-- <ion-grid class="ion-no-padding" *ngIf="displayName">
-    <ion-row class="ion-no-padding">
-      <ion-col>
-        <h3 class="top-heading-popular">Popular</h3>
-      </ion-col>
-    </ion-row>
-  </ion-grid> -->
-  <!-- <div *ngIf="displayName"> -->
   <div>
-    <!-- <unit-listing [units]="placesList" (unitClicked)='place($event)'></unit-listing> -->
   </div>
-  <!--filter Results-->
-  <!-- <div class="content" *ngIf="!displayName"> -->
-  <div class="content" *ngIf="!displayName">
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <h3 class="top-heading">
-            Found {{placesList.length}}
-            <span *ngIf="placesList.length == 0 || placesList.length == 1 ">unit</span>
-            <span *ngIf="placesList.length > 1 ">unit's</span>
-          </h3>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-    <div *ngIf="placesList">
-      <unit-listing [units]="placesList" (unitClicked)='place($event)'></unit-listing>
-    </div>
-  </div>
-
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="addClicked()">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
-
-  <!-- <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button>
-      <ion-icon name="chevron-up-outline"></ion-icon>
-    </ion-fab-button>
-
-    <ion-fab-list side="top">
-      <ion-fab-button (click)="optionClicked(1)">
-        <ion-icon name="add"></ion-icon>
-      </ion-fab-button>
-
-      <ion-fab-button (click)="optionClicked(2)">
-        <ion-icon name="star"></ion-icon>
-      </ion-fab-button>
-    </ion-fab-list>
-  </ion-fab> -->
 </ion-content>
 
 
@@ -182,9 +137,7 @@
 
 </div>
   </div>
-    <!-- <shared-space-type-slider [spaces]="spaceType" (clearAll)="clearFilters()" (spaceSelected)="spaceClick($event)">
-    </shared-space-type-slider>  -->
-  <div class="content">
+  <!-- <div class="content">
     <ion-grid>
       <ion-row>
         <ion-col>
@@ -196,10 +149,10 @@
     <div>
           <app-unit-listing [units]="placesAround" (unitClicked)='place($event)'></app-unit-listing>
   </div>
-  </div>
+  </div> -->
   <div>
   </div>
-  <div class="content" *ngIf="!displayName">
+  <!-- <div class="content" *ngIf="!displayName">
     <ion-grid>
       <ion-row>
         <ion-col>
@@ -214,7 +167,7 @@
     <div *ngIf="placesList">
       <unit-listing [units]="placesList" (unitClicked)='place($event)'></unit-listing>
     </div>
-  </div>
+  </div> -->
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button (click)="addClicked()">

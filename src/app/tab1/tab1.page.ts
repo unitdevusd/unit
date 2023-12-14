@@ -61,6 +61,7 @@ export class Tab1Page implements OnInit {
   firstName: string;
   role: string;
   userId: any;
+  userDetails: any;
 
 
   constructor(
@@ -78,37 +79,28 @@ export class Tab1Page implements OnInit {
     private userService : UserService,
     private loadingController : LoadingController
     ) {
-      
-      const userDetails = this.userService.getUserDetails();
-      this.firstName = userDetails?.firstName || 'Guest';
-      this.role = userDetails?.role;
-      this.userId = userDetails?.userId;
-      console.log('First Name is '+this.firstName+ ' and role is '+this.role);
-    
-      // get current location
+    this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
+    this.autocomplete = { input: '' };
+    this.autocompleteItems = [];
+  }
+
+  ionViewWillEnter() {
+
+    this.userDetails = this.userService.getUserDetails();
+    this.firstName = this.userDetails?.firstName || 'Guest';
+    this.role = this.userDetails?.role;
+    this.userId = this.userDetails?.userId;
+    console.log('First Name is '+this.firstName+ ' and role is '+this.role);
+
     setTimeout(() =>{ 
       this.getCurrentLocation();
     }, 1500);
 
     this.getMySpaces();
     this.getSpacesAround();
-    this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
-    this.autocomplete = { input: '' };
-    this.autocompleteItems = [];
-
-    // this._gs.applyFilters().subscribe(filters =>{
-    //   if(filters){
-    //     console.log(filters);
-    //     this.zone.run(()=>{
-    //         this.filters = filters.refresh;
-    //       this.getPlacesList(this.filters);
-    //      this.displayName = true;
-    //      this.clearFilter= false;
-    //    });
-    //   }
-    // });
 
   }
+
   getCurrentLocation() {
     this.geolocation.getCurrentPosition().then((resp) => {
       console.log('Response from getCurrentLocation is '+resp.coords.latitude+ " and "+resp.coords.longitude);
@@ -156,65 +148,65 @@ export class Tab1Page implements OnInit {
   }
 
 
-  getPlacesList(filters: any) {
-    this._loader.present();
-    const params = {
-      filters,
-    };
-    console.log('Param is '+params);
-    console.log('Sending places list request');
-    this._apiService.postRequest(this.url + '/api/v1/unit/spaces',
-      params)
-      .subscribe(
-        async (result) => {
-          console.log('Result is '+result.status);
-          if (result.success) {
-            this._loader.dismiss();
-            this.placesList = result.data.list;
-            console.log('Places list is '+this.placesList);
-          }else{
-            this._loader.dismiss();
-            console.log('err', result);
-          }
-        }
-      ), (error: any) => {
-        this._loader.dismiss();
-        console.log('error', error)
-      }
-  }
+  // getPlacesList(filters: any) {
+  //   this._loader.present();
+  //   const params = {
+  //     filters,
+  //   };
+  //   console.log('Param is '+params);
+  //   console.log('Sending places list request');
+  //   this._apiService.postRequest(this.url + '/api/v1/unit/spaces',
+  //     params)
+  //     .subscribe(
+  //       async (result) => {
+  //         console.log('Result is '+result.status);
+  //         if (result.success) {
+  //           this._loader.dismiss();
+  //           this.placesList = result.data.list;
+  //           console.log('Places list is '+this.placesList);
+  //         }else{
+  //           this._loader.dismiss();
+  //           console.log('err', result);
+  //         }
+  //       }
+  //     ), (error: any) => {
+  //       this._loader.dismiss();
+  //       console.log('error', error)
+  //     }
+  // }
   
-  placeMeta() {
-    console.log('Checking place meta');
-    const params = {
-      apiKey: 'rGpTKMEZjs3RR5vcfwg6pujoA54i33'
-    };
-    this._apiService.postRequest(this.url + '/api/v1/unit/placeMeta', params).subscribe(
-      async (result) => {
-        console.log('Result is '+result);
-        if (result.success) {
-          console.log(result);
-          this.spaceType = result.data.list.spaceType;
-        } else {
-          this._toast.presentToast(result.message);
-        }
-      });
-  }
+  // placeMeta() {
+  //   console.log('Checking place meta');
+  //   const params = {
+  //     apiKey: 'rGpTKMEZjs3RR5vcfwg6pujoA54i33'
+  //   };
+  //   this._apiService.postRequest(this.url + '/api/v1/unit/placeMeta', params).subscribe(
+  //     async (result) => {
+  //       console.log('Result is '+result);
+  //       if (result.success) {
+  //         console.log(result);
+  //         this.spaceType = result.data.list.spaceType;
+  //       } else {
+  //         this._toast.presentToast(result.message);
+  //       }
+  //     });
+  // }
 
   ngOnInit() {
-    this.placeMeta();
-    this.setIcon();
-    this.getPlacesList(this.filters);
+    // this.placeMeta();
+    // this.setIcon();
+    // this.getPlacesList(this.filters);
   }
 
-  setIcon() {
-    if (Object.keys(this.filters).length === 0) {
-      this.hasFilter = false;
-      this.displayName = true;
-    } else {
-      this.hasFilter = true;
-      this.displayName = false;
-    }
-  }
+  // setIcon() {
+  //   if (Object.keys(this.filters).length === 0) {
+  //     this.hasFilter = false;
+  //     this.displayName = true;
+  //   } else {
+  //     this.hasFilter = true;
+  //     this.displayName = false;
+  //   }
+  // }
 
 
   searchLocation() {
@@ -267,8 +259,8 @@ export class Tab1Page implements OnInit {
     console.log(item);
     this.filters['spaceType'] = item ? item : [];
     console.log(this.filters);
-    this.setIcon();
-    this.getPlacesList(this.filters);
+    // this.setIcon();
+    // this.getPlacesList(this.filters);
   }
 
   selectSearchResult(item: any) {
@@ -278,7 +270,7 @@ export class Tab1Page implements OnInit {
     this.getLatLOng(item.description).then(location =>{
       this.filters['location'] = [location[0]['longitude'],location[0]['latitude']];
       console.log(this.filters);
-      this.getPlacesList(this.filters);
+      // this.getPlacesList(this.filters);
     });
   }
 
@@ -320,7 +312,7 @@ export class Tab1Page implements OnInit {
     this.zone.run(()=>{
        this.spaceType.map( x=> x.status = false);
        this.filters = {};
-       this.getPlacesList(this.filters);
+      //  this.getPlacesList(this.filters);
       this.displayName = true;
       this.clearFilter= false;
     });

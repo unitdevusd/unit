@@ -14,7 +14,8 @@ export class ApiService {
   private spacesAround = 'http://localhost:8088/map/getnearestlocations';
   private findSpace = 'http://localhost:8088/spaces/findById';
   private bookSpaceUrl = 'http://localhost:8088/spaces/book-space';
-  private updateRoleUrl = 'http://localhost:8088/users/updateUserRole'
+  private updateRoleUrl = 'http://localhost:8088/users/updateUserRole';
+  private tenantSpacesUrl = 'http://localhost:8088/spaces/getbookedspaces';
 
 
   constructor(public http: HttpClient) { }
@@ -105,6 +106,10 @@ export class ApiService {
   }
 
   updateUserRole(payload: any): Observable<any> {
+    return this.http.post(this.updateRoleUrl, payload);
+  }
+
+  fetchTenantSpaces(payload: any): Observable<any> {
     return this.http.post(this.updateRoleUrl, payload);
   }
 

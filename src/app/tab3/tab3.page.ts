@@ -33,6 +33,8 @@ export class Tab3Page {
     this.firstName = this.userDetails?.firstName || 'Guest';
     this.role = this.userDetails?.role;
     this.userId = this.userDetails?.userId;
+    this.hostToggle = false;
+    this.tenantToggle = false;
     console.log('First Name is ' + this.firstName + ' and role is ' + this.role);
   }
 
