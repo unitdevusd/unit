@@ -13,6 +13,8 @@ export class ApiService {
   private addSpaces = 'http://localhost:8088/spaces/add-space';
   private spacesAround = 'http://localhost:8088/map/getnearestlocations';
   private findSpace = 'http://localhost:8088/spaces/findById';
+  private bookSpaceUrl = 'http://localhost:8088/spaces/book-space';
+  private updateRoleUrl = 'http://localhost:8088/users/updateUserRole'
 
 
   constructor(public http: HttpClient) { }
@@ -98,5 +100,12 @@ export class ApiService {
     return this.http.post(this.findSpace, payload);
   }
 
+  bookSpace(payload: any): Observable<any> {
+    return this.http.post(this.bookSpaceUrl, payload);
+  }
+
+  updateUserRole(payload: any): Observable<any> {
+    return this.http.post(this.updateRoleUrl, payload);
+  }
 
 }

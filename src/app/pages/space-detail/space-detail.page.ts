@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingController, ModalController, ToastController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api-service.service';
 import { ContactHostModalPage } from '../contact-host-modal/contact-host-modal.page';
+import { StripeService } from 'src/app/services/stripe.service';
 
 
 
@@ -19,6 +20,7 @@ export class SpaceDetailPage implements OnInit {
   place: any;
   owner: any;
   nodescription: boolean;
+  bookingButtonText: string;
 
   constructor(
     private router: Router,
@@ -28,6 +30,7 @@ export class SpaceDetailPage implements OnInit {
     private loadingController: LoadingController,
     private sanitizer: DomSanitizer,
     private modalController: ModalController,
+    private stripeService: StripeService,
   ) { 
     this.spaceId = this.route.snapshot.paramMap.get('spaceId');
     this.getSpaceById();
@@ -55,6 +58,7 @@ export class SpaceDetailPage implements OnInit {
           (response: any) => {
             loading.dismiss();
             this.place = response;
+            this.bookingButtonText = 'Click to book space';
           },
           (error: any) => {
             console.error(error);
@@ -80,6 +84,27 @@ export class SpaceDetailPage implements OnInit {
     toast.present();
   }
 
+  pay(amount: any) {
+    this.stripeService.pay(amount);
+    this.bookSpace();
+  }
+
+
+async bookSpace() {
+  const spaceData = {"spaceId" : this.spaceId, "bookingStatus" : "BOOKED"};
+  this._apiService.bookSpace(spaceData).subscribe(
+    (response: any) => {
+      console.log(response.message);
+      this.bookingButtonText = 'Successfully booked';
+      this.router.navigateByUrl('/tabs');
+    },
+    (error: any) => {
+      console.error(error);
+      this.showToast('Unable to book space');             
+    }
+  );
+}
+
 
   async openContactHostModal() {
     const modal = await this.modalController.create({
@@ -94,6 +119,8 @@ export class SpaceDetailPage implements OnInit {
   
     await modal.present();
   }
+
+
 
 
 }

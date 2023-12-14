@@ -18,7 +18,7 @@
           <ion-label>Lit garage - 10 minute walk from Redbull</ion-label>        
         </ion-col>
         <ion-col size="7">
-          <ion-button expand="full">Click to book slot</ion-button>
+          <ion-button expand="full" (click)="pay(place?.chargePerDay)">Click to book slot</ion-button>
         </ion-col>
       </ion-row>
     </ion-card-content>  
