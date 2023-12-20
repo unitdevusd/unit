@@ -4,12 +4,43 @@
     border-radius: 25px;
     padding-top: 60px;    
   }
-  
-  .logo{
-    margin: auto;
-    width: 25%;
-    margin-top: 10%;
+
+  .heading {
+    color: #ed1c24 !important;
+    margin-top: 15px !important;
+    align-items: center;
   }
+
+  .title-and-logo {
+    // display: flex;
+    // align-items: center;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    background-color: #ed1c24;
+    color: white;
+    font-weight: 600;
+
+  }
+  
+  .logo img {
+    width: 32px;
+    height: 32px; 
+    // margin-left: 8px; 
+    margin: 0 5px 0 35px;
+
+  }
+  
+  // .logo{
+  //   margin: auto;
+  //   width: 25%;
+  //   margin-top: 10%;
+  // }
   
   .img-card{
     max-width: 200px;
@@ -20,4 +51,11 @@
   .text-sucess{
     border-style: solid;
     border-color: green;
+  }
+
+
+  .div-content {
+    margin-top: 100px !important;
+    align-items: center;
+    text-align: center;
   }

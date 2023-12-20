@@ -6,6 +6,7 @@ import { ApiService } from 'src/app/services/api-service.service';
 import { ContactHostModalPage } from '../contact-host-modal/contact-host-modal.page';
 import { StripeService } from 'src/app/services/stripe.service';
 import { UserService } from 'src/app/services/user.service';
+import { MoreDetailsModalPage } from '../more-details-modal/more-details-modal.page';
 
 
 
@@ -125,6 +126,22 @@ async bookSpace() {
   
     await modal.present();
   }
+
+
+  async moreDetailsModal() {
+    const modal = await this.modalController.create({
+      component: MoreDetailsModalPage,
+      breakpoints: [0,5],
+      initialBreakpoint: 0.5,
+      handle: false,
+      componentProps: {
+        place: this.place,
+      },
+    });
+  
+    await modal.present();
+  }
+
 
 
 

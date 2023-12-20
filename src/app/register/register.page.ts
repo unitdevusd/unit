@@ -51,48 +51,6 @@ public signupForm!: FormGroup;
   ngOnInit() {
   }
 
-  async registerUser() {
-    const loading = await this.loadingController.create();
-    await loading.present();
-    console.log(this.signupForm.value);
-    if (this.signupForm.value) {
-      let registerData = this.signupForm.value;
-        this.authService.register(registerData.email,registerData.password).then(async response =>{
-          await loading.dismiss();
-          console.log(response);
-          if(response.user == undefined) {
-            this.showFailureAlert('User already exists');
-          }
-          else {
-            this.showSuccessAlert();
-            const user = response.user;
-            console.log('User is ' +user);
-            const uid = user.uid;
-            console.log('UID is '+uid);
-            this.custom(user,uid,registerData);
-            setTimeout(() => {
-              this.router.navigateByUrl('/login', { replaceUrl: true });
-            }, 2000);
-          }
-
-        }).catch(async error => {
-          await loading.dismiss();
-       });
-    }
-
-  }
-  custom(user : any , uid : any,userInfo : any) {
-    let data = {
-      role: this.role,
-      firstName :userInfo.firstName,
-      lastName : userInfo.lastName
-    };
-    console.log('Data is '+data);
-    this.authService.saveAdditionalUserData(uid,data);
-    
-  }
-
-
   async showSuccessAlert() {
     const alert = await this.alertController.create({
       header: 'Success',

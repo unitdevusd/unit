@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 import { Router } from '@angular/router';
 import { AlertController, LoadingController } from '@ionic/angular';
 import { AuthService } from '../services/auth.service';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+// import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { UserService } from '../services/user.service';
 
 @Component({
@@ -20,7 +20,7 @@ export class LoginPage implements OnInit {
     private router: Router,
     private loadingController: LoadingController,
     private alertController: AlertController,
-    private afs: AngularFirestore,
+    // private afs: AngularFirestore,
     private userService: UserService
     ) {
 

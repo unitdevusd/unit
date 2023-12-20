@@ -35,7 +35,7 @@ import { Tab1PageModule } from './tab1/tab1.module';
     IonicModule.forRoot({hardwareBackButton: false}), 
     AppRoutingModule,
     HttpClientModule, 
-    AngularFireModule.initializeApp(environment.firebaseConfig),
+    // AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
     AngularFirestoreModule,
     AngularFireStorageModule,

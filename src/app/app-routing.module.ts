@@ -9,7 +9,10 @@ const routes: Routes = [
   },
   {
     path: 'tabs',
-    loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
+    loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule),
+    data: {
+      cache: false
+    }
   },
   {
     path: 'register-role',
@@ -22,7 +25,11 @@ const routes: Routes = [
 
   {
     path: 'login',
-    loadChildren: () => import('./login/login.module').then(m => m.LoginPageModule)
+    loadChildren: () => import('./login/login.module').then(m => m.LoginPageModule),
+    data: {
+      cache: false
+    }
+
   },
   {
     path: 'intro',
@@ -48,9 +55,14 @@ const routes: Routes = [
   {
     path: 'space-detail/:spaceId',
     loadChildren: () => import('./pages/space-detail/space-detail.module').then( m => m.SpaceDetailPageModule)
-  },  {
+  },
+  {
     path: 'contact-host-modal',
     loadChildren: () => import('./pages/contact-host-modal/contact-host-modal.module').then( m => m.ContactHostModalPageModule)
+  },
+  {
+    path: 'more-details-modal',
+    loadChildren: () => import('./pages/more-details-modal/more-details-modal.module').then( m => m.MoreDetailsModalPageModule)
   }
 
 

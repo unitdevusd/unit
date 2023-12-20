@@ -1,12 +1,31 @@
-<ion-content fullscreen class="ion-padding">
-  <div class="logo">
+<ion-header>
+  <ion-toolbar>
+      <div class="title-and-logo">           
+          <div class="logo">
+            <img src="../../../../assets/imgs/logo.png" alt="Logo" />
+          </div>
+          <ion-title>Unit</ion-title>
+        </div>
+            
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen class="no-padding">
+
+  <div class="div-content">
+  <!-- <div class="logo">
       <img src="../../../../assets/imgs/logo.png">
-  </div>
+  </div> -->
+
+  <h3 class="heading"><b>Prefer To Be</b></h3>
+
   <div class="content">
     <div *ngFor="let item of roles">
     <div class="img-card" (click)="type(item.role)">
-      <img src="{{item.image}}" />
+      <ion-button style="--background: red; width: 100%">{{ item.text }}</ion-button>
+      <!-- <img src="{{item.image}}" /> -->
     </div>
   </div>
   </div>
+</div>
   </ion-content>

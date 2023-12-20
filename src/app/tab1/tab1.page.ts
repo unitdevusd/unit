@@ -84,13 +84,12 @@ export class Tab1Page implements OnInit {
     this.autocompleteItems = [];
   }
 
-  ionViewWillEnter() {
+  ionViewDidEnter() {
 
     this.userDetails = this.userService.getUserDetails();
     this.firstName = this.userDetails?.firstName || 'Guest';
     this.role = this.userDetails?.role;
     this.userId = this.userDetails?.userId;
-    console.log('First Name is '+this.firstName+ ' and role is '+this.role);
 
     setTimeout(() =>{ 
       this.getCurrentLocation();
@@ -103,7 +102,6 @@ export class Tab1Page implements OnInit {
 
   getCurrentLocation() {
     this.geolocation.getCurrentPosition().then((resp) => {
-      console.log('Response from getCurrentLocation is '+resp.coords.latitude+ " and "+resp.coords.longitude);
       this.lat = resp.coords.latitude;
       this.long = resp.coords.longitude;
       this.getAddressFromCoords(resp.coords.latitude, resp.coords.longitude);
@@ -113,7 +111,6 @@ export class Tab1Page implements OnInit {
 
 
   getAddressFromCoords(latitude: number, longitude: number) {
-    console.log("getAddressFromCoords " + latitude + " " + longitude);
     if (latitude == undefined) {
       return;
     }
@@ -148,65 +145,10 @@ export class Tab1Page implements OnInit {
   }
 
 
-  // getPlacesList(filters: any) {
-  //   this._loader.present();
-  //   const params = {
-  //     filters,
-  //   };
-  //   console.log('Param is '+params);
-  //   console.log('Sending places list request');
-  //   this._apiService.postRequest(this.url + '/api/v1/unit/spaces',
-  //     params)
-  //     .subscribe(
-  //       async (result) => {
-  //         console.log('Result is '+result.status);
-  //         if (result.success) {
-  //           this._loader.dismiss();
-  //           this.placesList = result.data.list;
-  //           console.log('Places list is '+this.placesList);
-  //         }else{
-  //           this._loader.dismiss();
-  //           console.log('err', result);
-  //         }
-  //       }
-  //     ), (error: any) => {
-  //       this._loader.dismiss();
-  //       console.log('error', error)
-  //     }
-  // }
-  
-  // placeMeta() {
-  //   console.log('Checking place meta');
-  //   const params = {
-  //     apiKey: 'rGpTKMEZjs3RR5vcfwg6pujoA54i33'
-  //   };
-  //   this._apiService.postRequest(this.url + '/api/v1/unit/placeMeta', params).subscribe(
-  //     async (result) => {
-  //       console.log('Result is '+result);
-  //       if (result.success) {
-  //         console.log(result);
-  //         this.spaceType = result.data.list.spaceType;
-  //       } else {
-  //         this._toast.presentToast(result.message);
-  //       }
-  //     });
-  // }
+
 
   ngOnInit() {
-    // this.placeMeta();
-    // this.setIcon();
-    // this.getPlacesList(this.filters);
   }
-
-  // setIcon() {
-  //   if (Object.keys(this.filters).length === 0) {
-  //     this.hasFilter = false;
-  //     this.displayName = true;
-  //   } else {
-  //     this.hasFilter = true;
-  //     this.displayName = false;
-  //   }
-  // }
 
 
   searchLocation() {
@@ -360,7 +302,6 @@ export class Tab1Page implements OnInit {
     async getMySpaces() {
 
       try {
-        console.log('Retrieving list of spaces created')
         const loading = await this.loadingController.create();
         await loading.present();
     
@@ -369,7 +310,6 @@ export class Tab1Page implements OnInit {
           this._apiService.viewAllSpacesByUser(spaceData).subscribe(
             (response: any) => {
               loading.dismiss();
-              console.log('Response is '+response[0].spaceImage);
               this.spaces = response
             },
             (error: any) => {
@@ -393,7 +333,6 @@ export class Tab1Page implements OnInit {
     async getSpacesAround() {
 
       try {
-        console.log('Retrieving list of spaces around me')
         const loading = await this.loadingController.create();
         await loading.present();
     
@@ -402,7 +341,6 @@ export class Tab1Page implements OnInit {
           this._apiService.getSpacesAround(spaceData).subscribe(
             (response: any) => {
               loading.dismiss();
-              console.log('Space around me is '+response[0].spaceLocation);
               this.placesAround = response
             },
             (error: any) => {

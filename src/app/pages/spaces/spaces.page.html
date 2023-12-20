@@ -1,103 +1,166 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+
+    <div class="title-and-logo">
+      <div class="logo">
+        <img src="../../../../assets/imgs/logo.png" alt="Logo" />
+      </div>
+      <ion-title>Hi, {{ firstName }}</ion-title>
+    </div>
+
+  </ion-toolbar>
+</ion-header>
+
+
+
 <ion-content fullscreen class="ion-padding">
-  <div class="logo">
-      <img src="../../../../assets/imgs/logo.png">
-  </div>
+  <h3 style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">Please fill below details to add new unit</h3>
   <ion-grid>
-      <ion-row>
-          <ion-col size="12" class="ion-text-center">
-              <form class="form"  [formGroup]="spaceForm">
+    <ion-row>
+      <ion-col size="12" class="ion-text-center">
+        <form class="form" [formGroup]="spaceForm" style="font-size: small;">
 
-                <ion-list mode="md">
-                  <ion-item mode="md">
-                    <ion-input
-                      formControlName="spaceLocation"
-                      placeholder="Search for Location"
-                      searchIcon=" "
-                      (ionInput)="searchLocation()"
-                      clearIcon=" "
-                      (ionFocus)="checkFocus()"
-                      (ionClear)="clearAutocomplete()"
-                    >
-                      <img src="../../../../assets/imgs/feather-search.png" />
-                    </ion-input>
-                  </ion-item>
-                </ion-list>
+          <ion-list mode="md">
+            <ion-item mode="md">
+              <ion-label position="floating" style="white-space: normal; margin-bottom: 30px;">What Street name and city is your unit located?</ion-label>
+              <ion-input formControlName="spaceLocation" placeholder="Street name and city">
+              </ion-input>
+            </ion-item>
+          </ion-list>
+
+          
+          <ion-list mode="md">
+            <ion-item mode="md">
+              <ion-label position="floating" style="margin-bottom: 20px;">What's the space type?</ion-label>
+              <ion-select formControlName="spaceType">
+                <ion-select-option value="" selected disabled>Select Space Type</ion-select-option>
+                <ion-select-option value="Linoleum / Dance Floor">Linoleum / Dance Floor</ion-select-option>
+                <ion-select-option value="Padded / Gym Floor">Padded / Gym Floor</ion-select-option>
+                <ion-select-option value="Trampoline">Trampoline</ion-select-option>
+                <ion-select-option value="Grass">Grass</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-list>
+
+          <ion-list mode="md">
+            <ion-item mode="md">
+              <ion-label position="floating">Approx. square feet</ion-label>
+              <ion-input formControlName="description" placeholder="Describe the space"></ion-input>
+            </ion-item>
+          </ion-list>
+
+          <ion-list mode="md">
+            <ion-item mode="md">
+              <ion-label position="floating">Cost(per Day)</ion-label>
+              <ion-input formControlName="chargePerDay" placeholder="Enter Charges($)"></ion-input>
+            </ion-item>
+          </ion-list>
+
+          <ion-list mode="md">
+            <ion-item mode="md">
+              <ion-label position="floating">How big is your spot?</ion-label>
+              <ion-input formControlName="size" placeholder="Enter size of unit"></ion-input>
+            </ion-item>
+          </ion-list>
+
+          <ion-list mode="md">
+            <ion-item mode="md">
+              <ion-label position="floating">Upload Space Image</ion-label>
+              <ion-input id="spaceImage" type="file" accept="image/*" (change)="onFileChange($event)"
+                formControlName="spaceImage" style="margin-top: 16px;">
+
+              </ion-input>
+            </ion-item>
+
+          </ion-list>
+          <b style="color: red; margin-bottom: 6px; text-align: left; font-size: medium;">Preferences</b>
+
+          <ion-list mode="md">
+            <ion-item mode="md">
+              <ion-label position="floating" style="margin-bottom: 20px;">When can renter come for a tour?</ion-label>
+              <ion-select formControlName="visitDays">
+                <ion-select-option class="custom-color" value="" selected disabled>Select Day</ion-select-option>
+                <ion-select-option value="Sunday">Sunday</ion-select-option>
+                <ion-select-option value="Monday">Monday</ion-select-option>
+                <ion-select-option value="Tuesday">Tuesday</ion-select-option>
+                <ion-select-option value="Wednesday">Wednesday</ion-select-option>
+                <ion-select-option value="Thursday">Thursday</ion-select-option>
+                <ion-select-option value="Friday">Friday</ion-select-option>
+                <ion-select-option value="Saturday">Saturday</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-list>
+
+
+
+          <p style="color: red;">At what time? </p>
+
+          <ion-list mode="md">
+            <ion-item mode="md">
+              <div class="visit-time" style="display: block;">
+                <ion-label>From:</ion-label>
+                <input class="native-input sc-ion-input-md" style="max-width: 500%; width: 350%;" type="time" formControlName="visitStartTime">
+              </div>
+            </ion-item>
+          </ion-list>
+
+          <ion-list mode="md">
+            <ion-item mode="md">
+              <div class="visit-time" style="display: block;">
+                <ion-label>Until:</ion-label>
+                <input class="native-input sc-ion-input-md" style="max-width: 500%; width: 350%;" type="time" formControlName="visitEndTime">
+              </div>
+            </ion-item>
+          </ion-list>
+
+
+          <ion-list>
+            <ion-item>
+              <ion-label class="ion-text-wrap" position="fixed">Can your renter practice alone?</ion-label><br />
+          
+              <ion-radio-group [allowEmptySelection]="true" [formControl]="spaceForm.get('practice')">
+
+                <ion-item>
+                  <ion-radio value="yes" class="start-aligned"></ion-radio>
+                  <ion-label class="start-aligned-label">Yes, I don't need to session with renters</ion-label>
+                </ion-item>
               
-                    <div [hidden]="autocompleteItems.length == 0" class="search_list">
-                      <ion-list (click)="useCurrentLocation()" lines="none">
-                        <ion-item>
-                          <ion-label>
-                            <img  class="image-loc" style="margin-inline-end: 0px !important;" slot="start"
-                              src="../../../../assets/imgs/material-location-on.png" />
-                            <p class="main_text">Current Location</p>
-                          </ion-label>
-                        </ion-item>
-                      </ion-list>
-                      <ion-list [hidden]="autocompleteItems.length == 0" lines="none">
-                        <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
-                          <ion-label>
-                            <p class="secondary_text"> {{ item.structured_formatting.secondary_text }} </p>
-                          </ion-label>
-                        </ion-item>
-                      </ion-list>
-                    </div>
-                  
-              
+                <ion-item>
+                  <ion-radio value="no" class="start-aligned"></ion-radio>
+                  <ion-label class="start-aligned-label">No, renter has to be ready to session with me</ion-label>
+                </ion-item>
+              </ion-radio-group>          
+            </ion-item>
+          </ion-list>
+          
+
+          <ion-list>
+            <ion-item>
+              <ion-label position="floating" style="white-space: normal; margin-top: -30px; margin-bottom: 30px;">Do you have a music system and speakers available? If yes, how will the
+                host play their music?</ion-label>
+              <ion-input formControlName="musicDetails" placeholder="Please enter details"></ion-input>
+            </ion-item>
+          </ion-list>
+
+
+          <ion-list>
+            <ion-item>
+              <ion-label position="floating">Extra Notes</ion-label>
+              <ion-input formControlName="additionalDetails" placeholder="Any thing you'll like the renter to know"></ion-input>
+            </ion-item>
+          </ion-list>
 
 
 
-                    <ion-list mode="md">
-                      <ion-item mode="md">
-                        <ion-label>Space Type</ion-label>
-                        <ion-select formControlName="spaceType">
-                          <ion-select-option value="" selected disabled>Select Space Type</ion-select-option>
-                          <ion-select-option value="SMOOTH">Smooth Field</ion-select-option>
-                          <ion-select-option value="FIELD">Open Field</ion-select-option>
-                          <ion-select-option value="TILED">Tiled Space</ion-select-option>
-                        </ion-select>
-                      </ion-item>
-                    </ion-list>
-
-
-                    <ion-list mode="md">
-                      <ion-item mode="md">
-                        <ion-label position="floating">Description</ion-label>
-                        <ion-input formControlName="description" placeholder="Describe the space"></ion-input>
-                      </ion-item>
-                    </ion-list>
-
-                    <ion-list mode="md">
-                      <ion-item mode="md">
-                        <ion-label position="floating">Charges(per Day)</ion-label>
-                        <ion-input formControlName="chargePerDay" placeholder="Enter Charges($)"></ion-input>
-                      </ion-item>
-                    </ion-list>              
-
-                  <ion-list mode="md">
-                    <ion-item mode="md">
-                      <ion-label position="floating">Upload Space Image</ion-label>
-                      <ion-input
-                        id="spaceImage"
-                        type="file"
-                        accept="image/*"
-                        (change)="onFileChange($event)"
-                        formControlName="spaceImage"
-                        style="margin-top: 16px;">
-                      
-                      </ion-input>
-                    </ion-item>
-                    
-                    <!-- <ion-item>
-    <ion-button (click)="openCamera()">Open Camera</ion-button>
-  </ion-item> -->
-</ion-list>
-
-  </form>
-              <ion-button class="button-h" fill="solid" size="default" shape="round" expand="block" color="primary"
-                  [disabled]="!spaceForm.valid" (click)="uploadSpace()">
-                  Add Space
-              </ion-button>
-          </ion-col>
-      </ion-row>
+        </form>
+        <ion-button class="button-h" fill="solid" size="default" shape="round" expand="block" color="primary"
+        (click)="uploadSpace()">
+          Add Space
+        </ion-button>
+      </ion-col>
+    </ion-row>
   </ion-grid>
 </ion-content>
