@@ -61,7 +61,7 @@ export class SpacesPage implements OnInit {
       spaceLocation: new FormControl("", Validators.required),
       userId: this.userId,
       spaceType: new FormControl("", Validators.required),
-      spaceImage: new FormControl(""),
+      spaceImage: new FormControl([]),
       description: new FormControl("", Validators.required),
       chargePerDay: new FormControl("", Validators.required),
       size: new FormControl("", Validators.required),
@@ -168,32 +168,76 @@ export class SpacesPage implements OnInit {
   }
 
 
+  // onFileChange(event: any) {
+  //   const file = event.target.files[0];
+
+  //   if (file) {
+  //     this.convertToBase64(file).then((base64) => {
+  //       this.spaceForm.patchValue({
+  //         spaceImage: base64,
+  //       });
+  //     });
+  //   }
+  // }
+
+  // convertToBase64(file: File): Promise<string> {
+  //   return new Promise<string>((resolve, reject) => {
+  //     const reader = new FileReader();
+
+  //     reader.onloadend = () => {
+  //       resolve(reader.result as string);
+  //     };
+
+  //     reader.onerror = (error) => {
+  //       reject(error);
+  //     };
+
+  //     reader.readAsDataURL(file);
+  //   });
+  // }
+
+
   onFileChange(event: any) {
-    const file = event.target.files[0];
+  const files: FileList = event.target.files;
 
-    if (file) {
-      this.convertToBase64(file).then((base64) => {
-        this.spaceForm.patchValue({
-          spaceImage: base64,
-        });
-      });
+  if (files && files.length > 0) {
+    const promises: Promise<string>[] = [];
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+
+      if (file) {
+        promises.push(this.convertToBase64(file));
+      }
     }
+
+    Promise.all(promises)
+      .then((base64Array) => {
+        this.spaceForm.patchValue({
+          spaceImage: base64Array,
+        });
+      })
+      .catch((error) => {
+        console.error('Error converting files to base64:', error);
+      });
   }
+}
 
-  convertToBase64(file: File): Promise<string> {
-    return new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
+convertToBase64(file: File): Promise<string> {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
 
-      reader.onloadend = () => {
-        resolve(reader.result as string);
-      };
+    reader.onloadend = () => {
+      resolve(reader.result as string);
+    };
 
-      reader.onerror = (error) => {
-        reject(error);
-      };
+    reader.onerror = (error) => {
+      reject(error);
+    };
 
-      reader.readAsDataURL(file);
-    });
-  }
+    reader.readAsDataURL(file);
+  });
+}
+
 
 }

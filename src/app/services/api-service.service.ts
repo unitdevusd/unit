@@ -16,6 +16,8 @@ export class ApiService {
   private bookSpaceUrl = 'http://localhost:8088/spaces/book-space';
   private updateRoleUrl = 'http://localhost:8088/users/updateUserRole';
   private tenantSpacesUrl = 'http://localhost:8088/spaces/getbookedspaces';
+  private spaceImagesUrl = 'http://localhost:8088/spaces/getSpaceImages';
+
 
 
   constructor(public http: HttpClient) { }
@@ -111,6 +113,10 @@ export class ApiService {
 
   fetchTenantSpaces(payload: any): Observable<any> {
     return this.http.post(this.updateRoleUrl, payload);
+  }
+
+  retrieveSpaceImages(payload: any): Observable<any> {
+    return this.http.post(this.spaceImagesUrl, payload);
   }
 
 }

@@ -1,11 +1,20 @@
-<ion-header>
-  <ion-toolbar>
+<ion-header style="background-color: red;">
+  <ion-toolbar style="background-color: red;">
     <ion-buttons slot="end">
       <ion-button (click)="logout()">
         <ion-icon name="log-out-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title class="left-title">Welcome, {{ firstName }}</ion-title>
+
+    <div class="title-and-logo">
+      <div class="logo">
+        <img src="../../../../assets/imgs/logo.png" alt="Logo" />
+      </div>
+      <ion-title>Welcome, {{ firstName }}</ion-title>
+    </div>
+
+
+    <!-- <ion-title color="primary" class="left-title">Welcome, {{ firstName }}</ion-title> -->
   </ion-toolbar>
 </ion-header>
 
@@ -137,37 +146,8 @@
 
 </div>
   </div>
-  <!-- <div class="content">
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <h3 class="top-heading">Places Around You</h3>        
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-
-    <div>
-          <app-unit-listing [units]="placesAround" (unitClicked)='place($event)'></app-unit-listing>
-  </div>
-  </div> -->
   <div>
   </div>
-  <!-- <div class="content" *ngIf="!displayName">
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <h3 class="top-heading">
-            Found {{placesList.length}}
-            <span *ngIf="placesList.length == 0 || placesList.length == 1 ">unit</span>
-            <span *ngIf="placesList.length > 1 ">unit's</span>
-          </h3>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-    <div *ngIf="placesList">
-      <unit-listing [units]="placesList" (unitClicked)='place($event)'></unit-listing>
-    </div>
-  </div> -->
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button (click)="addClicked()">

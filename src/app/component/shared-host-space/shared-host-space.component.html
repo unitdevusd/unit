@@ -1,33 +1,63 @@
-<!-- <ng-container *ngIf="spaces && spaces.length > 0; else noSpaces"> -->
-  <swiper-container *ngIf="spaces && spaces.length > 0; else noSpaces" [slidesPerView]="3" [loop]="true" [spaceBetween]="10">
-    <!-- <ng-container *ngFor="let item of spaces"> -->
-    <swiper-slide *ngFor="let item of spaces">
-      <!-- <div (click)="spaceClick(item)"> -->
+  <!-- <swiper-container *ngIf="spaces && spaces.length > 0; else noSpaces" [slidesPerView]="3" [loop]="true" [spaceBetween]="10">
+    <swiper-slide *ngFor="let item of spaces"> -->
+      <ion-list *ngIf="spaces && spaces.length > 0; else noSpaces">
+        <ion-item *ngFor="let item of spaces" (click)="place(item)" 
+        >
+    
         <div>
+          <ion-grid class="card-grid">
         <ion-row>
           <ion-col>
-            <div class="main">
+            <ion-card class="card_features ion-no-padding" style="width: 150%; margin-left: -20px;">
               <img class="img-spacetype" *ngIf="item?.images !== null; else noImage" 
               [src]="item.spaceImage" />
               <ng-template #noImage>
                 <img class="img-spacetype" src="../../../../assets/imgs/dummys.png" />
               </ng-template>
-            </div>
-            <span class="space-span">{{ item.spaceLocation }}</span>
+
+            <ion-card-header>
+              <ion-card-subtitle>{{item?.description}}</ion-card-subtitle>
+              <ion-card-title>{{item?.spaceType}} ({{item?.spaceLocation}})</ion-card-title>
+            </ion-card-header>
+            <ion-card-content class="no-padding">
+              <div class="card-content">
+                <span>$</span>{{item?.chargePerDay}}/<span>day</span>
+
+                <ion-icon name="share-social-outline" color="dark" style="font-size: 20px;" class="mr-l"
+                (click)="shareByFacebook(space)"></ion-icon>
+
+              </div>
+            </ion-card-content>
+          </ion-card>
+
           </ion-col>
         </ion-row>
+      </ion-grid>
       </div>
-      </swiper-slide>
-    </swiper-container>
-    <!-- </ng-container>
-  </ng-container> -->
+      </ion-item>
+      </ion-list>
+      <!-- </swiper-slide>
+    </swiper-container> -->
+
+
+
+  
+
+
+
+
+
+
+
+
+
   
   <ng-template #noSpaces>
     <img class="img-spacetype-data" src="../../../../assets/imgs/dummy_space.png" />
   
     <div class="no-item">
       <p style="text-align: center;"><b><h5>You have not added any space</h5></b></p>
-      <ion-button expand="full">Click to add a space</ion-button>
+      <ion-button expand="full" (click)="addClicked()">Click to add your first space</ion-button>
     </div>
   </ng-template>
   

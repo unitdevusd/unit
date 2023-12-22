@@ -87,6 +87,8 @@ export class LoginPage implements OnInit {
       buttons: ['OK']
     });
 
+    await alert.present();
+
   }
 
 
@@ -100,14 +102,15 @@ export class LoginPage implements OnInit {
         await this.authService.authenticateUser(loginData).subscribe(
           (response: any) => {
             loading.dismiss();
-            console.log('Response is '+response.email);
+            // console.log('Response is '+response.email);
   
-            if (!response.email) {
-              this.showErrorAlert(response.message);    
-            } else {
+            if (response.email) {
               this.userService.setUserDetails(response);
               this.showSuccessAlert();
-                this.router.navigateByUrl('/tabs');               
+              this.router.navigateByUrl('/tabs');   
+
+            } else {
+              this.showErrorAlert(response.message);    
             }
           },
           (error: any) => {

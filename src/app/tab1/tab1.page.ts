@@ -38,6 +38,7 @@ export class Tab1Page implements OnInit {
   spaces: any[];
   placesList: any = [];
   placesAround: any = [];
+  spacesList: any = [];
   units: any = [];
   today: any = Date.now();
   filters: any = {};
@@ -328,6 +329,27 @@ export class Tab1Page implements OnInit {
   
     }
 
+
+    async getAllCreatedSpaces(userId: any) {
+
+      const loading = await this.loadingController.create();
+      await loading.present();
+
+      const userData = {"userId" : this.userDetails?.userId};
+          this._apiService.retrieveSpaceImages(userData).subscribe(
+            (response: any) => {
+              loading.dismiss();
+              if(response !== null) {
+                this.spacesList = response;
+              }             
+            },
+            (error: any) => {
+              console.error(error);
+              this.showToast('Unable to Fetch Spaces');             
+            }
+          );
+  
+    }
 
 
     async getSpacesAround() {

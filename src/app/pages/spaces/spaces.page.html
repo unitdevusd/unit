@@ -69,10 +69,14 @@
           <ion-list mode="md">
             <ion-item mode="md">
               <ion-label position="floating">Upload Space Image</ion-label>
-              <ion-input id="spaceImage" type="file" accept="image/*" (change)="onFileChange($event)"
+              <ion-input id="spaceImage" multiple="multiple" type="file" accept="image/*" (change)="onFileChange($event)"
                 formControlName="spaceImage" style="margin-top: 16px;">
 
               </ion-input>
+          <span id="file-upload-message" style="display: none;" class="message">max total upload of 100MB</span>
+          <span id="file-upload-message" style="display: none;" class="message">max upload per file of 10MB</span>
+
+
             </ion-item>
 
           </ion-list>

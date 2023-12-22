@@ -1,14 +1,22 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>
-      View Spaces
-    </ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+
+    <div class="title-and-logo">
+      <div class="logo">
+        <img src="../../../../assets/imgs/logo.png" alt="Logo" />
+      </div>
+      <ion-title>View your spaces</ion-title>
+    </div>
+
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
 
-  <ion-card class="full-width-card" no-padding *ngIf="userDetails?.role === 'HOST'">
+  <ion-card class="full-width-card" no-padding *ngIf="userDetails?.role === 'TENANT'">
     <ion-list>
       <ion-item *ngFor="let tenant of tenantSpaces">
         <ion-row>

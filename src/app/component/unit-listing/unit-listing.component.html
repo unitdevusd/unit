@@ -1,6 +1,11 @@
-<swiper-container *ngIf="units && units.length > 0; else noUnits" [slidesPerView]="1" [loop]="true" [spaceBetween]="4">
+<!-- <swiper-container *ngIf="units && units.length > 0; else noUnits" [slidesPerView]="1" [loop]="true" [spaceBetween]="4">
     <swiper-slide *ngFor="let item of units" (click)="place(item)"
-  style="width: 100px; height: 370px; border: 2px solid #f8f8f8">
+  style="width: 100px; height: 370px; border: 2px solid #f8f8f8"> -->
+
+  <ion-list *ngIf="units && units.length > 0; else noUnits">
+    <ion-item *ngFor="let item of units" (click)="place(item)" 
+    style="border: 2px solid #f8f8f8">
+
     <div (click)="place(item)">
     <ion-grid class="card-grid">
       <ion-row>
@@ -28,8 +33,10 @@
       </ion-row>
     </ion-grid>
     </div>
-  </swiper-slide>
-  </swiper-container>
+    </ion-item>
+    </ion-list>
+  <!-- </swiper-slide>
+  </swiper-container> -->
 
 <ng-template #noUnits>
   <img class="img-spacetype-unit" src="../../../../assets/imgs/emptyList.png" />

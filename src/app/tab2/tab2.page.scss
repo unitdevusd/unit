@@ -1,0 +1,21 @@
+.title-and-logo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    background-color: #ed1c24;
+    color: white;
+    font-weight: 600;
+
+  }
+
+  .logo img {
+    width: 32px;
+    height: 32px; 
+    margin: 0 5px 0 35px;
+
+  }
+
