@@ -3,6 +3,7 @@ import { UserService } from '../services/user.service';
 import { ApiService } from '../services/api-service.service';
 import { ToastController } from '@ionic/angular';
 import { LoaderService } from '../services/loader-service.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tab2',
@@ -19,6 +20,8 @@ export class Tab2Page {
     private apiService : ApiService,
     private toastController : ToastController,
     private _loader: LoaderService,
+    private router: Router,
+
 
 
   ) {}
@@ -71,6 +74,10 @@ export class Tab2Page {
           }
         );
 
+  }
+
+  bookSpace() {
+    this.router.navigateByUrl(`/tabs`);
   }
 
 

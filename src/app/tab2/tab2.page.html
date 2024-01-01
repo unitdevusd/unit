@@ -17,23 +17,33 @@
 <ion-content [fullscreen]="true">
 
   <ion-card class="full-width-card" no-padding *ngIf="userDetails?.role === 'TENANT'">
-    <ion-list>
-      <ion-item *ngFor="let tenant of tenantSpaces">
-        <ion-row>
-          <ion-col size="7">
-            <ion-img *ngIf="tenantSpaces" [src]="tenant.spaceId.spaceImage"></ion-img> <br>
-            {{ tenant.spaceId.spaceLocation }}
-          </ion-col>
-          <ion-col size="5">
-            <ion-card-content>
-              <ion-label><b>BOOKED</b></ion-label>
-            </ion-card-content>
-          </ion-col>
-        </ion-row>
-      </ion-item>
-    </ion-list>
-  </ion-card>
+    <ng-container *ngIf="tenantSpaces && tenantSpaces.length > 0; else noSpacesTemplate">
+      <ion-list>
+        <ion-item *ngFor="let tenant of tenantSpaces">
+          <ion-row>
+            <ion-col size="7">
+              <ion-img [src]="tenant.spaceId.spaceImage"></ion-img> <br>
+              {{ tenant.spaceId.spaceLocation }}
+            </ion-col>
+            <ion-col size="5">
+              <ion-card-content>
+                <ion-label><b>BOOKED</b></ion-label>
+              </ion-card-content>
+            </ion-col>
+          </ion-row>
+        </ion-item>
+      </ion-list>
+    </ng-container>
   
+    <!-- Template to display when tenantSpaces is null or empty -->
+    <ng-template #noSpacesTemplate>
+
+      <img class="img-spacetype-unit" src="../../../../assets/imgs/emptyList.png" />
+      <div class="no-item-unit">
+        <ion-button (click)="bookSpace()">No Space Booked yet</ion-button>
+      </div>
+    </ng-template>
+  </ion-card>  
 
 <ion-card class="full-width-card" no-padding *ngIf="userDetails?.role === 'HOST'">
   <ion-list>

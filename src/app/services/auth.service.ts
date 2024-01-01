@@ -11,8 +11,11 @@ import { Observable } from 'rxjs/internal/Observable';
 })
 export class AuthService {
   userdata: any;
-  private signUpUrl = 'http://localhost:8088/users/create';
-  private loginUrl = 'http://localhost:8088/users/authenticate';
+  private baseUrl = 'https://unitsession.com/';
+  // private baseUrl = 'http://localhost:8088/';
+  private signUpUrl = this.baseUrl+'users/create';
+  private loginUrl = this.baseUrl+'users/authenticate';
+
 
 
   constructor(

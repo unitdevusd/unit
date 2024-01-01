@@ -59,5 +59,9 @@ export class SharedHostSpaceComponent  implements OnInit {
     this.clearFilter = false;
   }
 
+  addClicked() {
+    this.router.navigate(['/spaces']);
+  }
+
 
 }

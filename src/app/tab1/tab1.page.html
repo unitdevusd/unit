@@ -32,16 +32,17 @@
   <ion-grid class="ion-no-padding pad-lr">
     <ion-row class="ion-no-padding">
       <ion-col size-sm="6" offset-sm="3" class="ion-no-padding" [size]="10">
+
         <ion-searchbar color="black" [(ngModel)]="autocomplete.input" #searchbar placeholder="Search for Location" searchIcon=" "
           (ionInput)="searchLocation()" clearIcon=" " (ionFocus)="checkFocus()" (ionClear)="clearAutocomplete()">
           <img src="../../../../assets/imgs/feather-search.png" />
         </ion-searchbar>
       </ion-col>
       <ion-col [size]="2" class="noti">
-        <ion-icon *ngIf="!hasFilter" name="funnel" (click)="openFilter()"
+        <ion-icon *ngIf="!hasFilter" name="funnel"
           style="margin-right: 14px; margin-top: 14px;"> </ion-icon>
         <ion-icon *ngIf="hasFilter" color="unit-btn" name="funnel"
-          (click)="openFilter()" style="margin-right: 14px; margin-top: 14px;"> </ion-icon>
+          (click)="clearFilters()" style="margin-right: 14px; margin-top: 14px;"> </ion-icon>
       </ion-col>
     </ion-row>
   </ion-grid>
@@ -64,12 +65,6 @@
     </ion-list>
   </div>
 
-  <!-- <div class="content" *ngIf="userDetails?.role === 'HOST'">
-
-    <shared-space-type-slider [spaces]="spaceType" (clearAll)="clearFilters()" (spaceSelected)="spaceClick($event)">
-    </shared-space-type-slider> 
-
-    </div> -->
 
   <div class="content">
     <ion-grid>
@@ -80,8 +75,12 @@
       </ion-row>
     </ion-grid>
 
-    <div>
+    <div *ngIf="!hasFilter">
       <app-unit-listing [units]="placesAround" (unitClicked)='place($event)'></app-unit-listing>
+    </div>
+
+    <div *ngIf="hasFilter">
+      <app-unit-listing [units]="placesFiltered" (unitClicked)='place($event)'></app-unit-listing>
     </div>
   </div>
   <div>

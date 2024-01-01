@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoadingController, ModalController, ToastController } from '@ionic/angular';
+import { IonInput, LoadingController, ModalController, PickerController, ToastController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api-service.service';
 import { ContactHostModalPage } from '../contact-host-modal/contact-host-modal.page';
 import { StripeService } from 'src/app/services/stripe.service';
 import { UserService } from 'src/app/services/user.service';
 import { MoreDetailsModalPage } from '../more-details-modal/more-details-modal.page';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 
 
@@ -25,6 +26,11 @@ export class SpaceDetailPage implements OnInit {
   bookingButtonText: string;
   userDetails: any;
   userId: any;
+  hoursForm: FormGroup;
+  customPickerOptions: any;
+  startDateTime: string;
+  endDateTime: string;
+  startDateTimeInput: any;
 
   constructor(
     private router: Router,
@@ -36,22 +42,50 @@ export class SpaceDetailPage implements OnInit {
     private modalController: ModalController,
     private stripeService: StripeService,
     private userService : UserService,
+    private formBuilder: FormBuilder,
+    private pickerController: PickerController,
   ) { 
+    this.hoursForm = this.formBuilder.group({
+      // hoursValue: ['', [Validators.required, Validators.pattern('^[0-9]*$')], disabled: true],
+      hoursValue: new FormControl({ value: '', disabled: true }, [Validators.required, Validators.pattern('^[0-9]*$')]),
+      startDateTime: new FormControl(''),
+      endDateTime: new FormControl(''),
+
+    });
+
+    // this.startDateTime = new Date().toISOString();
+    // this.endDateTime = new Date().toISOString();
     this.userDetails = this.userService.getUserDetails();
     this.userId = this.userDetails?.userId;
-
     this.spaceId = this.route.snapshot.paramMap.get('spaceId');
     this.getSpaceById();
-    // const url = `https://www.google.com/maps/embed/v1/view?key=AIzaSyCZme7cYLG7jnK4Cn8ZFnQJDUKPNwIsfqI&center=41.8781136,-87.6297982&zoom=15&output=embed`;
     const url = `https://maps.google.com/maps?q=41.8781136,-87.6297982&z=10&output=embed`;
-
     this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
 
+
+    // this.customPickerOptions = {
+    //   buttons: [
+    //     {
+    //       text: 'Cancel',
+    //       role: 'cancel',
+    //     },
+    //     {
+    //       text: 'Done',
+    //       handler: () => {
+    //         // Handle the done button click if needed
+    //       },
+    //     },
+    //   ],
+    // };
+
+    
 
   }
 
   ngOnInit() {
+    this.calculateHours();
   }
+
 
   async getSpaceById() {
 
@@ -84,26 +118,57 @@ export class SpaceDetailPage implements OnInit {
 
 
   async showToast(message: any) {
-    const toast = await this.toastController.create({
-      message: message,
-      duration: 2000,
-      position: 'bottom',
-    });
-    toast.present();
+
+    setTimeout(async () => {
+      const toast = await this.toastController.create({
+        message: message,
+        duration: 4000,
+        position: 'bottom',
+        cssClass: 'centered-toast',
+      });
+      toast.present();
+  
+    }, 3000);
+
   }
 
-  pay(amount: any) {
-    this.stripeService.pay(amount);
-    this.bookSpace();
+
+
+  pay(amount: number) {
+    const currentHours = this.hoursForm.get('hoursValue')!.value;
+    if(currentHours === "" || currentHours === "0") {
+      console.log('Hour is blank');
+      this.showToast('Enter hours needed');
+    }
+
+    else {
+    console.log('Current hour is ' + currentHours);
+    this.stripeService.pay(amount * currentHours)
+      .then(() => {
+        this.bookSpace();
+      })
+      .catch((error: Error) => {
+        // Handle payment error
+        console.error('Payment failed:', error);
+      });
+    }
   }
+
+
+
 
 
 async bookSpace() {
-  const spaceData = {"spaceId" : this.spaceId, "bookingStatus" : "BOOKED", "userId" : this.userDetails?.userId};
+  const spaceData = {"spaceId" : this.spaceId, "bookingStatus" : "BOOKED", "duration" : this.hoursForm.get('hoursValue')!.value, "userId" : this.userDetails?.userId, 
+  "startDateTime" : this.hoursForm.get('startDateTime')!.value,
+  "endDateTime" : this.hoursForm.get('endDateTime')!.value};
   this._apiService.bookSpace(spaceData).subscribe(
     (response: any) => {
       console.log(response.message);
       this.bookingButtonText = 'Successfully booked';
+      setTimeout(() => {
+        this.router.navigateByUrl('/tabs');
+      }, 2000);
     },
     (error: any) => {
       console.error(error);
@@ -142,6 +207,42 @@ async bookSpace() {
     await modal.present();
   }
 
+
+
+  calculateHours() {
+    if (this.startDateTime && this.endDateTime) {
+      const startDate = new Date(this.startDateTime);
+      const endDate = new Date(this.endDateTime);
+      console.log('Start date is '+startDate);
+      console.log('End date is '+endDate);
+      const timeDifference = endDate.getTime() - startDate.getTime();
+      const hoursDifference = Math.ceil(timeDifference / (1000 * 60 * 60));
+      
+      if(hoursDifference <= 0) {
+        this.showToast('Please enter a valid duration');
+      }
+
+      else if(hoursDifference > 1) {
+        this.showToast('Space will be booked for '+hoursDifference+' hours');
+      }
+      else {
+        this.showToast('Space will be booked for '+hoursDifference+' hour');
+      }
+
+
+      const hoursValueControl = this.hoursForm.get('hoursValue');
+      const startDateTimeForm = this.hoursForm.get('startDateTime');
+      const endDateTimeForm = this.hoursForm.get('endDateTime');
+
+      if (hoursValueControl && startDateTimeForm && endDateTimeForm) {
+        hoursValueControl.setValue(hoursDifference);
+        startDateTimeForm.setValue(startDate);
+        endDateTimeForm.setValue(endDate);
+      }
+
+      console.log('Number of hours between the selected dates/times:', hoursDifference);
+    }
+  }
 
 
 

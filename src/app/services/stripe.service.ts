@@ -16,13 +16,34 @@ export class StripeService {
 
 
   
-  pay(amount: any) {
-    this.handler.open({
-      name: 'Demo Site',
-      description: '2 widgets',
-      amount: amount * 100
+  // pay(amount: any) {
+  //   this.handler.open({
+  //     name: 'Demo Site',
+  //     description: '2 widgets',
+  //     amount: amount * 100
+  //   });
+  // }
+
+  pay(amount: any): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.handler.open({
+        name: 'Demo Site',
+        description: '2 widgets',
+        amount: amount * 100,
+        token: (token: any) => {
+          console.log(token);
+          this.showSuccessAlert('Payment Successful');
+          resolve();
+        },
+        closed: () => {
+          // Handle closure of the payment form
+          // You can reject the promise here if needed
+          reject(new Error('Payment form closed'));
+        },
+      });
     });
   }
+  
 
   private loadStripe() {
     if (!window.document.getElementById('stripe-script')) {

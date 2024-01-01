@@ -10,13 +10,14 @@ import { SpacesPage } from './spaces.page';
 import { Camera } from '@ionic-native/camera/ngx';
 
 
+
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
     SpacesPageRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   declarations: [SpacesPage],
   providers: [

@@ -1,4 +1,4 @@
-import { Component, NgZone, OnInit } from '@angular/core';
+import { Component, ElementRef, NgZone, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
@@ -13,6 +13,8 @@ import { Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api-service.service';
 import { fromEventPattern } from 'rxjs';
 
+declare var google: any;
+
 
 @Component({
   selector: 'app-spaces',
@@ -20,17 +22,22 @@ import { fromEventPattern } from 'rxjs';
   styleUrls: ['./spaces.page.scss'],
 })
 export class SpacesPage implements OnInit {
+  @ViewChild('autocompleteInput') autocompleteInput: ElementRef;
   public spaceForm!: FormGroup;
   userId: any;
   autocompleteItems: any[];
   lat: any;
   long: any;
   address: string;
-  autocomplete: { input: string; };
+  // autocomplete: { input: string; };
   GoogleAutocomplete: any;
   filters: any = {};
   userDetails: any;
   firstName: any;
+  autocomplete: any;
+  autocompletedInput: { input: string; };
+  
+
 
 
   constructor(
@@ -43,7 +50,8 @@ export class SpacesPage implements OnInit {
     private loadingController: LoadingController,
     private router: Router,
     private apiService: ApiService,
-    private alertController: AlertController
+    private alertController: AlertController,
+
 
 
 
@@ -51,17 +59,20 @@ export class SpacesPage implements OnInit {
 
   ) {
 
+    this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
+    this.autocomplete = { input: '' };
+    this.autocompleteItems = [];
+
     this.userDetails = this.userService.getUserDetails();
     this.userId = this.userDetails?.userId;
     this.firstName = this.userDetails?.firstName || 'Guest';
-
-
 
     this.spaceForm = this.formBuilder.group({
       spaceLocation: new FormControl("", Validators.required),
       userId: this.userId,
       spaceType: new FormControl("", Validators.required),
       spaceImage: new FormControl([]),
+      spaceRules: new FormControl([], Validators.required),
       description: new FormControl("", Validators.required),
       chargePerDay: new FormControl("", Validators.required),
       size: new FormControl("", Validators.required),
@@ -77,6 +88,31 @@ export class SpacesPage implements OnInit {
 
   ngOnInit() {
   }
+
+
+  searchLocation() {
+    if (this.autocomplete.input == '') {
+      this.autocompleteItems = [];
+      return;
+    }
+    this.GoogleAutocomplete.getPlacePredictions({ input: this.autocomplete.input },
+      (predictions: any, status: any) => {
+        this.autocompleteItems = [];
+        this.zone.run(() => {
+          predictions.forEach((prediction: any) => {
+            this.autocompleteItems.push(prediction);
+          });
+        });
+      });
+  }
+
+
+  selectSearchResult(item: any) {
+    this.address = item.structured_formatting.secondary_text;
+    this.autocomplete.input = this.address;
+    this.autocompleteItems = [];
+  }
+
 
   async uploadSpace() {
     console.log(this.spaceForm.valid);
@@ -111,6 +147,7 @@ export class SpacesPage implements OnInit {
       }
     } catch (error) {
       console.error(error);
+      this.showErrorAlert('Unexpected error occurred');
     }
 
   }

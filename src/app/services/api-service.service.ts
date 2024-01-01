@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, catchError } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
@@ -9,14 +9,17 @@ import { Observable, throwError } from 'rxjs';
 export class ApiService {
 
   jsonData: any;
-  private viewSpaces = 'http://localhost:8088/spaces/getSpaces';
-  private addSpaces = 'http://localhost:8088/spaces/add-space';
-  private spacesAround = 'http://localhost:8088/map/getnearestlocations';
-  private findSpace = 'http://localhost:8088/spaces/findById';
-  private bookSpaceUrl = 'http://localhost:8088/spaces/book-space';
-  private updateRoleUrl = 'http://localhost:8088/users/updateUserRole';
-  private tenantSpacesUrl = 'http://localhost:8088/spaces/getbookedspaces';
-  private spaceImagesUrl = 'http://localhost:8088/spaces/getSpaceImages';
+  private baseUrl = 'https://unitsession.com/';
+  // private baseUrl = 'http://localhost:8088/';
+  private viewSpaces = this.baseUrl+'spaces/getSpaces';
+  private addSpaces = this.baseUrl+'spaces/add-space';
+  private spacesAround = this.baseUrl+'map/getnearestlocations';
+  private findSpace = this.baseUrl+'spaces/findById';
+  private bookSpaceUrl = this.baseUrl+'spaces/book-space';
+  private updateRoleUrl = this.baseUrl+'users/updateUserRole';
+  private tenantSpacesUrl = this.baseUrl+'spaces/getbookedspaces';
+  private spaceImagesUrl = this.baseUrl+'spaces/getSpaceImages';
+  private filterSpacesUrl = this.baseUrl+'map/filterspaces';
 
 
 
@@ -112,11 +115,35 @@ export class ApiService {
   }
 
   fetchTenantSpaces(payload: any): Observable<any> {
-    return this.http.post(this.updateRoleUrl, payload);
+    return this.http.post(this.tenantSpacesUrl, payload);
   }
 
   retrieveSpaceImages(payload: any): Observable<any> {
     return this.http.post(this.spaceImagesUrl, payload);
   }
+
+  // filterSpaces(address: string): Observable<any> {
+  //   console.log('Address is '+address);
+  //   const params = new HttpParams().set('address', address); 
+  //   return this.http.get(this.filterSpacesUrl, { params });
+  // }
+
+  filterSpaces(payload: any): Observable<any> {
+    console.log(payload);
+    return this.http.post(this.filterSpacesUrl, payload);
+  }
+
+  // filterSpaces(address: string): Observable<any> {
+  //   console.log('Address is ' + address);
+  //   const params = new HttpParams().set('address', address);
+  
+  //   return this.http.get(this.filterSpacesUrl, { params })
+  //     .pipe(
+  //       catchError((error) => {
+  //         console.error('Error in filterSpaces:', error);
+  //         throw error; // Rethrow the error to propagate it to the calling code
+  //       })
+  //     );
+  // }
 
 }

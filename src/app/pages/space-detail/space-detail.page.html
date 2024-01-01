@@ -3,9 +3,17 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title class="title-class">Property Details</ion-title>
+
+    <div class="title-and-logo">
+      <div class="logo">
+        <img src="../../../../assets/imgs/logo.png" alt="Logo" />
+      </div>
+      <ion-title>Property Details</ion-title>
+    </div>
+
   </ion-toolbar>
 </ion-header>
+
 
 
 <ion-content>
@@ -13,6 +21,43 @@
   <ion-card class="full-width-card" no-padding>
     <ion-img *ngIf="place" [src]="place.spaceImage"></ion-img>
     <ion-card-content>
+
+
+      <ion-label position="floating" *ngIf="place && place.chargePerDay"><b>Enter Duration (${{ place.chargePerDay }}/hour)</b></ion-label>
+
+      <div style="display: flex; margin-top: 10px;">
+        <ion-datetime-button datetime="startDateTime"></ion-datetime-button>
+  
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime [preferWheel]="true" [showDefaultButtons]="true" id="startDateTime" minuteValues="0" displayFormat="HH:mm" (ionChange)="calculateHours()" [(ngModel)]="startDateTime">
+        <span slot="title">Select start Date/Time</span>
+      </ion-datetime>
+    </ng-template>
+  </ion-modal>
+  
+  <ion-icon name="swap-horizontal-outline" size="large" color="primary"></ion-icon>
+
+  <ion-datetime-button datetime="endDateTime"></ion-datetime-button>
+  
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime [preferWheel]="true" [showDefaultButtons]="true" id="endDateTime" minuteValues="0" [(ngModel)]="endDateTime" (ionChange)="calculateHours()">
+        <span slot="title">Select end Date/Time</span>
+      </ion-datetime>
+    </ng-template>
+  </ion-modal>
+  
+  </div>
+  
+
+      <form class="form" [formGroup]="hoursForm" style="margin-top: 20px; display: none;">
+      <ion-label *ngIf="place && place.chargePerDay" position="floating"><b>Hours to rent (${{ place.chargePerDay }}/hour)</b></ion-label>
+      <ion-input type="number" placeholder="Number of hours" class="custom-input" formControlName="hoursValue"></ion-input>
+      
+    </form>
+
+
       <ion-row>
         <ion-col size="5">
           <ion-label *ngIf="place && place.dateAdded">
@@ -41,18 +86,14 @@
   </ion-card>
 
   <!-- Card with House Rules -->
-  <ion-card no-padding>
+  <ion-card no-padding *ngIf="place?.spaceRules !== null && place?.spaceRules">
     <ion-card-header>
       <ion-card-title>House Rules</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <!-- List of house rules -->
       <ion-list>
-        <ion-item>
-          <ion-label>No smoking</ion-label>
-        </ion-item>
-        <ion-item>
-          <ion-label>No pets allowed</ion-label>
+        <ion-item *ngFor="let rule of place?.spaceRules">
+          <ion-label>{{ rule }}</ion-label>
         </ion-item>
       </ion-list>
     </ion-card-content>

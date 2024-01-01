@@ -26,21 +26,34 @@
           <ion-list mode="md">
             <ion-item mode="md">
               <ion-label position="floating" style="white-space: normal; margin-bottom: 30px;">What Street name and city is your unit located?</ion-label>
-              <ion-input formControlName="spaceLocation" placeholder="Street name and city">
+              <ion-input [(ngModel)]="autocomplete.input" #autocompleteInput formControlName="spaceLocation" 
+              (ionInput)="searchLocation()" placeholder="Street name and city">
               </ion-input>
             </ion-item>
           </ion-list>
 
+          <div [hidden]="autocompleteItems.length == 0" class="search_list">
+            <ion-list [hidden]="autocompleteItems.length == 0" lines="none">
+        
+              <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
+                <ion-label>
+                  <p class="secondary_text"> {{ item.structured_formatting.secondary_text }} </p>
+                </ion-label>
+              </ion-item>
+            </ion-list>
+          </div>
+        
           
           <ion-list mode="md">
             <ion-item mode="md">
               <ion-label position="floating" style="margin-bottom: 20px;">What's the space type?</ion-label>
               <ion-select formControlName="spaceType">
-                <ion-select-option value="" selected disabled>Select Space Type</ion-select-option>
+                <!-- <ion-select-option value="" selected disabled>Select Space Type</ion-select-option> -->
                 <ion-select-option value="Linoleum / Dance Floor">Linoleum / Dance Floor</ion-select-option>
                 <ion-select-option value="Padded / Gym Floor">Padded / Gym Floor</ion-select-option>
                 <ion-select-option value="Trampoline">Trampoline</ion-select-option>
                 <ion-select-option value="Grass">Grass</ion-select-option>
+                <ion-select-option value="Concrete">Concrete</ion-select-option>
               </ion-select>
             </ion-item>
           </ion-list>
@@ -54,17 +67,45 @@
 
           <ion-list mode="md">
             <ion-item mode="md">
-              <ion-label position="floating">Cost(per Day)</ion-label>
+              <ion-label position="floating">Cost(per hour)</ion-label>
               <ion-input formControlName="chargePerDay" placeholder="Enter Charges($)"></ion-input>
             </ion-item>
           </ion-list>
 
-          <ion-list mode="md">
+          <!-- <ion-list mode="md">
             <ion-item mode="md">
               <ion-label position="floating">How big is your spot?</ion-label>
               <ion-input formControlName="size" placeholder="Enter size of unit"></ion-input>
             </ion-item>
+          </ion-list> -->
+
+
+          <ion-list mode="md">
+            <ion-item mode="md">
+              <ion-label position="floating" style="margin-bottom: 20px;">How big is your spot?</ion-label>
+              <ion-select formControlName="size">
+                <!-- <ion-select-option value="" selected disabled>How big is your spot?</ion-select-option> -->
+                <ion-select-option value="1 - 5 People">1 - 5 People</ion-select-option>
+                <ion-select-option value="5 - 15 People">5 - 15 People</ion-select-option>
+                <ion-select-option value="16 - 30 People">16 - 30 People</ion-select-option>
+                <ion-select-option value="31 - 70 People">31 - 70 People</ion-select-option>
+                <ion-select-option value="70 - 100+ People">70 - 100+ People</ion-select-option>
+              </ion-select>
+            </ion-item>
           </ion-list>
+
+          <ion-list>
+            <ion-item>
+            <ion-label position="floating" style="margin-bottom: 20px;">House Rules</ion-label>
+            <ion-select formControlName="spaceRules" multiple="true">
+              <ion-select-option value="No Smoking">No Smoking</ion-select-option>
+              <ion-select-option value="No Children">No Children</ion-select-option>
+              <ion-select-option value="No Sharp Objects">No Sharp Objects</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-list>
+          
+
 
           <ion-list mode="md">
             <ion-item mode="md">
@@ -87,6 +128,7 @@
               <ion-label position="floating" style="margin-bottom: 20px;">When can renter come for a tour?</ion-label>
               <ion-select formControlName="visitDays">
                 <ion-select-option class="custom-color" value="" selected disabled>Select Day</ion-select-option>
+                <ion-select-option value="Anyday">Anyday</ion-select-option>
                 <ion-select-option value="Sunday">Sunday</ion-select-option>
                 <ion-select-option value="Monday">Monday</ion-select-option>
                 <ion-select-option value="Tuesday">Tuesday</ion-select-option>
@@ -161,7 +203,7 @@
 
         </form>
         <ion-button class="button-h" fill="solid" size="default" shape="round" expand="block" color="primary"
-        (click)="uploadSpace()">
+        [disabled]="!spaceForm.valid" (click)="uploadSpace()">
           Add Space
         </ion-button>
       </ion-col>

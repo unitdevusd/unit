@@ -17,6 +17,9 @@ import { Platform } from '@ionic/angular';
 import { LoaderService } from '../services/loader-service.service';
 import { UserService } from '../services/user.service';
 import { async } from 'rxjs';
+import { Plugins } from '@capacitor/core';
+
+const { Geocoder } = Plugins;
 
 
 declare var google: any;
@@ -33,11 +36,11 @@ export class Tab1Page implements OnInit {
   @ViewChild('swiper') swiperRef: ElementRef;
   @ViewChild('searchbar', { static: false }) searchbar: IonSearchbar;
   
-  url: any = 'https://gur.sandbox.imkloud.com';
   spaceType: any[];
   spaces: any[];
   placesList: any = [];
   placesAround: any = [];
+  placesFiltered: any = [];
   spacesList: any = [];
   units: any = [];
   today: any = Date.now();
@@ -49,7 +52,7 @@ export class Tab1Page implements OnInit {
   lat: any;
   long: any;
   address: string;
-  hasFilter: boolean = true;
+  hasFilter: boolean = false;
   displayName: boolean;
   size: number = 10;
   sizeFilter : number = 2; 
@@ -85,20 +88,20 @@ export class Tab1Page implements OnInit {
     this.autocompleteItems = [];
   }
 
-  ionViewDidEnter() {
+  ionViewWillEnter() {
+
+    console.log('ionViewDidEnter is triggered');
+    this.hasFilter = false;
 
     this.userDetails = this.userService.getUserDetails();
     this.firstName = this.userDetails?.firstName || 'Guest';
     this.role = this.userDetails?.role;
     this.userId = this.userDetails?.userId;
-
-    setTimeout(() =>{ 
-      this.getCurrentLocation();
-    }, 1500);
-
+    this.getCurrentLocation();
     this.getMySpaces();
     this.getSpacesAround();
 
+    console.log('Gotten spaces around');
   }
 
   getCurrentLocation() {
@@ -152,6 +155,23 @@ export class Tab1Page implements OnInit {
   }
 
 
+  // searchLocation() {
+  //   if (this.autocomplete.input == '') {
+  //     this.autocompleteItems = [];
+  //     return;
+  //   }
+  //   this.GoogleAutocomplete.getPlacePredictions({ input: this.autocomplete.input },
+  //     (predictions: any, status: any) => {
+  //       this.autocompleteItems = [];
+  //       this.zone.run(() => {
+  //         predictions.forEach((prediction: any) => {
+  //           this.autocompleteItems.push(prediction);
+  //         });
+  //       });
+  //     });
+  // }
+
+
   searchLocation() {
     if (this.autocomplete.input == '') {
       this.autocompleteItems = [];
@@ -167,6 +187,80 @@ export class Tab1Page implements OnInit {
         });
       });
   }
+
+
+  async selectSearchResult(item: any) {
+    this.address = item.structured_formatting.main_text;
+    this.autocomplete.input = this.address;
+    this.autocompleteItems = [];
+    const payload = { address: item.description };
+    this._apiService.filterSpaces(payload).subscribe(
+      (response: any) => {
+        console.log('Response is '+response[0].spaceLocation);
+        this.hasFilter = true;
+        this.placesFiltered = response;
+      },
+      (error: any) => {
+        console.error(error);
+        this.showToast('Unable to fetch spaces');        
+        // this.showErrorAlert('Unexpected error occurred');
+      }
+    );
+
+
+
+  }
+
+
+
+  getLatLOng(address: string): Promise<any> {
+    const options: NativeGeocoderOptions = {
+      useLocale: true,
+      maxResults: 5,
+    };
+  
+    return this.nativeGeocoder
+      .forwardGeocode(address, options)
+      .then((result: NativeGeocoderResult[]) => {
+        const location = result[0];
+        console.log('Location is '+location);
+        return {
+          latitude: location.latitude,
+          longitude: location.longitude,
+        };
+      })
+      .catch((error: any) => {
+        console.error(error);
+        throw error;
+      });
+  }
+
+
+  // getLatLOng(addressString: any) : Promise<any> {
+  //   console.log(addressString);
+  //   let options: NativeGeocoderOptions = {
+  //     useLocale: true,
+  //     maxResults: 5,
+  //   };
+  //   console.log(options);
+  //   return new Promise((resolve, reject) =>
+  //   {
+  //      this.nativeGeocoder.forwardGeocode(addressString)
+  //      .then((result: NativeGeocoderResult[]) => 
+  //      {
+  //         console.log(result);
+  //         resolve(result);
+  //      })
+  //      .catch((error: any) => 
+  //      {
+  //         reject(error);
+  //      });
+  //   });
+  // }
+
+
+
+
   clearAutocomplete() {
     this.autocompleteItems = []
     this.autocomplete.input = '';
@@ -193,8 +287,6 @@ export class Tab1Page implements OnInit {
       }
     };
     this.router.navigateByUrl(`/space-detail/${place.spaceId}`);
-
-    // this.router.navigate(['place-detail'], navigationExtras);
   }
 
 
@@ -202,42 +294,8 @@ export class Tab1Page implements OnInit {
     console.log(item);
     this.filters['spaceType'] = item ? item : [];
     console.log(this.filters);
-    // this.setIcon();
-    // this.getPlacesList(this.filters);
   }
 
-  selectSearchResult(item: any) {
-    this.address = item.structured_formatting.main_text;
-    this.autocomplete.input = this.address;
-    this.autocompleteItems = [];
-    this.getLatLOng(item.description).then(location =>{
-      this.filters['location'] = [location[0]['longitude'],location[0]['latitude']];
-      console.log(this.filters);
-      // this.getPlacesList(this.filters);
-    });
-  }
-
-  getLatLOng(addressString: any) : Promise<any> {
-    console.log(addressString);
-    let options: NativeGeocoderOptions = {
-      useLocale: true,
-      maxResults: 5,
-    };
-    console.log(options);
-    return new Promise((resolve, reject) =>
-    {
-       this.nativeGeocoder.forwardGeocode(addressString)
-       .then((result: NativeGeocoderResult[]) => 
-       {
-          console.log(result);
-          resolve(result);
-       })
-       .catch((error: any) => 
-       {
-          reject(error);
-       });
-    });
-  }
 
   slidePrev() {
     this.slides.slidePrev().then((x: any) =>{
@@ -252,13 +310,11 @@ export class Tab1Page implements OnInit {
 
 
   clearFilters(){
-    this.zone.run(()=>{
-       this.spaceType.map( x=> x.status = false);
-       this.filters = {};
-      //  this.getPlacesList(this.filters);
-      this.displayName = true;
-      this.clearFilter= false;
-    });
+    this.hasFilter= false;
+    // this.zone.run(()=>{
+    //    this.spaceType.map( x=> x.status = false);
+    //    this.filters = {};
+    // });
   }
 
   logout() {
