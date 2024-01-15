@@ -1,4 +1,4 @@
-import { Component, ElementRef, NgZone, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, NgZone, OnInit, ViewChild } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { IonicSlides, IonSearchbar, LoadingController, ModalController, ToastController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api-service.service';
@@ -35,6 +35,8 @@ export class Tab1Page implements OnInit {
   @ViewChild(IonicSlides) slides: any;
   @ViewChild('swiper') swiperRef: ElementRef;
   @ViewChild('searchbar', { static: false }) searchbar: IonSearchbar;
+
+  @Input() balance: number = 0;
   
   spaceType: any[];
   spaces: any[];

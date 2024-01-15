@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IonInput, LoadingController, ModalController, PickerController, ToastController } from '@ionic/angular';
+import { AlertController, IonInput, LoadingController, ModalController, PickerController, ToastController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api-service.service';
 import { ContactHostModalPage } from '../contact-host-modal/contact-host-modal.page';
 import { StripeService } from 'src/app/services/stripe.service';
 import { UserService } from 'src/app/services/user.service';
 import { MoreDetailsModalPage } from '../more-details-modal/more-details-modal.page';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { loadStripe } from '@stripe/stripe-js';
 
 
 
@@ -17,6 +18,17 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
   styleUrls: ['./space-detail.page.scss'],
 })
 export class SpaceDetailPage implements OnInit {
+
+  title = 'angular-stripe';
+  priceId = 'price_1HSxpTFHabj9XRH6DMA8pC7l';
+  product = {
+    title: 'Classic Peace Lily',
+    subTitle: 'Popular House Plant',
+    description: 'Classic Peace Lily is a spathiphyllum floor plant arranged in a bamboo planter with a blue & red ribbom and butterfly pick.',
+    price: 18.00
+  };
+  quantity = 1;
+  stripePromise = loadStripe('pk_test_51OJq1MIa2Zt80Jvhh1zBVKaiG3t46oKxwAPp0b8QjMVlZBFZsfV2QV7VWYVUUtw3paJskmCsO6AoJeU09mkhmY1f00LtYcxFyh');
 
   public sanitizedUrl: SafeResourceUrl;
   spaceId: any;
@@ -31,6 +43,9 @@ export class SpaceDetailPage implements OnInit {
   startDateTime: string;
   endDateTime: string;
   startDateTimeInput: any;
+  rentCharges: number = 0;
+  serviceCharges: number = 0;
+  totalFees: number = 0;
 
   constructor(
     private router: Router,
@@ -44,6 +59,7 @@ export class SpaceDetailPage implements OnInit {
     private userService : UserService,
     private formBuilder: FormBuilder,
     private pickerController: PickerController,
+    private alertController: AlertController,
   ) { 
     this.hoursForm = this.formBuilder.group({
       // hoursValue: ['', [Validators.required, Validators.pattern('^[0-9]*$')], disabled: true],
@@ -134,25 +150,83 @@ export class SpaceDetailPage implements OnInit {
 
 
 
-  pay(amount: number) {
+  async pay(amount: number) {
     const currentHours = this.hoursForm.get('hoursValue')!.value;
+    const loading = await this.loadingController.create();
     if(currentHours === "" || currentHours === "0") {
-      console.log('Hour is blank');
       this.showToast('Enter hours needed');
     }
 
     else {
-    console.log('Current hour is ' + currentHours);
-    this.stripeService.pay(amount * currentHours)
-      .then(() => {
-        this.bookSpace();
-      })
-      .catch((error: Error) => {
-        // Handle payment error
-        console.error('Payment failed:', error);
-      });
-    }
+
+      await loading.present();
+
+      try {
+          const token: any = await this.stripeService.pay(amount * currentHours);
+          const response: any = await this.stripeService.sendTokenToBackend(token, amount);  
+          loading.dismiss();
+          console.log('Response is ' + response);
+  
+          if (response.startsWith('Payment Successful')) {
+              this.showSuccessAlert('Payment Successful');
+              this.bookSpace();
+
+          } else {
+              this.showErrorAlert(response);
+          }
+  
+      } catch (error) {
+          // Handle payment error
+          loading.dismiss();
+          console.error('Payment failed:', error);
+          this.showErrorAlert('Payment Failed');
+      } finally {
+          loading.dismiss();
+      }
   }
+}
+  
+
+  async showSuccessAlert(message: any) {
+    const alert = await this.alertController.create({
+      header: 'Success',
+      message: message,
+      buttons: ['OK']
+    });
+
+    await alert.present();
+  }
+
+  async showErrorAlert(message: any) {
+    const alert = await this.alertController.create({
+      header: 'Error',
+      message: message,
+      buttons: ['OK']
+    });
+
+    await alert.present();
+
+  }
+
+
+
+
+
+  // async checkout() {
+  //   const stripe = await this.stripePromise;
+  //   if(stripe) {
+  //   const { error } = await stripe.redirectToCheckout({
+  //     mode: "payment",
+  //     lineItems: [{ price: this.priceId, quantity: this.quantity }],
+  //     successUrl: `${window.location.href}/success`,
+  //     cancelUrl: `${window.location.href}/failure`,
+  //   });
+  
+  //   if (error) {
+  //     console.log(error);
+  //   }
+  // }
+  // }
 
 
 
@@ -213,8 +287,8 @@ async bookSpace() {
     if (this.startDateTime && this.endDateTime) {
       const startDate = new Date(this.startDateTime);
       const endDate = new Date(this.endDateTime);
-      console.log('Start date is '+startDate);
-      console.log('End date is '+endDate);
+      // console.log('Start date is '+startDate);
+      // console.log('End date is '+endDate);
       const timeDifference = endDate.getTime() - startDate.getTime();
       const hoursDifference = Math.ceil(timeDifference / (1000 * 60 * 60));
       
@@ -222,10 +296,25 @@ async bookSpace() {
         this.showToast('Please enter a valid duration');
       }
 
+
       else if(hoursDifference > 1) {
+
+        this.rentCharges = this.place?.chargePerDay * hoursDifference || 0;
+        console.log(this.place?.chargePerDay);
+        this.serviceCharges = this.rentCharges * 0.05;
+        console.log(this.serviceCharges);
+        this.totalFees = this.rentCharges + this.serviceCharges;
+  
         this.showToast('Space will be booked for '+hoursDifference+' hours');
       }
       else {
+
+        this.rentCharges = this.place?.chargePerDay * hoursDifference || 0;
+        console.log(this.place?.chargePerDay);
+        this.serviceCharges = this.rentCharges * 0.05;
+        console.log(this.serviceCharges);
+        this.totalFees = this.rentCharges + this.serviceCharges;
+  
         this.showToast('Space will be booked for '+hoursDifference+' hour');
       }
 

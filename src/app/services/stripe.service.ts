@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 
@@ -6,10 +7,15 @@ import { AlertController } from '@ionic/angular';
 })
 export class StripeService {
   private handler: any;
+  private baseUrl = 'https://unitsession.com/';
+  // private baseUrl = 'http://localhost:8088/';
+  private processPayment = this.baseUrl+'payment/process-payment';
+
 
 
   constructor(
     private alertController: AlertController,
+    public http: HttpClient,
   ) { 
     this.loadStripe();
   }
@@ -27,17 +33,15 @@ export class StripeService {
   pay(amount: any): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       this.handler.open({
-        name: 'Demo Site',
-        description: '2 widgets',
+        name: 'Unit Session',
+        description: 'Payment page',
         amount: amount * 100,
         token: (token: any) => {
-          console.log(token);
+          console.log('Token1 from pay is '+token.id);
           this.showSuccessAlert('Payment Successful');
-          resolve();
+          resolve(token.id);
         },
         closed: () => {
-          // Handle closure of the payment form
-          // You can reject the promise here if needed
           reject(new Error('Payment form closed'));
         },
       });
@@ -53,11 +57,11 @@ export class StripeService {
       script.src = 'https://checkout.stripe.com/checkout.js';
       script.onload = () => {
         this.handler = (<any>window).StripeCheckout.configure({
-          key: 'pk_test_51OJq1MIa2Zt80Jvhh1zBVKaiG3t46oKxwAPp0b8QjMVlZBFZsfV2QV7VWYVUUtw3paJskmCsO6AoJeU09mkhmY1f00LtYcxFyh',
+          key: 'pk_live_51OJq1MIa2Zt80JvhtpGP4jmOaCsE9jVOlVWUzZKOvUFZUkXh4PoTJ1BIJkPiMMyQ2tFuZFCOU4IhpWhQkiJbgEVv00kGiX1sWC',
           locale: 'auto',
           token: (token: any) => {
-            console.log(token);
-            this.showSuccessAlert('Payment Successful');
+            // this.showSuccessAlert('Payment Successful');
+            // resolve();
           }
         });
       };
@@ -73,6 +77,20 @@ export class StripeService {
     });
 }
 
+
+async sendTokenToBackend(token: any, amount: any): Promise<string> {
+  const url = `${this.processPayment}/?tokenId=${token}&amount=${amount}`;
+
+  try {
+    const response = await this.http.post(url, {}, { responseType: 'text' }).toPromise();
+
+    console.log('Backend response:', response);
+    return response;
+  } catch (error) {
+    console.error('Error sending token to backend:', error);
+    throw error;
+  }
+}
 }
 
 

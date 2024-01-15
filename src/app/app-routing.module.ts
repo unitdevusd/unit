@@ -63,7 +63,15 @@ const routes: Routes = [
   {
     path: 'more-details-modal',
     loadChildren: () => import('./pages/more-details-modal/more-details-modal.module').then( m => m.MoreDetailsModalPageModule)
+  },  {
+    path: 'success',
+    loadChildren: () => import('./pages/success/success.module').then( m => m.SuccessPageModule)
+  },
+  {
+    path: 'failure',
+    loadChildren: () => import('./pages/failure/failure.module').then( m => m.FailurePageModule)
   }
+
 
 
 

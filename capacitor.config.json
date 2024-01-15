@@ -1,1 +1,7 @@
-{}
+{
+    "cordova.plugins": {
+        "cordova-plugin-file": {
+          "PACKAGE_NAME": "UnitSession"
+        }
+      }
+}
