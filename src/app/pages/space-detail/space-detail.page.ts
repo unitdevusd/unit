@@ -212,26 +212,6 @@ export class SpaceDetailPage implements OnInit {
 
 
 
-  // async checkout() {
-  //   const stripe = await this.stripePromise;
-  //   if(stripe) {
-  //   const { error } = await stripe.redirectToCheckout({
-  //     mode: "payment",
-  //     lineItems: [{ price: this.priceId, quantity: this.quantity }],
-  //     successUrl: `${window.location.href}/success`,
-  //     cancelUrl: `${window.location.href}/failure`,
-  //   });
-  
-  //   if (error) {
-  //     console.log(error);
-  //   }
-  // }
-  // }
-
-
-
-
-
 async bookSpace() {
   const spaceData = {"spaceId" : this.spaceId, "bookingStatus" : "BOOKED", "duration" : this.hoursForm.get('hoursValue')!.value, "userId" : this.userDetails?.userId, 
   "startDateTime" : this.hoursForm.get('startDateTime')!.value,

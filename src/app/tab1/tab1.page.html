@@ -96,14 +96,43 @@
 <ion-content [fullscreen]="true" *ngIf="role === 'HOST'">
 
 
+    <swiper-container [slidesPerView]="1" [spaceBetween]="10">
+      <swiper-slide>
+
+
   <ion-card class="account-balance">
     <ion-card-header>
       Account Balance
     </ion-card-header>
     <ion-card-content>
-      <ion-label class="balance-label">{{ balance | currency: 'USD':'symbol':'1.2-2' }}</ion-label>
+      <ion-label *ngIf="showBalance" class="balance-label">{{ balance | currency: 'USD':'symbol':'1.2-2' }}</ion-label> <br>
+      <ion-icon (click)="toggleBalanceVisibility()" [name]="showBalance ? 'eye' : 'eye-off'"></ion-icon> 
+      <ion-label>
+        {{ showBalance ? 'Hide Account Balance' : 'View Account Balance' }}
+      </ion-label>    
     </ion-card-content>
   </ion-card>
+
+  </swiper-slide>
+
+
+  <swiper-slide>
+  <ion-card class="withdraw-balance">
+    <ion-card-header>
+      Amount Withdrawn
+    </ion-card-header>
+    <ion-card-content>
+      <ion-label *ngIf="showBalance" class="balance-label">{{ withdrawnBalance | currency: 'USD':'symbol':'1.2-2' }}</ion-label> <br>
+      <ion-icon (click)="toggleBalanceVisibility()" [name]="showBalance ? 'eye' : 'eye-off'"></ion-icon> 
+      <ion-label>
+        {{ showBalance ? 'Hide Account Balance' : 'View Account Balance' }}
+      </ion-label>    
+
+    </ion-card-content>
+  </ion-card>
+
+    </swiper-slide>
+  </swiper-container>
 
   <ion-grid class="user-details pad-lr">
     <ion-row>

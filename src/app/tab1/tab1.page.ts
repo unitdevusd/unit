@@ -37,6 +37,7 @@ export class Tab1Page implements OnInit {
   @ViewChild('searchbar', { static: false }) searchbar: IonSearchbar;
 
   @Input() balance: number = 0;
+  @Input() withdrawnBalance: number = 0;
   
   spaceType: any[];
   spaces: any[];
@@ -68,6 +69,8 @@ export class Tab1Page implements OnInit {
   role: string;
   userId: any;
   userDetails: any;
+  showBalance: boolean = true;
+
 
 
   constructor(
@@ -99,11 +102,22 @@ export class Tab1Page implements OnInit {
     this.firstName = this.userDetails?.firstName || 'Guest';
     this.role = this.userDetails?.role;
     this.userId = this.userDetails?.userId;
-    this.getCurrentLocation();
-    this.getMySpaces();
-    this.getSpacesAround();
 
-    console.log('Gotten spaces around');
+    this.getCurrentLocation();
+
+    if(this.role === 'HOST') {
+      this.getMySpaces();
+      this.getAccountBalance();
+    }
+
+    if(this.role === 'TENANT') {
+      this.getSpacesAround();
+    }
+
+  }
+
+  toggleBalanceVisibility() {
+    this.showBalance = !this.showBalance;
   }
 
   getCurrentLocation() {
@@ -386,6 +400,47 @@ export class Tab1Page implements OnInit {
   
   
     }
+
+
+
+
+    async getAccountBalance() {
+
+      try {
+        const loading = await this.loadingController.create();
+        await loading.present();
+    
+        if (this.userId) {
+          const userData = {"userId" : this.userId};
+          this._apiService.fetchAccountBalance(userData).subscribe(
+            (response: any) => {
+              loading.dismiss();
+              console.log(response);
+              if(response === null) {
+                this.balance = 0;
+                this.withdrawnBalance = 0;
+              } else {
+                const [balance, withdrawnBalance] = response.split('~~').map(Number);
+                this.balance = balance ?? 0;
+                this.withdrawnBalance = withdrawnBalance ?? 0;         
+              }
+            },
+            (error: any) => {
+              console.error(error);
+              loading.dismiss();              
+            }
+          );
+        }
+      } catch (error) {
+        console.error(error);
+      }
+  
+  
+    }
+
+
+
+
 
 
     async getAllCreatedSpaces(userId: any) {

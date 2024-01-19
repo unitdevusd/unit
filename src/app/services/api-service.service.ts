@@ -20,6 +20,7 @@ export class ApiService {
   private tenantSpacesUrl = this.baseUrl+'spaces/getbookedspaces';
   private spaceImagesUrl = this.baseUrl+'spaces/getSpaceImages';
   private filterSpacesUrl = this.baseUrl+'map/filterspaces';
+  private accountBalanceUrl = this.baseUrl+'payment/account-balance';
 
 
 
@@ -133,17 +134,9 @@ export class ApiService {
     return this.http.post(this.filterSpacesUrl, payload);
   }
 
-  // filterSpaces(address: string): Observable<any> {
-  //   console.log('Address is ' + address);
-  //   const params = new HttpParams().set('address', address);
-  
-  //   return this.http.get(this.filterSpacesUrl, { params })
-  //     .pipe(
-  //       catchError((error) => {
-  //         console.error('Error in filterSpaces:', error);
-  //         throw error; // Rethrow the error to propagate it to the calling code
-  //       })
-  //     );
-  // }
+  fetchAccountBalance(payload: any): Observable<any> {
+    return this.http.post(this.accountBalanceUrl, payload, { responseType: 'text' });
+  }
+ 
 
 }

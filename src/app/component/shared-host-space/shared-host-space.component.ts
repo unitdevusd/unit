@@ -22,13 +22,8 @@ export class SharedHostSpaceComponent  implements OnInit {
 
 
   constructor(
-    private apiService: ApiService,
     private userService : UserService,
-    private loadingController : LoadingController,
     private router : Router,
-    private alertController : AlertController,
-    private toastController : ToastController
-
   ) { 
 
     const userDetails = this.userService.getUserDetails();
