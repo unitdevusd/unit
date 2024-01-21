@@ -46,6 +46,7 @@ export class SpaceDetailPage implements OnInit {
   rentCharges: number = 0;
   serviceCharges: number = 0;
   totalFees: number = 0;
+  fromTab2: boolean = false;
 
   constructor(
     private router: Router,
@@ -74,26 +75,16 @@ export class SpaceDetailPage implements OnInit {
     this.userDetails = this.userService.getUserDetails();
     this.userId = this.userDetails?.userId;
     this.spaceId = this.route.snapshot.paramMap.get('spaceId');
+    this.fromTab2 = history.state.fromTab2;
+    if (this.fromTab2) {
+      console.log('From Tab 2');
+      this.bookingButtonText = 'Book Again'
+    }
     this.getSpaceById();
     const url = `https://maps.google.com/maps?q=41.8781136,-87.6297982&z=10&output=embed`;
     this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
 
-
-    // this.customPickerOptions = {
-    //   buttons: [
-    //     {
-    //       text: 'Cancel',
-    //       role: 'cancel',
-    //     },
-    //     {
-    //       text: 'Done',
-    //       handler: () => {
-    //         // Handle the done button click if needed
-    //       },
-    //     },
-    //   ],
-    // };
-
+   
     
 
   }
@@ -116,7 +107,8 @@ export class SpaceDetailPage implements OnInit {
           (response: any) => {
             loading.dismiss();
             this.place = response;
-            this.bookingButtonText = 'Click to book space'
+            this.fromTab2 ? this.bookingButtonText = 'Book Again' : this.bookingButtonText = 'Click to book space';
+            // this.bookingButtonText = 'Click to book space'
           },
           (error: any) => {
             console.error(error);
@@ -162,7 +154,7 @@ export class SpaceDetailPage implements OnInit {
       await loading.present();
 
       try {
-          const token: any = await this.stripeService.pay(amount * currentHours);
+          const token: any = await this.stripeService.pay(amount);
           const response: any = await this.stripeService.sendTokenToBackend(token, amount);  
           loading.dismiss();
           console.log('Response is ' + response);
@@ -207,8 +199,6 @@ export class SpaceDetailPage implements OnInit {
     await alert.present();
 
   }
-
-
 
 
 

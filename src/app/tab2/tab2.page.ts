@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { UserService } from '../services/user.service';
 import { ApiService } from '../services/api-service.service';
-import { ToastController } from '@ionic/angular';
+import { NavController, ToastController } from '@ionic/angular';
 import { LoaderService } from '../services/loader-service.service';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 
 @Component({
   selector: 'app-tab2',
@@ -21,6 +21,7 @@ export class Tab2Page {
     private toastController : ToastController,
     private _loader: LoaderService,
     private router: Router,
+    private navCtrl: NavController,
 
 
 
@@ -88,6 +89,20 @@ export class Tab2Page {
       position: 'bottom',
     });
     toast.present();
+  }
+
+
+  place(tenantSpaces: any) {
+    console.log('Place is '+tenantSpaces.spaceLocation);
+    let navigationExtras: NavigationExtras = {
+      state: {
+        place: tenantSpaces,
+        fromTab2: true
+      }
+    };
+    this.router.navigateByUrl(`/space-detail/${tenantSpaces.spaceId}`, navigationExtras);
+    // this.router.navigate(['/space-detail', tenantSpaces.spaceId], navigationExtras);
+
   }
 
 }
