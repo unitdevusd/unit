@@ -20,6 +20,7 @@ export class ApiService {
   private tenantSpacesUrl = this.baseUrl+'spaces/getbookedspaces';
   private spaceImagesUrl = this.baseUrl+'spaces/getSpaceImages';
   private filterSpacesUrl = this.baseUrl+'map/filterspaces';
+  private filterSpacesRadiusUrl = this.baseUrl+'map/filterspacesbyradius';
   private accountBalanceUrl = this.baseUrl+'payment/account-balance';
 
 
@@ -132,6 +133,11 @@ export class ApiService {
   filterSpaces(payload: any): Observable<any> {
     console.log(payload);
     return this.http.post(this.filterSpacesUrl, payload);
+  }
+
+  filterCloseSpaces(payload: any): Observable<any> {
+    console.log(payload);
+    return this.http.post(this.filterSpacesRadiusUrl, payload);
   }
 
   fetchAccountBalance(payload: any): Observable<any> {

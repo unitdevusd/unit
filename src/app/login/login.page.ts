@@ -67,7 +67,8 @@ export class LoginPage implements OnInit {
   //   }
   // }
   registerpage() {
-    this.router.navigateByUrl('/register-role', { replaceUrl: true });
+    // this.router.navigateByUrl('/register-role', { replaceUrl: true });
+    this.router.navigateByUrl('/register-role');
   }
 
   async showSuccessAlert() {

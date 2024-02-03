@@ -51,6 +51,7 @@ export class Tab1Page implements OnInit {
   spaceFilters: any = [];
   autocomplete: { input: string; };
   autocompleteItems: any[];
+  searchResults: any;
   GoogleAutocomplete: any;
   lat: any;
   long: any;
@@ -204,24 +205,70 @@ export class Tab1Page implements OnInit {
       });
   }
 
+  getExactLocation(item: any): Promise<string> {
+    const apiKey = 'AIzaSyCZme7cYLG7jnK4Cn8ZFnQJDUKPNwIsfqI';
+    const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${this.lat},${this.long}&key=${apiKey}`;
+
+    return fetch(apiUrl)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.results && data.results.length > 0) {
+         
+          this.autocomplete.input = data.results[0].formatted_address;
+          return data.results[0].formatted_address;
+        } else {
+          return Promise.reject('No address found');
+        }
+      });
+  }
+
 
   async selectSearchResult(item: any) {
     this.address = item.structured_formatting.main_text;
-    this.autocomplete.input = this.address;
+    this.autocomplete.input = item.description;
     this.autocompleteItems = [];
     const payload = { address: item.description };
-    this._apiService.filterSpaces(payload).subscribe(
+    const loading = await this.loadingController.create();
+    await loading.present();
+    this._apiService.filterCloseSpaces(payload).subscribe(
       (response: any) => {
+        if (response.length > 0) {
         console.log('Response is '+response[0].spaceLocation);
         this.hasFilter = true;
         this.placesFiltered = response;
+        loading.dismiss();
+        }
+        else {
+          console.log('No spaces around but these are available spaces');
+          this.searchResults = 'Zero spaces found but here are some from nearby';
+
+          this._apiService.filterSpaces(payload).subscribe(
+            (response: any) => {
+              console.log('Response is '+response[0].spaceLocation);
+              this.hasFilter = true;
+              this.placesFiltered = response;
+              loading.dismiss();
+
+
+            },
+            (error: any) => {
+              console.error(error);
+              this.showToast('Unable to fetch spaces');    
+              loading.dismiss();    
+              // this.showErrorAlert('Unexpected error occurred');
+            }
+          );
+        }
       },
       (error: any) => {
         console.error(error);
-        this.showToast('Unable to fetch spaces');        
+        this.showToast('Unable to fetch spaces');    
+        loading.dismiss();    
         // this.showErrorAlert('Unexpected error occurred');
       }
     );
+    
+
 
 
 
@@ -327,6 +374,7 @@ export class Tab1Page implements OnInit {
 
   clearFilters(){
     this.hasFilter= false;
+    this.searchResults = '';
     // this.zone.run(()=>{
     //    this.spaceType.map( x=> x.status = false);
     //    this.filters = {};
@@ -421,8 +469,8 @@ export class Tab1Page implements OnInit {
                 this.withdrawnBalance = 0;
               } else {
                 const [balance, withdrawnBalance] = response.split('~~').map(Number);
-                this.balance = balance ?? 0;
-                this.withdrawnBalance = withdrawnBalance ?? 0;         
+                this.balance = isNaN(balance) ? 0 : balance;
+                this.withdrawnBalance = isNaN(withdrawnBalance) ? 0 : withdrawnBalance;
               }
             },
             (error: any) => {

@@ -150,9 +150,7 @@ export class SpaceDetailPage implements OnInit {
     }
 
     else {
-
       await loading.present();
-
       try {
           const token: any = await this.stripeService.pay(amount);
           const response: any = await this.stripeService.sendTokenToBackend(token, amount);  
@@ -166,6 +164,8 @@ export class SpaceDetailPage implements OnInit {
           } else {
               this.showErrorAlert(response);
           }
+
+
   
       } catch (error) {
           // Handle payment error
@@ -271,7 +271,7 @@ async bookSpace() {
 
         this.rentCharges = this.place?.chargePerDay * hoursDifference || 0;
         console.log(this.place?.chargePerDay);
-        this.serviceCharges = this.rentCharges * 0.05;
+        this.serviceCharges = this.rentCharges * 0.1;
         console.log(this.serviceCharges);
         this.totalFees = this.rentCharges + this.serviceCharges;
   
@@ -281,7 +281,7 @@ async bookSpace() {
 
         this.rentCharges = this.place?.chargePerDay * hoursDifference || 0;
         console.log(this.place?.chargePerDay);
-        this.serviceCharges = this.rentCharges * 0.05;
+        this.serviceCharges = this.rentCharges * 0.1;
         console.log(this.serviceCharges);
         this.totalFees = this.rentCharges + this.serviceCharges;
   

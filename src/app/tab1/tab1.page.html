@@ -21,6 +21,9 @@
 
 
 <ion-content [fullscreen]="true" *ngIf="role === 'TENANT'">
+
+
+
   <ion-grid class="user-details pad-lr">
     <ion-row>
       <ion-col size="12">    
@@ -47,19 +50,28 @@
     </ion-row>
   </ion-grid>
   <div [hidden]="autocompleteItems.length == 0" class="search_list">
-    <ion-list (click)="useCurrentLocation()" lines="none">
+    <!-- <ion-list lines="none">
       <ion-item>
-        <ion-label>
+        <ion-label (click)="getExactLocation(item)">
           <img  class="image-loc" style="margin-inline-end: 0px !important;" slot="start"
             src="../../../../assets/imgs/material-location-on.png" />
           <p class="main_text">Current Location</p>
         </ion-label>
       </ion-item>
-    </ion-list>
+    </ion-list> -->
     <ion-list [hidden]="autocompleteItems.length == 0" lines="none">
+
+      <!-- <ion-label (click)="getExactLocation(item)">
+        <img  class="image-loc" style="margin-inline-end: 0px !important;" slot="start"
+          src="../../../../assets/imgs/material-location-on.png" />
+        <b class="main_text">Current Location</b>
+      </ion-label> -->
+
       <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
         <ion-label>
-          <p class="secondary_text"> {{ item.structured_formatting.secondary_text }} </p>
+          <img  class="image-loc" style="margin-inline-end: 0px !important;" slot="start"
+          src="../../../../assets/imgs/material-location-on.png" />
+          {{ item.description }}
         </ion-label>
       </ion-item>
     </ion-list>
@@ -73,6 +85,11 @@
           <h3 class="top-heading">Places Around You</h3>        
         </ion-col>
       </ion-row>
+
+      <div [hidden]="!searchResults" class="search_list">
+        <ion-icon name="search"></ion-icon> {{ searchResults }}
+        </div>
+    
     </ion-grid>
 
     <div *ngIf="!hasFilter">
@@ -163,7 +180,7 @@
 
       <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
         <ion-label>
-          <p class="secondary_text"> {{ item.structured_formatting.secondary_text }} </p>
+          <p class="secondary_text"> {{ item.description }} </p>
         </ion-label>
       </ion-item>
     </ion-list>

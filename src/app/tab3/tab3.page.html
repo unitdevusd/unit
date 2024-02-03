@@ -39,7 +39,7 @@
       </ion-item>   -->
 
       <ion-item lines="full">
-        <ion-toggle *ngIf="userDetails?.role !== null && userDetails?.role == 'HOST'" [(ngModel)]="hostToggle" (ionChange)="toggleRole('HOST')">Switch to Tenant</ion-toggle>
+        <ion-toggle *ngIf="userDetails?.role !== null && userDetails?.role == 'HOST'" [(ngModel)]="hostToggle" (ionChange)="toggleRole('HOST')">Switch to Dancer</ion-toggle>
         <ion-toggle *ngIf="userDetails?.role !== null && userDetails?.role == 'TENANT'" [(ngModel)]="tenantToggle" (ionChange)="toggleRole('TENANT')">Switch to Host</ion-toggle><br /><br />
     </ion-item>
 
