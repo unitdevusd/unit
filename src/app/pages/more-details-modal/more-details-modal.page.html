@@ -13,8 +13,8 @@
 
 <ion-content>
   <ion-list>
-    <ion-item *ngIf="place.visitDays" style="color: red;">
-      <ion-label>Available day for visit: {{ place.visitDays}} </ion-label>
+    <ion-item *ngIf="place.visitDays">
+      <ion-label>Available day for visit: <span style="color: red;"> {{ place.visitDays}} </span></ion-label>
     </ion-item>
 
     <ion-item *ngIf="place.visitStartTime && place.visitEndTime">
@@ -22,7 +22,7 @@
     </ion-item>
 
     <ion-item *ngIf="place.description">
-      <ion-label>Size(Square metre): {{ place.description }}</ion-label>
+      <ion-label>Size(Feet): {{ place.description }}</ion-label>
     </ion-item>
 
     <ion-item *ngIf="place.practice">
