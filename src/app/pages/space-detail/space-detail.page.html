@@ -107,7 +107,7 @@
       <ion-card-title>Description</ion-card-title>
     </ion-card-header>
     <ion-card-content *ngIf="place?.description !== null && place?.description; else nodescription">
-      {{ place.description }}
+      {{ place.size.replace('People', 'bboys') }}
       <ng-template #nodescription>
         <b>No Content available</b>
       </ng-template>
