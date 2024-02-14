@@ -12,6 +12,7 @@ import { loadStripe } from '@stripe/stripe-js';
 
 
 
+
 @Component({
   selector: 'app-space-detail',
   templateUrl: './space-detail.page.html',
@@ -61,6 +62,7 @@ export class SpaceDetailPage implements OnInit {
     private formBuilder: FormBuilder,
     private pickerController: PickerController,
     private alertController: AlertController,
+
   ) { 
     this.hoursForm = this.formBuilder.group({
       // hoursValue: ['', [Validators.required, Validators.pattern('^[0-9]*$')], disabled: true],
@@ -250,6 +252,7 @@ async bookSpace() {
   
     await modal.present();
   }
+
 
 
 

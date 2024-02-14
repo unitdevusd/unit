@@ -7,6 +7,11 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
+
+  <div [hidden]="!searchResults" class="search_list">
+    <ion-icon name="search"></ion-icon> {{ searchResults }}
+    </div>
+
 </ion-header>
 <ion-content>
   <ion-list>
@@ -32,71 +37,47 @@
     <ion-list [hidden]="autocompleteItems.length == 0" lines="none">
       <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
         <ion-label>
-          <p class="secondary_text"> {{ item.structured_formatting.secondary_text }} </p>
+          <p class="secondary_text"> {{ item.description }} </p>
         </ion-label>
       </ion-item>
     </ion-list>
   </div>
-  <ion-grid>
-    <ion-row>
-      <ion-col size="6">
-        <ion-list>
-          <ion-list-header>
-            <h4>From</h4>
-          </ion-list-header>
-          <ion-datetime displayFormat="MMM DD YYYY" [(ngModel)]="dates.startDate" placeholder="Start Date" class="input-with">
-          </ion-datetime>
-        </ion-list>
-      </ion-col>
-      <ion-col size="6">
-        <ion-list>
-          <ion-list-header>
-            <h4>To</h4>
-          </ion-list-header>
-          <ion-datetime placeholder="End Date" displayFormat="MMM DD YYYY" [(ngModel)]="dates.endDate" class="input-with">
-          </ion-datetime>
-        </ion-list>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-  <ion-grid>
-    <ion-row>
-      <ion-col size="12">
-        <ion-list>
-          <ion-list-header>
-            <h4>Accessibility</h4>
-          </ion-list-header>
-          <ion-select (ionChange)="onTimeChange($event)" [(ngModel)]="selectedAccess" class="select-with">
-            <ion-select-option *ngFor="let am of timeSlotTypeList; let i=index" [value]="am._id">{{am.accessType}}
-            </ion-select-option>
-          </ion-select>
-        </ion-list>
-      </ion-col>
-      <ion-col size="4"> </ion-col>
-      <ion-col size="4"> </ion-col>
-    </ion-row>
-  </ion-grid>
-  <div style="text-align: center;">
-    <ion-list>
-      <ion-list-header>
-        <h4>Features</h4>
-      </ion-list-header>
-      </ion-list>
-      <ion-badge *ngFor="let am of features; let i=index" class="bad-col" color="tertiary">
-        {{am.name}}
-        <ion-icon name="close-outline" (click)="clearFeature(i)"></ion-icon>
-      </ion-badge>
-  </div>
+
+
+
+  <!-- <ion-list mode="md"> -->
+    <ion-item mode="md">
+      <ion-label position="floating" style="margin-bottom: 20px;">Preferred space type</ion-label>
+      <ion-select [(ngModel)]="spaceFloor">
+        <!-- <ion-select-option value="" selected disabled>Select Space Type</ion-select-option> -->
+        <ion-select-option value="Linoleum / Dance Floor">Linoleum / Dance Floor</ion-select-option>
+        <ion-select-option value="Padded / Gym Floor">Padded / Gym Floor</ion-select-option>
+        <ion-select-option value="Trampoline">Trampoline</ion-select-option>
+        <ion-select-option value="Grass">Grass</ion-select-option>
+        <ion-select-option value="Concrete">Concrete</ion-select-option>
+      </ion-select>
+    </ion-item>
+  <!-- </ion-list> -->
+
+
+  <ion-item>
+    <ion-label>Price Range(Per hour)</ion-label>
+
+  <ion-range aria-label="Dual Knobs Range" [dualKnobs]="true" [pin]="true" [value]="{ lower: 20, upper: 80 }" (ionChange)="updatePriceRange($event)"></ion-range>
+
+</ion-item>
+
+<ion-grid>
+  <ion-row class="ion-align-items-start">
+    <ion-col>
+      <ion-button color="primary" (click)="applyFilters()" class="btn">Apply</ion-button>
+    </ion-col>
+    <!-- <ion-col class="ion-align-self-end" style="left: 25%;">
+      <ion-button color="danger" (click)="clearFilters()" class="btn">Clear</ion-button>
+    </ion-col> -->
+  </ion-row>
+</ion-grid>
+
+
 </ion-content>
-<ion-footer>
-  <ion-grid>
-    <ion-row class="ion-align-items-start">
-      <ion-col>
-        <ion-button color="primary" (click)="applyFilters()" class="btn">Apply</ion-button>
-      </ion-col>
-      <ion-col class="ion-align-self-end" style="left: 25%;">
-        <ion-button color="danger" (click)="clearFilters()" class="btn">Clear</ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-</ion-footer>
+

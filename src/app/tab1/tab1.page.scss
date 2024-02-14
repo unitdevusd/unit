@@ -345,4 +345,12 @@
     background-color: #a3a4a7;
   }
 
+
+  .center-card {
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap; 
+    min-height: 100vh;
+  }
+
   

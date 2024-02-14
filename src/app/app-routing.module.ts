@@ -63,14 +63,23 @@ const routes: Routes = [
   {
     path: 'more-details-modal',
     loadChildren: () => import('./pages/more-details-modal/more-details-modal.module').then( m => m.MoreDetailsModalPageModule)
-  },  {
+  },
+  {
     path: 'success',
     loadChildren: () => import('./pages/success/success.module').then( m => m.SuccessPageModule)
   },
   {
     path: 'failure',
     loadChildren: () => import('./pages/failure/failure.module').then( m => m.FailurePageModule)
+  },
+  {
+    path: 'host-space-detail/:spaceId',
+    loadChildren: () => import('./pages/host-space-detail/host-space-detail.module').then( m => m.HostSpaceDetailPageModule)
+  },  {
+    path: 'modify-rules-modal',
+    loadChildren: () => import('./pages/modify-rules-modal/modify-rules-modal.module').then( m => m.ModifyRulesModalPageModule)
   }
+
 
 
 

@@ -22,6 +22,10 @@ export class ApiService {
   private filterSpacesUrl = this.baseUrl+'map/filterspaces';
   private filterSpacesRadiusUrl = this.baseUrl+'map/filterspacesbyradius';
   private accountBalanceUrl = this.baseUrl+'payment/account-balance';
+  private deleteSpaceUrl = this.baseUrl+'spaces/deleteById';
+  private updateRulesUrl = this.baseUrl+'spaces/updateRulesById';
+  private updateImagesUrl = this.baseUrl+'spaces/updateSpaceImages';
+  private filterPreferenceUrl =  this.baseUrl+'spaces/filterspacesbyPreference';
 
 
 
@@ -143,6 +147,21 @@ export class ApiService {
   fetchAccountBalance(payload: any): Observable<any> {
     return this.http.post(this.accountBalanceUrl, payload, { responseType: 'text' });
   }
+
+  deleteSpace(payload: any): Observable<any> {
+    return this.http.post(this.deleteSpaceUrl, payload, { responseType: 'text' });
+  }
  
 
+  updateRules(payload: any): Observable<any> {
+    return this.http.post(this.updateRulesUrl, payload);
+  }
+
+  updateImages(payload: any): Observable<any> {
+    return this.http.post(this.updateImagesUrl, payload);
+  }
+
+  filterPreference(payload: any): Observable<any> {
+    return this.http.post(this.filterPreferenceUrl, payload);
+  }
 }

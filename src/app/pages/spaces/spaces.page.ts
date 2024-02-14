@@ -36,6 +36,10 @@ export class SpacesPage implements OnInit {
   firstName: any;
   autocomplete: any;
   autocompletedInput: { input: string; };
+  newRule: { input: string; };
+  rules: string[] = [];
+  totalSize: number = 0;
+  largestFileSize: number = 0;
   
 
 
@@ -62,6 +66,7 @@ export class SpacesPage implements OnInit {
     this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
     this.autocomplete = { input: '' };
     this.autocompleteItems = [];
+    this.newRule = { input: '' };
 
     this.userDetails = this.userService.getUserDetails();
     this.userId = this.userDetails?.userId;
@@ -71,8 +76,8 @@ export class SpacesPage implements OnInit {
       spaceLocation: new FormControl("", Validators.required),
       userId: this.userId,
       spaceType: new FormControl("", Validators.required),
-      spaceImage: new FormControl([]),
-      spaceRules: new FormControl([], Validators.required),
+      spaceImage: new FormControl([], Validators.required),
+      spaceRules: new FormControl(this.rules),
       description: new FormControl("", Validators.required),
       chargePerDay: new FormControl("", Validators.required),
       size: new FormControl("", Validators.required),
@@ -81,12 +86,35 @@ export class SpacesPage implements OnInit {
       visitEndTime: new FormControl("", Validators.required),
       practice: ['yes'],
       musicDetails: new FormControl("", Validators.required),
-      additionalDetails: new FormControl("", Validators.required),
+      additionalDetails: new FormControl("", [
+        Validators.required,
+        Validators.pattern(/^(ftp|http|https):\/\/[^ "]+$/)
+      ]),
     });
     
    }
 
   ngOnInit() {
+  }
+
+
+  onInputChange(event: any) {
+    this.newRule.input = event.target.value;
+  }
+
+  addRule() {
+    console.log('Adding rule');
+    console.log('New rule:', this.newRule);
+    if (this.newRule.input !== '') {
+      this.rules.push(this.newRule.input);
+      this.newRule.input = '';
+      console.log(this.rules);
+      const inputElement = document.getElementById('rules');
+      if (inputElement) {
+        (inputElement as HTMLInputElement).value = '';
+      }
+    }
+    
   }
 
 
@@ -108,8 +136,8 @@ export class SpacesPage implements OnInit {
 
 
   selectSearchResult(item: any) {
-    this.address = item.structured_formatting.secondary_text;
-    this.autocomplete.input = this.address;
+    this.address = item.description;
+    this.autocomplete.input = item.description;
     this.autocompleteItems = [];
   }
 
@@ -235,31 +263,55 @@ export class SpacesPage implements OnInit {
 
 
   onFileChange(event: any) {
-  const files: FileList = event.target.files;
-
-  if (files && files.length > 0) {
-    const promises: Promise<string>[] = [];
-
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-
-      if (file) {
-        promises.push(this.convertToBase64(file));
+    const files: FileList = event.target.files;
+  
+    this.totalSize = 0;
+    this.largestFileSize = 0;
+  
+    if (files && files.length > 0) {
+  
+      const promises: Promise<string>[] = [];
+  
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        this.totalSize += file.size;
+  
+        if (file.size > this.largestFileSize) {
+          this.largestFileSize = file.size;
+        }
+  
+        if (file) {
+          promises.push(this.convertToBase64(file));
+        }
       }
-    }
-
-    Promise.all(promises)
-      .then((base64Array) => {
-        this.spaceForm.patchValue({
-          spaceImage: base64Array,
+  
+      console.log(this.totalSize);
+      console.log(this.largestFileSize);
+  
+      // Update message display based on total size and largest file size
+      const maxTotalUploadMessage = document.getElementById('max-total-upload-message');
+      const maxUploadPerFileMessage = document.getElementById('max-upload-per-file-message');
+  
+      if (maxTotalUploadMessage) {
+        maxTotalUploadMessage.style.display = this.totalSize > 10 * 1024 * 1024 ? 'block' : 'none';
+      }
+  
+      if (maxUploadPerFileMessage) {
+        maxUploadPerFileMessage.style.display = this.largestFileSize > 2 * 1024 * 1024 ? 'block' : 'none';
+      }
+  
+      Promise.all(promises)
+        .then((base64Array) => {
+          this.spaceForm.patchValue({
+            spaceImage: base64Array,
+          });
+        })
+        .catch((error) => {
+          console.error('Error converting files to base64:', error);
         });
-      })
-      .catch((error) => {
-        console.error('Error converting files to base64:', error);
-      });
+    }
   }
-}
-
+  
 convertToBase64(file: File): Promise<string> {
   return new Promise<string>((resolve, reject) => {
     const reader = new FileReader();

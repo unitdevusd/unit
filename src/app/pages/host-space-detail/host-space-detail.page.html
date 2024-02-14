@@ -1,0 +1,120 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+
+    <div class="title-and-logo">
+      <div class="logo">
+        <img src="../../../../assets/imgs/logo.png" alt="Logo" />
+      </div>
+      <ion-title>Hi, {{ firstName }}</ion-title>
+    </div>
+
+    <ion-icon class="rules" slot="end" name="trash" style="color: black;" size="large" (click)="confirmDelete()"></ion-icon>    
+
+  </ion-toolbar>
+</ion-header>
+
+
+
+<ion-content fullscreen class="ion-padding">
+
+
+  <ion-card class="full-width-card" no-padding>
+    <div class="img-container">
+    <ion-img class="img-spacetype" *ngIf="place" [src]="place.spaceImage" (click)="selectNewImages()"></ion-img>
+    <input type="file" accept="image/*" multiple="multiple" (change)="onFileChange($event)" style="display: none;">
+
+    </div>
+
+    <ion-card-content *ngIf="place?.dateAdded !== null && place?.dateAdded;">
+      Space added on {{ place?.dateAdded | date: 'medium' }}
+    </ion-card-content>
+
+    <ion-label>
+      <span id="max-total-upload-message" style="display: none; color: red; text-align: center;" class="message"><b>max total upload of 10MB</b></span>
+      <span id="max-upload-per-file-message" style="display: none; color: red; text-align: center;" class="message"><b>max upload per file of 2MB</b></span>
+
+    </ion-label>
+
+
+    </ion-card>
+
+
+    <ion-card class="full-width-card" no-padding>
+      <ion-card-header>
+        <ion-card-title>Description</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ng-container *ngIf="place?.description !== null && place?.description; else nodescription">
+          {{ place.size.replace('People', 'bboys') }}
+          <a ion-text color="primary" (click)="moreDetailsModal()">Read more</a>
+        </ng-container>
+        <ng-template #nodescription>
+          <b>No Content available</b>
+        </ng-template>
+      </ion-card-content>
+    </ion-card>
+    
+
+    <ion-card no-padding *ngIf="place?.spaceRules !== null && place?.spaceRules">
+      <ion-card-header>
+        <ion-card-title>House Rules</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          <ion-item *ngFor="let rule of place?.spaceRules">
+            <ion-label>{{ rule }}</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+
+
+      <ion-item class="rules" lines="none">
+        <ion-icon name="add-circle" slot="start" (click)="modifyRules()"></ion-icon>
+        <ion-label (click)="modifyRules()">Add/Remove Rules</ion-label>
+      </ion-item>
+    </ion-card>
+
+    
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Location</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <!-- <ion-img src="path/to/dummy/map.png"></ion-img> -->
+        <iframe
+        width="100%"
+        height="300"
+        frameborder="0"
+        style="border:0"
+        [src]="sanitizedUrl"
+      ></iframe>    
+    </ion-card-content>
+    </ion-card>
+
+    
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Owner Details</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="img-container">
+        <ion-img class="img-spacetype" img src="../../../../assets/imgs/user.png"></ion-img>
+      </div>
+  
+        <ion-row>
+          <ion-col size="5">
+            <ion-label *ngIf="place && place.spaceOwner && place.spaceOwner.firstName">
+              Hosted By {{ place.spaceOwner.firstName }}
+            </ion-label>
+              </ion-col>
+          <ion-col size="7">
+            <ion-button expand="full" (click)="openContactHostModal()">Contact Host</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-card-content>
+    </ion-card>
+  
+</ion-content>

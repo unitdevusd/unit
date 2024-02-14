@@ -37,7 +37,7 @@
         
               <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
                 <ion-label>
-                  <p class="secondary_text"> {{ item.structured_formatting.secondary_text }} </p>
+                  <p class="secondary_text"> {{ item.description }} </p>
                 </ion-label>
               </ion-item>
             </ion-list>
@@ -94,7 +94,7 @@
             </ion-item>
           </ion-list>
 
-          <ion-list>
+          <!-- <ion-list>
             <ion-item>
             <ion-label position="floating" style="margin-bottom: 20px;">House Rules</ion-label>
             <ion-select formControlName="spaceRules" multiple="true">
@@ -102,6 +102,21 @@
               <ion-select-option value="No Children">No Children</ion-select-option>
               <ion-select-option value="No Sharp Objects">No Sharp Objects</ion-select-option>
             </ion-select>
+          </ion-item>
+        </ion-list> -->
+
+
+        <ion-list>
+          <ion-item>
+            <ion-label position="floating" style="margin-bottom: 20px;">House Rules</ion-label>
+            <ion-input type="text" placeholder="Add house rules" (input)="onInputChange($event)" id="rules"></ion-input>
+            <ion-button (click)="addRule()">
+              <ion-icon name="add"></ion-icon>
+            </ion-button>
+          
+          </ion-item>
+          <ion-item *ngFor="let rule of rules">
+            {{ rule }}
           </ion-item>
         </ion-list>
           
@@ -112,20 +127,21 @@
               <ion-label position="floating">Upload Space Image</ion-label>
               <ion-input id="spaceImage" multiple="multiple" type="file" accept="image/*" (change)="onFileChange($event)"
                 formControlName="spaceImage" style="margin-top: 16px;">
-
               </ion-input>
-          <span id="file-upload-message" style="display: none;" class="message">max total upload of 100MB</span>
-          <span id="file-upload-message" style="display: none;" class="message">max upload per file of 10MB</span>
-
-
             </ion-item>
+
+            <ion-label>
+              <span id="max-total-upload-message" style="display: none; color: red;" class="message"><b>max total upload of 10MB</b></span>
+              <span id="max-upload-per-file-message" style="display: none; color: red;" class="message"><b>max upload per file of 2MB</b></span>
+    
+            </ion-label>
 
           </ion-list>
           <b style="color: red; margin-bottom: 6px; text-align: left; font-size: medium;">Preferences</b>
 
           <ion-list mode="md">
             <ion-item mode="md">
-              <ion-label position="floating" style="margin-bottom: 20px;">When can renter come for a tour?</ion-label>
+              <ion-label position="floating" style="margin-bottom: 20px;">When can dancers come session?</ion-label>
               <ion-select formControlName="visitDays">
                 <ion-select-option class="custom-color" value="" selected disabled>Select Day</ion-select-option>
                 <ion-select-option value="Anyday">Anyday</ion-select-option>
@@ -194,16 +210,24 @@
 
           <ion-list>
             <ion-item>
+              <ion-label position="floating">Enter URL for video(Youtube or any other web url)</ion-label>
+              <ion-input type="URL" formControlName="additionalDetails" placeholder="Video description of space"></ion-input>
+            </ion-item>
+          </ion-list>
+
+
+          <!-- <ion-list>
+            <ion-item>
               <ion-label position="floating">Extra Notes</ion-label>
               <ion-input formControlName="additionalDetails" placeholder="Any thing you'll like the renter to know"></ion-input>
             </ion-item>
-          </ion-list>
+          </ion-list> -->
 
 
 
         </form>
         <ion-button class="button-h" fill="solid" size="default" shape="round" expand="block" color="primary"
-        [disabled]="!spaceForm.valid" (click)="uploadSpace()">
+        [disabled]="!spaceForm.valid || totalSize > 10 * 1024 * 1024 || largestFileSize > 2 * 1024 * 1024" (click)="uploadSpace()">
           Add Space
         </ion-button>
       </ion-col>

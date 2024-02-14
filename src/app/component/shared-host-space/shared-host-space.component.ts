@@ -14,6 +14,8 @@ export class SharedHostSpaceComponent  implements OnInit {
   @Input() spaces: any;
   @Output() spaceSelected = new EventEmitter();
   @Output() clearAll = new EventEmitter();
+  @Output() unitClicked = new EventEmitter();
+
 
   userId: any;
   // spaces: any[] = [];
@@ -56,6 +58,10 @@ export class SharedHostSpaceComponent  implements OnInit {
 
   addClicked() {
     this.router.navigate(['/spaces']);
+  }
+
+  place(placeInfo: any){
+    this.unitClicked.emit(placeInfo);
   }
 
 

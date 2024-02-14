@@ -1,3 +1,133 @@
 .custom-cursor {
     cursor: pointer;
   }
+
+
+  .card-grid {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+  }
+
+
+
+  // .image-container {
+  //   width: 350px;
+  //   height: 350px;
+  // }
+
+
+  
+  // .img-spacetype {
+  //   width: 100%;
+  //   height: 100%;
+  //   object-fit: cover;
+  // }
+
+  .img-spacetype {
+    width: 100%; 
+    max-width: 350px;
+    max-height: 400px;
+    height: 100%;
+  }
+  
+  .img-spacetype:hover {
+    cursor: pointer;
+  }
+  
+  .img-spacetype  ion-img {
+    width: 100%;
+    height: 100%;
+    min-height: fit-content;
+  }
+  
+
+  .card_features {
+    margin-inline-start: 10px !important;
+    margin-inline-end: 10px !important;
+    display: grid !important;
+
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    ion-card-header {
+      padding-bottom: 5px !important;
+      padding: 0;
+      ion-card-subtitle {
+        text-align: left;
+        font-size: 13px;
+        font-weight: 2;
+        margin-top: 8px;
+        padding-top: 0;
+        font-family: "helveticaneuebold";
+        color: "tertiary";
+        margin-bottom: 0;
+        padding-bottom: 3px;
+      }
+      ion-card-title {
+        text-align: left;
+        color: "tertiary";
+        font-size: 11px;
+        font-family: "medium";
+        font-weight: 400;
+        span {
+          color: "tertiary";
+        }
+      }
+    }
+    ion-card-content {
+      // .rating {
+      //   text-align: left !important;
+      // }
+      .card-content {
+        // text-align: left !important;
+        color: "tertiary";
+        font-size: 11px !important;
+        margin-top: 6px;
+        margin-bottom: 6px;
+        font-family: "medium";
+        span {
+          color: #9b9b9b;
+        }
+      }
+      .card-content-popular{
+        // text-align: left !important;
+        color: "#000";
+        font-size: 11px !important;
+        font-family: "medium";
+        span {
+          color: #9b9b9b;
+        }
+      }
+    }
+  }
+
+  .card-list {
+    display: flex;
+    flex-wrap: wrap;
+    // justify-content: space-between;
+  }
+  
+  .card-item {
+    width: calc(25% - 1px); 
+    margin-bottom: 20px;
+    margin-right: 0px;
+  }
+
+  .card-item img {
+    width: 100%; 
+    height: 200px;
+    object-fit: cover;
+  }
+
+
+  @media screen and (max-width: 767px) {
+    .card-list {
+      display: block;
+    }
+  
+    .card-item {
+      width: 100%; /* Make each card item occupy full width */
+    }
+  }
+  

@@ -1,14 +1,10 @@
-  <!-- <swiper-container *ngIf="spaces && spaces.length > 0; else noSpaces" [slidesPerView]="3" [loop]="true" [spaceBetween]="10">
-    <swiper-slide *ngFor="let item of spaces"> -->
-      <ion-list *ngIf="spaces && spaces.length > 0; else noSpaces">
-        <ion-item *ngFor="let item of spaces" (click)="place(item)" 
+      <ion-list class="card-list" *ngIf="spaces && spaces.length > 0; else noSpaces">
+        <ion-item class="card-item" *ngFor="let item of spaces" (click)="place(item)" 
         >
     
-        <div>
+        <!-- <div (click)="place(item)" class="image-container"> -->
           <ion-grid class="card-grid">
-        <ion-row>
-          <ion-col>
-            <ion-card class="card_features ion-no-padding" style="width: 150%; margin-left: -20px;">
+            <ion-card class="card_features ion-no-padding">    
               <img class="img-spacetype" *ngIf="item?.images !== null; else noImage" 
               [src]="item.spaceImage" />
               <ng-template #noImage>
@@ -21,7 +17,7 @@
             </ion-card-header>
             <ion-card-content class="no-padding">
               <div class="card-content">
-                <span>$</span>{{item?.chargePerDay}}/<span>day</span>
+                <span>$</span>{{item?.chargePerDay}}/<span>hour</span>
 
                 <ion-icon name="share-social-outline" color="dark" style="font-size: 20px;" class="mr-l"
                 (click)="shareByFacebook(space)"></ion-icon>
@@ -29,15 +25,9 @@
               </div>
             </ion-card-content>
           </ion-card>
-
-          </ion-col>
-        </ion-row>
       </ion-grid>
-      </div>
       </ion-item>
       </ion-list>
-      <!-- </swiper-slide>
-    </swiper-container> -->
 
 
 

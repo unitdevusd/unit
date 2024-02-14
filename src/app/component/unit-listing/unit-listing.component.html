@@ -2,16 +2,16 @@
     <swiper-slide *ngFor="let item of units" (click)="place(item)"
   style="width: 100px; height: 370px; border: 2px solid #f8f8f8"> -->
 
-  <ion-list *ngIf="units && units.length > 0; else noUnits">
-    <ion-item *ngFor="let item of units" (click)="place(item)" 
-    style="border: 2px solid #f8f8f8">
+  <ion-list class="card-list" *ngIf="units && units.length > 0; else noUnits">
+    <ion-item class="card-item"  *ngFor="let item of units" (click)="place(item)" 
+    style="border: 2px solid #f8f8f8;">
 
-    <div (click)="place(item)">
+    <!-- <div (click)="place(item)"> -->
     <ion-grid class="card-grid">
-      <ion-row>
-        <ion-col>
+      <!-- <ion-row> -->
+        <!-- <ion-col>  -->
           <ion-card class="card_features ion-no-padding">
-            <img *ngIf="item?.images !== null; else noimage" [src]="item.spaceImage" />
+            <img class="img-spacetype" *ngIf="item?.images !== null; else noimage" [src]="item.spaceImage" />
             <ng-template #noimage>
               <img src="../../../../assets/imgs/dummy_space1.png" />
             </ng-template>
@@ -29,10 +29,10 @@
               </div>
             </ion-card-content>
           </ion-card>
-        </ion-col>
-      </ion-row>
+        <!-- </ion-col>
+      </ion-row> -->
     </ion-grid>
-    </div>
+    <!-- </div> -->
     </ion-item>
     </ion-list>
   <!-- </swiper-slide>

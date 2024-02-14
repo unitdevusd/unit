@@ -13,6 +13,8 @@
 
 <ion-content>
   <ion-list>
+
+
     <ion-item *ngIf="place.visitDays">
       <ion-label>Available day for visit: <span style="color: red;"> {{ place.visitDays}} </span></ion-label>
     </ion-item>
@@ -25,11 +27,18 @@
       <ion-label>Size(Feet): {{ place.description }}</ion-label>
     </ion-item>
 
+    <ion-item *ngIf="place.additionalDetails">
+      <ion-label>Video URL: <a target="_blank" href="{{ place.additionalDetails }}">{{ place.additionalDetails }}</a></ion-label>
+    </ion-item>
+
+    <!-- <ion-item *ngIf="place.additionalDetails">
+      <ion-label>Video URL: <a (click)="openVideoUrl(place.additionalDetails)" href="javascript:void(0)">{{ place.additionalDetails }}</a></ion-label>
+    </ion-item> -->
+
+
     <ion-item *ngIf="place.practice">
       <ion-label>Practice with tenant: {{ place.practice }}</ion-label>
     </ion-item>
-
-
 
     <ion-item *ngIf="place.musicDetails">
       <ion-label>Music Availability: {{ place.musicDetails }} </ion-label>

@@ -240,7 +240,7 @@ export class Tab1Page implements OnInit {
         }
         else {
           console.log('No spaces around but these are available spaces');
-          this.searchResults = 'Zero spaces found but here are some from nearby';
+          this.searchResults = 'No results in that area. Here are some close by to check out."';
 
           this._apiService.filterSpaces(payload).subscribe(
             (response: any) => {
@@ -335,10 +335,25 @@ export class Tab1Page implements OnInit {
     const modal = await this.modalCtrl.create({
       component: FiltersPage,
       cssClass: 'my-custom-modal-css',
-      componentProps: {
-        filters: JSON.stringify(this.filters)
-      }
+      breakpoints: [0,5],
+      initialBreakpoint: 0.6,
+      handle: false,
+
+      // componentProps: {
+      //   filters: JSON.stringify(this.filters)
+      // }
     });
+
+    modal.onDidDismiss()
+    .then((data) => {
+      console.log(data.data.data[0].spaceLocation);
+      this.hasFilter = true;
+      this.placesFiltered = data.data.data;
+  });
+
+
+  
+
     return await modal.present();
   }
 
@@ -350,6 +365,16 @@ export class Tab1Page implements OnInit {
       }
     };
     this.router.navigateByUrl(`/space-detail/${place.spaceId}`);
+  }
+
+  space(place: any) {
+    console.log('Place is '+place.spaceLocation);
+    let navigationExtras: NavigationExtras = {
+      state: {
+        place: place
+      }
+    };
+    this.router.navigateByUrl(`/host-space-detail/${place.spaceId}`);
   }
 
 

@@ -16,53 +16,71 @@
 
 <ion-content [fullscreen]="true">
 
-  <ion-card class="full-width-card" no-padding *ngIf="userDetails?.role === 'TENANT'">
-    <ng-container *ngIf="tenantSpaces && tenantSpaces.length > 0; else noSpacesTemplate">
-      <ion-list>
-        <ion-item *ngFor="let tenant of tenantSpaces">
-          <ion-row>
-            <ion-col size="7">
-              <ion-img [src]="tenant.spaceId.spaceImage" (click)="place(tenant.spaceId)"></ion-img> <br>
-              {{ tenant.spaceId.spaceLocation }}
-            </ion-col>
-            <ion-col size="5">
-              <ion-card-content>
-                <ion-label><b>BOOKED</b></ion-label>
-              </ion-card-content>
-            </ion-col>
-          </ion-row>
-        </ion-item>
-      </ion-list>
-    </ng-container>
+
+  <div *ngIf="(tenantSpaces && tenantSpaces.length > 0) || (hostSpaces && hostSpaces.length > 0); else noSpacesTemplate">
+
+<ion-list class="card-list" *ngIf="userDetails?.role === 'TENANT' && tenantSpaces && tenantSpaces.length > 0;">
   
-    <!-- Template to display when tenantSpaces is null or empty -->
-    <ng-template #noSpacesTemplate>
+  <ion-item class="card-item" *ngFor="let item of tenantSpaces" 
+  >
+        <ion-grid class="card-grid">
+      <ion-card class="card_features ion-no-padding">    
+        <img class="img-spacetype" *ngIf="item?.spaceId.spaceImage !== null; else noImage" 
+        [src]="item.spaceId.spaceImage" (click) = "place(item.spaceId)" />
+        <ng-template #noImage>
+          <img class="img-spacetype" src="../../../../assets/imgs/dummys.png" />
+        </ng-template>
 
-      <img class="img-spacetype-unit" src="../../../../assets/imgs/emptyList.png" />
-      <div class="no-item-unit">
-        <ion-button (click)="bookSpace()">No Space Booked yet</ion-button>
-      </div>
-    </ng-template>
-  </ion-card>  
+      <ion-card-header>
+        <ion-card-subtitle>{{ item.spaceId.spaceLocation }}</ion-card-subtitle>
+        <ion-card-title>Booked</ion-card-title>
+      </ion-card-header>
+      <ion-card-content class="no-padding">
+      </ion-card-content>
 
-<ion-card class="full-width-card" no-padding *ngIf="userDetails?.role === 'HOST'">
-  <ion-list>
-    <ion-item *ngFor="let host of hostSpaces">
-      <ion-row>
-        <ion-col size="7">
-          <ion-img *ngIf="host.spaceImage" [src]="host.spaceImage"></ion-img> <br>
-          {{ host.spaceLocation }}
-        </ion-col>
-        <ion-col size="5">
-          <ion-card-content>
-            <ion-label><b>
-              {{ host.bookingStatus === 'PENDING' ? 'No Bookings' : 'Booked' }}
-            </b></ion-label>
-          </ion-card-content>
-        </ion-col>
-      </ion-row>
-    </ion-item>
-  </ion-list>
-</ion-card>
+     
+    </ion-card>
+</ion-grid>
+</ion-item>
+</ion-list>
 
+
+
+
+<ion-list class="card-list" *ngIf="userDetails?.role === 'HOST' && hostSpaces && hostSpaces.length > 0;">
+  
+  <ion-item class="card-item" *ngFor="let item of hostSpaces" 
+  >
+        <ion-grid class="card-grid">
+      <ion-card class="card_features ion-no-padding">    
+        <img class="img-spacetype" *ngIf="item?.spaceImage !== null; else noImage" 
+        [src]="item.spaceImage" />
+        <ng-template #noImage>
+          <img class="img-spacetype" src="../../../../assets/imgs/dummys.png" />
+        </ng-template>
+
+      <ion-card-header>
+        <ion-card-subtitle>{{ item.spaceLocation }}</ion-card-subtitle>
+        <ion-card-title style="font-family: Verdana, Geneva, Tahoma, sans-serif; font-size: small;">{{ item.bookingStatus === 'PENDING' ? 'No Bookings' : 'Booked' }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content class="no-padding">
+      </ion-card-content>
+
+     
+    </ion-card>
+</ion-grid>
+</ion-item>
+</ion-list>
+
+  
+
+</div>
+
+<ng-template #noSpacesTemplate>
+
+  <img class="img-spacetype-unit" src="../../../../assets/imgs/emptyList.png" />
+  <div class="no-item-unit">
+    <ion-button (click)="bookSpace()">{{ userDetails?.role === 'HOST' ? 'No Space added yet' : 'No bookings yet' }}</ion-button>
+  </div>
+</ng-template>
 </ion-content>

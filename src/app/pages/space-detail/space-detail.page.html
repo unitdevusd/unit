@@ -19,7 +19,7 @@
 <ion-content>
   <!-- Card with image and "Click to book slot" button -->
   <ion-card class="full-width-card" no-padding>
-    <ion-img *ngIf="place" [src]="place.spaceImage"></ion-img>
+    <ion-img class="img-spacetype" *ngIf="place" [src]="place.spaceImage"></ion-img>
     <ion-card-content>
 
 
@@ -151,7 +151,7 @@
       <ion-card-title>Owner Details</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <ion-img img src="../../../../assets/imgs/user.png"></ion-img>
+      <ion-img class="img-spacetype" img src="../../../../assets/imgs/user.png"></ion-img>
 
       <ion-row>
         <ion-col size="5">

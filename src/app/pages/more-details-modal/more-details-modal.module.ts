@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { MoreDetailsModalPageRoutingModule } from './more-details-modal-routing.module';
 
 import { MoreDetailsModalPage } from './more-details-modal.page';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 @NgModule({
   imports: [
@@ -15,6 +16,7 @@ import { MoreDetailsModalPage } from './more-details-modal.page';
     IonicModule,
     MoreDetailsModalPageRoutingModule
   ],
-  declarations: [MoreDetailsModalPage]
+  declarations: [MoreDetailsModalPage],
+  providers: [InAppBrowser]
 })
 export class MoreDetailsModalPageModule {}

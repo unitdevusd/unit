@@ -1,5 +1,5 @@
-import { Component, Input, OnInit, NgZone } from '@angular/core';
-import { ModalController, NavParams } from '@ionic/angular';
+import { Component, Input, OnInit, NgZone, Output, EventEmitter } from '@angular/core';
+import { LoadingController, ModalController, NavParams } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api-service.service';
 import { GlobalService } from 'src/app/services/global.service';
 // import { config, KEY, UNITURL } from '../../config/config';
@@ -22,7 +22,7 @@ export class FiltersPage implements OnInit {
   
   @Input() filters: any;
 
-  private url: any = 'https://gur.sandbox.imkloud.com';
+  // private url: any = 'https://gur.sandbox.imkloud.com';
   features: any = [];
   timeSlotTypeList: any = [];
   public dates = {
@@ -39,7 +39,11 @@ export class FiltersPage implements OnInit {
   lat: any;
   long: any;
   address: any;
-
+  startPrice: number = 20;
+  endPrice: number = 80;
+  priceRange: { lower: number, upper: number } = { lower: this.startPrice, upper: this.endPrice };
+  spaceFloor: string;
+  searchResults: string;
   constructor(
     private api: ApiService,
     private _gs: GlobalService,
@@ -47,7 +51,9 @@ export class FiltersPage implements OnInit {
     public modalCtrl: ModalController,
     private zone : NgZone,
     private nativeGeocoder: NativeGeocoder,
-    private geolocation : Geolocation
+    private geolocation : Geolocation,
+    private _apiService : ApiService,
+    private loadingController : LoadingController,
   ) { 
 
      // get current location
@@ -63,51 +69,15 @@ export class FiltersPage implements OnInit {
  
 
   ngOnInit() {
-    if (this.navParams.get('filters')) {
-      let filters = JSON.parse(this.navParams.get('filters'));
-      console.log(filters);
-      this.city = filters.city;
-      if (filters.selectedDates) {
-        this.dates.startDate = filters.selectedDates.startDate;
-        this.dates.endDate = filters.selectedDates.endDate;
-      }
-      if (filters.features) {
-        this.selectedFeaturs = filters.features;
-      }
-      if (filters.accessTime) {
-        this.selectedTimeSlot = filters.accessTime;
-      }
-    }
-    this.placeMeta();
   }
-  placeMeta() {
-    const params = {
-      apiKey : 'rGpTKMEZjs3RR5vcfwg6pujoA54i33'
-    };
-    this.api.postRequest(this.url + '/api/v1/unit/placeMeta', params).subscribe(
-      async (result) => {
-        if (result.success) {
-         console.log(result);
-          this.features = result.data.list.amenities;
-          console.log(this.features);
-          if (this.selectedFeaturs.length) {
-            this.selectedFeaturs.map((y: any) => {
-              let index = this.features.indexOf(y._id);
-              this.features.splice(index, 1);
-            });
-          }
-          this.timeSlotTypeList = result.data.list.accessType;
-          console.log(this.timeSlotTypeList);
-          if (this.selectedTimeSlot.length) {
-            this.selectedTimeSlot.map((x: any) => {
-              this.selectedAccess = x;
-            });
-          };
-        } else {
-          console.log(result.message);
-        }
-      })
+
+
+  updatePriceRange(event: CustomEvent) {
+    this.priceRange = event.detail.value;
+    console.log('Selected Price Range:', this.priceRange);
+    // You can perform additional logic here if needed
   }
+
   onTimeChange(ev: any) {
     this.selectedTimeSlot = [];
     this.selectedTimeSlot.push(ev.detail.value);
@@ -115,27 +85,8 @@ export class FiltersPage implements OnInit {
   }
 
   applyFilters() {
-    let filters: any = {};
-    if (this.selectedTimeSlot.length) {
-      filters['accessTime'] = this.selectedTimeSlot;
-    }
-    if (this.dates.startDate && this.dates.endDate) {
-      filters['selectedDates'] = this.dates;
-    }
-    if (this.city) {
-      filters['city'] = this.city;
-    }
-    if (this.features.length) {
-      let featuresArray = [];
-      for (let i = 0; i < this.features.length; i++) {
-        featuresArray.push(this.features[i]._id);
-      }
-      filters['features'] = featuresArray;
-    }
-    console.log(filters);
-    // return;
-    this.dismiss();
-    this._gs.setFilterRefresh(filters);
+    this.getSpacesFromFilters();
+    // this.dismiss();
   }
 
 
@@ -145,7 +96,6 @@ export class FiltersPage implements OnInit {
   }
   clearAll() {
     this.selectedFeaturs = [];
-    this.placeMeta();
     this.dates.startDate = '';
     this.dates.endDate = '';
     this.city = '';
@@ -158,6 +108,13 @@ export class FiltersPage implements OnInit {
   dismiss() {
     this.modalCtrl.dismiss({
       'dismissed': true
+    });
+  }
+
+  dismissWithData(responseData: any) {
+    this.modalCtrl.dismiss({
+      role: 'applied',
+      data: responseData
     });
   }
 
@@ -187,8 +144,8 @@ export class FiltersPage implements OnInit {
   }
 
   selectSearchResult(item: any) {
-    this.address = item.structured_formatting.main_text;
-    this.autocomplete.input = this.address;
+    this.address = item.description;
+    this.autocomplete.input = item.description;
     this.autocompleteItems = [];
     this.getLatLOng(item.description).then(location =>{
       this.filters['location'] = [location[0]['longitude'],location[0]['latitude']];
@@ -257,6 +214,35 @@ export class FiltersPage implements OnInit {
       .catch((error: any) => {
         this.address = "Address Not Available!";
       });
+  }
+
+  async getSpacesFromFilters() {
+
+    const payload = { spaceLocation: this.autocomplete.input, spaceType : this.spaceFloor, 
+      lowerPriceRange : this.priceRange.lower, upperPriceRange : this.priceRange.upper };
+    const loading = await this.loadingController.create();
+    await loading.present();
+    this._apiService.filterPreference(payload).subscribe(
+      (response: any) => {
+        if (response.length > 0) {
+        console.log('Response is '+response[0].spaceLocation);
+        loading.dismiss();
+
+       
+        this.dismissWithData(response);
+        }
+        else {
+          loading.dismiss();
+          this.searchResults = 'No Location matches your filter';
+          console.log('No Location found');
+        }
+      },
+      (error: any) => {
+        console.error(error);
+        loading.dismiss();    
+      }
+    );
+    
   }
 
 }
