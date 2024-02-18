@@ -6,7 +6,7 @@
 
     <div class="title-and-logo">
       <div class="logo">
-        <img src="../../../../assets/imgs/logo.png" alt="Logo" />
+        <img src="../../../../assets/imgs/unit-logo.png" alt="Logo" style="width: 50px; height: auto;" />
       </div>
       <ion-title>Hi, {{ firstName }}</ion-title>
     </div>
@@ -107,16 +107,16 @@
 
 
         <ion-list>
+          <ion-label position="floating" style="margin-bottom: 20px; text-align: left; font-size: medium; display: block; margin-left: 16px;">House Rules</ion-label>
+
           <ion-item>
-            <ion-label position="floating" style="margin-bottom: 20px;">House Rules</ion-label>
-            <ion-input type="text" placeholder="Add house rules" (input)="onInputChange($event)" id="rules"></ion-input>
-            <ion-button (click)="addRule()">
-              <ion-icon name="add"></ion-icon>
-            </ion-button>
+            <ion-input type="text" placeholder="Type house rules" (input)="onInputChange($event)" id="rules"></ion-input>
+              <ion-icon name="add" slot="end" (click)="addRule()"></ion-icon>
           
           </ion-item>
-          <ion-item *ngFor="let rule of rules">
+          <ion-item *ngFor="let rule of rules; let i = index">
             {{ rule }}
+            <ion-icon name="remove-circle" slot="end" (click)="removeRule(i)"></ion-icon>
           </ion-item>
         </ion-list>
           
@@ -142,7 +142,7 @@
           <ion-list mode="md">
             <ion-item mode="md">
               <ion-label position="floating" style="margin-bottom: 20px;">When can dancers come session?</ion-label>
-              <ion-select formControlName="visitDays">
+              <ion-select formControlName="visitDays" multiple="true">
                 <ion-select-option class="custom-color" value="" selected disabled>Select Day</ion-select-option>
                 <ion-select-option value="Anyday">Anyday</ion-select-option>
                 <ion-select-option value="Sunday">Sunday</ion-select-option>
@@ -226,8 +226,13 @@
 
 
         </form>
-        <ion-button class="button-h" fill="solid" size="default" shape="round" expand="block" color="primary"
+        <!-- <ion-button class="button-h" fill="solid" size="default" shape="round" expand="block" color="primary"
         [disabled]="!spaceForm.valid || totalSize > 10 * 1024 * 1024 || largestFileSize > 2 * 1024 * 1024" (click)="uploadSpace()">
+          Add Space
+        </ion-button> -->
+
+        <ion-button class="button-h" fill="solid" size="default" shape="round" expand="block" color="primary"
+        [disabled]="totalSize > 10 * 1024 * 1024 || largestFileSize > 2 * 1024 * 1024" (click)="uploadSpace()">
           Add Space
         </ion-button>
       </ion-col>

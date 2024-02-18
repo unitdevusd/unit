@@ -1,4 +1,4 @@
-<ion-content fullscreen class="ion-padding">
+<!-- <ion-content fullscreen class="ion-padding">
     <div class="logo">
         <img src="../../../../assets/imgs/logo.png">
     </div>
@@ -39,4 +39,34 @@
             </ion-col>
         </ion-row>
     </ion-grid>
-</ion-content>
+</ion-content> -->
+
+
+
+<ion-content fullscreen class="ion-padding">
+    <div class="container">
+      <div class="logo">
+        <img src="../../../../assets/imgs/logo.png">
+      </div>
+      <div class="form-container">
+        <form class="form" [formGroup]="loginForm">
+          <ion-list mode="md">
+            <ion-item mode="md">
+              <ion-input id="email" placeholder="Email Address" type="email" formControlName="email"></ion-input>
+            </ion-item>
+          </ion-list>
+          <ion-list mode="md">
+            <ion-item mode="md">
+              <ion-input id="pass" type="password" placeholder="Password" formControlName="password"></ion-input>
+            </ion-item>
+          </ion-list>
+          <div class="forgot-pass">
+            <a routerLink="/forgot-password">Forgot Password?</a>
+          </div>
+          <ion-button class="button-h custom-cursor" fill="solid" size="default" shape="round" expand="block" color="primary" [disabled]="!loginForm.valid" (click)="loginUser()">Login</ion-button>
+          <p class="have">Don't have an account? <br><a class="signup-text" (click)="registerpage()"> Sign up </a></p>
+        </form>
+      </div>
+    </div>
+  </ion-content>
+  

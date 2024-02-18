@@ -240,7 +240,7 @@ export class Tab1Page implements OnInit {
         }
         else {
           console.log('No spaces around but these are available spaces');
-          this.searchResults = 'No results in that area. Here are some close by to check out."';
+          this.searchResults = 'No results in that area. Here are some close by to check out.';
 
           this._apiService.filterSpaces(payload).subscribe(
             (response: any) => {

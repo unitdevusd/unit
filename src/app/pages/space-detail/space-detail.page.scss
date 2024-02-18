@@ -1,28 +1,87 @@
-img {
-    max-height: 200px !important;
-}
+// img {
+//     max-height: 200px !important;
+// }
+
+
+// .full-width-card {
+//     margin: 0;
+//     width: 100%;
+// }
+
+// .title-class{
+//     background-color: red;
+// }
+
+// .custom-input {
+//     font-weight: bold;
+//     text-align: center;
+//     font-size: x-large;
+//   }
+
+//   .centered-toast {
+//     text-align: center;
+//     justify-content: center;
+//     margin-left: 10px;
+//   }
+
+
+//   .title-and-logo {
+//     position: absolute;
+//     top: 0;
+//     left: 0;
+//     right: 0;
+//     height: 60px;
+//     display: flex;
+//     align-items: center;
+//     background-color: #ed1c24;
+//     color: white;
+//     font-weight: 600;
+
+//   }
+
+//   .logo img {
+//     width: 32px;
+//     height: 32px; 
+//     margin: 0 5px 0 35px;
+
+//   }
+
+
+//   .img-spacetype {
+//     width: 100%; 
+//     max-width: 350px;
+//     height: auto;
+//   }
+  
+//   .img-spacetype  ion-img {
+//     width: 100%;
+//     height: auto;
+//   }
+
 
 
 .full-width-card {
-    margin: 0;
-    width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
-.title-class{
-    background-color: red;
+.img-spacetype {
+  width: 100%;
 }
 
-.custom-input {
-    font-weight: bold;
-    text-align: center;
-    font-size: x-large;
-  }
+.datetime-section {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
 
-  .centered-toast {
-    text-align: center;
-    justify-content: center;
-    margin-left: 10px;
-  }
+.fee-row {
+  margin-top: 20px;
+}
+
+.info-row {
+  margin-top: 20px;
+}
 
 
   .title-and-logo {
@@ -46,15 +105,11 @@ img {
 
   }
 
+  ion-card-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333; /* Example color */
+  }
 
-  .img-spacetype {
-    width: 100%; 
-    max-width: 350px;
-    height: auto;
-  }
-  
-  .img-spacetype  ion-img {
-    width: 100%;
-    height: auto;
-  }
+
 

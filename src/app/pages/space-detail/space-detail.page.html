@@ -16,8 +16,7 @@
 
 
 
-<ion-content>
-  <!-- Card with image and "Click to book slot" button -->
+<!-- <ion-content>
   <ion-card class="full-width-card" no-padding>
     <ion-img class="img-spacetype" *ngIf="place" [src]="place.spaceImage"></ion-img>
     <ion-card-content>
@@ -101,7 +100,6 @@
     </ion-card-content>  
   </ion-card>
 
-  <!-- Card with Description and Read more -->
   <ion-card class="full-width-card" no-padding>
     <ion-card-header>
       <ion-card-title>Description</ion-card-title>
@@ -115,7 +113,6 @@
     </ion-card-content>
   </ion-card>
 
-  <!-- Card with House Rules -->
   <ion-card no-padding *ngIf="place?.spaceRules !== null && place?.spaceRules">
     <ion-card-header>
       <ion-card-title>House Rules</ion-card-title>
@@ -129,13 +126,11 @@
     </ion-card-content>
   </ion-card>
 
-  <!-- Card with dummy map -->
   <ion-card>
     <ion-card-header>
       <ion-card-title>Location</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <!-- <ion-img src="path/to/dummy/map.png"></ion-img> -->
       <iframe
       width="100%"
       height="300"
@@ -166,4 +161,150 @@
     </ion-card-content>
   </ion-card>
 
+</ion-content> -->
+
+
+
+
+<ion-content>
+  <!-- Image and "Click to book slot" section -->
+  <ion-card class="full-width-card" no-padding>
+    <ion-img style="margin-top: 3px;" class="img-spacetype" *ngIf="place" [src]="place.spaceImage"></ion-img>
+    <ion-card-content>
+      <ion-label position="floating" *ngIf="place && place.chargePerDay"><b>Enter Duration (${{ place.chargePerDay }}/hour)</b></ion-label>
+      
+      <div style="display: flex; justify-content: center; align-items: center; margin-top: 10px;">
+        <ion-datetime-button datetime="startDateTime">Enter Start Date</ion-datetime-button>
+  
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime [preferWheel]="true" [showDefaultButtons]="true" id="startDateTime" minuteValues="0" displayFormat="HH:mm" (ionChange)="calculateHours()" [(ngModel)]="startDateTime">
+        <span slot="title">Select start Date/Time</span>
+      </ion-datetime>
+    </ng-template>
+  </ion-modal>
+  
+  <ion-icon name="swap-horizontal-outline" size="large" color="primary"></ion-icon>
+
+  <ion-datetime-button datetime="endDateTime"></ion-datetime-button>
+  
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime [preferWheel]="true" [showDefaultButtons]="true" id="endDateTime" minuteValues="0" [(ngModel)]="endDateTime" (ionChange)="calculateHours()">
+        <span slot="title">Select end Date/Time</span>
+      </ion-datetime>
+    </ng-template>
+  </ion-modal>
+  
+  </div>
+
+      
+      <!-- Rent Charges, Service Charges, and Total Fees -->
+      <ion-row class="fee-row">
+        <ion-col size="8">
+          <ion-label>Rent Charges</ion-label>
+        </ion-col>
+        <ion-col size="4">
+          {{ rentCharges | currency:'USD':'symbol':'1.2-2'}}
+        </ion-col>
+      </ion-row>
+
+      <!-- Service Charges -->
+      <ion-row class="fee-row">
+        <ion-col size="8">
+          <ion-label>Service Charges(10%)</ion-label>
+        </ion-col>
+        <ion-col size="4">
+          {{ serviceCharges | currency:'USD':'symbol':'1.2-2'}}
+        </ion-col>
+      </ion-row>
+
+      <!-- Total Fees -->
+      <ion-row class="fee-row">
+        <ion-col size="8">
+          <ion-label>Total Fees</ion-label>
+        </ion-col>
+        <ion-col size="4">
+          {{ totalFees | currency:'USD':'symbol':'1.2-2'}}
+        </ion-col>
+      </ion-row>
+
+      <!-- Form to enter hours -->
+      <form class="form" [formGroup]="hoursForm" style="margin-top: 20px; display: none;">
+        <ion-label *ngIf="place && place.chargePerDay" position="floating"><b>Hours to rent (${{ place.chargePerDay }}/hour)</b></ion-label>
+        <ion-input type="number" placeholder="Number of hours" class="custom-input" formControlName="hoursValue"></ion-input>
+      </form>
+
+      <!-- Space added date and Book button -->
+      <ion-row class="info-row">
+        <ion-col size="5">
+          <ion-label *ngIf="place && place.dateAdded">
+            Space added on {{ place.dateAdded | date: 'medium' }}
+          </ion-label>
+        </ion-col>
+        <ion-col size="7">
+          <ion-button expand="full" (click)="pay(totalFees)">{{ bookingButtonText }}</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>  
+  </ion-card>
+
+  <!-- Description section -->
+  <ion-card class="full-width-card" no-padding>
+    <ion-card-header>
+      <ion-card-title>Description</ion-card-title>
+    </ion-card-header>
+    <ion-card-content *ngIf="place?.description !== null && place?.description; else nodescription">
+      {{ place.size.replace('People', 'bboys') }}
+      <ng-template #nodescription>
+        <b>No Content available</b>
+      </ng-template>
+      <a ion-text color="primary" (click)="moreDetailsModal()">Read more</a>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- House Rules section -->
+  <ion-card class="full-width-card" no-padding *ngIf="place?.spaceRules !== null && place?.spaceRules">
+    <ion-card-header>
+      <ion-card-title>House Rules</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let rule of place?.spaceRules">
+          <ion-label>{{ rule }}</ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Location section -->
+  <ion-card class="full-width-card" no-padding>
+    <ion-card-header>
+      <ion-card-title>Location</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <iframe width="100%" height="300" frameborder="0" style="border:0" [src]="sanitizedUrl"></iframe>    
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Owner Details section -->
+  <ion-card class="full-width-card" no-padding>
+    <ion-card-header>
+      <ion-card-title>Owner Details</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-img class="img-spacetype" img src="../../../../assets/imgs/user.png"></ion-img>
+      <ion-row>
+        <ion-col size="5">
+          <ion-label *ngIf="place && place.spaceOwner && place.spaceOwner.firstName">
+            Hosted By {{ place.spaceOwner.firstName }}
+          </ion-label>
+        </ion-col>
+        <ion-col size="7">
+          <ion-button expand="full" (click)="openContactHostModal()">Contact Host</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
+

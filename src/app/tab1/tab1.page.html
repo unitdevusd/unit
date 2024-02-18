@@ -24,33 +24,28 @@
 
 
 
-  <ion-grid class="user-details pad-lr">
-    <ion-row>
-      <ion-col size="12">    
-        <!-- <h2 class="name-txt"> Welcome, {{ firstName }}</h2> -->
-        <p class="find-txt">Here are all the units available to you!</p>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-  <ion-grid class="ion-no-padding pad-lr">
+  <div class="desktop-container" style="display: flex;">
+  <!-- <ion-grid class="ion-no-padding pad-lr">
     <ion-row class="ion-no-padding">
-      <ion-col size-sm="6" offset-sm="3" class="ion-no-padding" [size]="10">
+      <ion-col size-sm="10" offset-sm="3" class="ion-no-padding" [size]="10"> -->
 
-        <ion-searchbar color="black" [(ngModel)]="autocomplete.input" #searchbar placeholder="Search for Location" searchIcon=" "
+        <ion-searchbar style="height: 66px; margin-top: 10px;" color="black" [(ngModel)]="autocomplete.input" #searchbar placeholder="Search for Location" searchIcon=" "
           (ionInput)="searchLocation()" clearIcon=" " (ionFocus)="checkFocus()" (ionClear)="clearAutocomplete()">
           <img src="../../../../assets/imgs/feather-search.png" />
         </ion-searchbar>
-      </ion-col>
-      <ion-col [size]="2" class="noti">
+
+
+
+      <!-- </ion-col> -->
+      <!-- <ion-col [size]="2" class="noti"> -->
         <ion-icon color="unit-btn" *ngIf="hasFilter" name="funnel" (click)="clearFilters()"
-          style="margin-right: 14px; margin-top: 14px;"> </ion-icon>
-        <!-- <ion-icon *ngIf="hasFilter" color="unit-btn" name="funnel"
-          (click)="openFilter()" style="margin-right: 14px; margin-top: 14px;"> </ion-icon> -->
+          style="margin-right: 14px; margin-top: 30px;"> </ion-icon>
           <ion-icon name="funnel" *ngIf="!hasFilter"
-          (click)="openFilter()" style="margin-right: 14px; margin-top: 14px;"> </ion-icon>
-      </ion-col>
+          (click)="openFilter()" style="margin-right: 14px; margin-top: 30px;"> </ion-icon>
+      <!-- </ion-col>
     </ion-row>
-  </ion-grid>
+  </ion-grid> -->
+</div>
   <div [hidden]="autocompleteItems.length == 0" class="search_list">
     <!-- <ion-list lines="none">
       <ion-item>
@@ -153,15 +148,7 @@
     </swiper-slide>
   </swiper-container>
 
-  <ion-grid class="user-details pad-lr">
-    <ion-row>
-      <ion-col size="12">    
-        <!-- <h2 class="name-txt"> Welcome, {{ firstName }}</h2> -->
-        <p class="find-txt">Here are all your spaces!</p>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-  <ion-grid class="ion-no-padding pad-lr">
+  <!-- <ion-grid class="ion-no-padding pad-lr">
     <ion-row class="ion-no-padding">
       <ion-col size-sm="6" offset-sm="3" class="ion-no-padding" [size]="10">
         <ion-searchbar color="black" [(ngModel)]="autocomplete.input" #searchbar placeholder="Search for Location" searchIcon=" "
@@ -176,7 +163,33 @@
           (click)="openFilter()" style="margin-right: 14px; margin-top: 14px;"> </ion-icon>
       </ion-col>
     </ion-row>
-  </ion-grid>
+  </ion-grid> -->
+
+  <div class="desktop-container" style="display: flex;">
+    <!-- <ion-grid class="ion-no-padding pad-lr">
+      <ion-row class="ion-no-padding">
+        <ion-col size-sm="10" offset-sm="3" class="ion-no-padding" [size]="10"> -->
+  
+          <ion-searchbar style="height: 66px; margin-top: 10px;" color="black" [(ngModel)]="autocomplete.input" #searchbar placeholder="Search for Location" searchIcon=" "
+            (ionInput)="searchLocation()" clearIcon=" " (ionFocus)="checkFocus()" (ionClear)="clearAutocomplete()">
+            <img src="../../../../assets/imgs/feather-search.png" />
+          </ion-searchbar>
+  
+  
+  
+        <!-- </ion-col> -->
+        <!-- <ion-col [size]="2" class="noti"> -->
+          <ion-icon color="unit-btn" *ngIf="hasFilter" name="funnel" (click)="clearFilters()"
+            style="margin-right: 14px; margin-top: 30px;"> </ion-icon>
+            <ion-icon name="funnel" *ngIf="!hasFilter"
+            (click)="openFilter()" style="margin-right: 14px; margin-top: 30px;"> </ion-icon>
+        <!-- </ion-col>
+      </ion-row>
+    </ion-grid> -->
+  </div>
+  
+
+
   <div [hidden]="autocompleteItems.length == 0" class="search_list">
     <ion-list [hidden]="autocompleteItems.length == 0" lines="none">
 

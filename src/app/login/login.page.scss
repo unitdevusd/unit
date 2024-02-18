@@ -87,6 +87,8 @@
   .signup-text{
     font-size: 17px;
     font-family: medium;
+    cursor: pointer;
+    color: blue;
   }
   ion-button{
     text-transform: capitalize;
@@ -103,6 +105,7 @@
     line-height: 20px;
     margin-top: 25px;
     line-height: 20px;
+    text-align: center;
   }
   #email{
     caret-color: red;
@@ -110,3 +113,41 @@
   #pass{
     caret-color: red;
   }
+
+
+
+
+
+
+  .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 500px;
+  margin: 0 auto;
+  // border: 1px solid #ccc;
+  padding: 20px;
+}
+
+@media only screen and (min-width: 600px) {
+  .container {
+    border: 1px solid #ccc;
+  }
+}
+
+.logo {
+  margin-bottom: 20px;
+}
+
+.form-container {
+  width: 100%;
+}
+
+.form {
+  width: 100%;
+}
+
+.forgot-pass {
+  margin-bottom: 10px;
+  text-align: right;
+}

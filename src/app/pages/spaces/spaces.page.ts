@@ -8,7 +8,7 @@ import {
   NativeGeocoderResult,
   NativeGeocoderOptions
 } from '@ionic-native/native-geocoder/ngx';
-import { AlertController, LoadingController } from '@ionic/angular';
+import { AlertController, LoadingController, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api-service.service';
 import { fromEventPattern } from 'rxjs';
@@ -55,6 +55,7 @@ export class SpacesPage implements OnInit {
     private router: Router,
     private apiService: ApiService,
     private alertController: AlertController,
+    private toastController: ToastController,
 
 
 
@@ -81,7 +82,7 @@ export class SpacesPage implements OnInit {
       description: new FormControl("", Validators.required),
       chargePerDay: new FormControl("", Validators.required),
       size: new FormControl("", Validators.required),
-      visitDays: new FormControl("", Validators.required),
+      visitDays: new FormControl([], Validators.required),
       visitStartTime: new FormControl("", Validators.required),
       visitEndTime: new FormControl("", Validators.required),
       practice: ['yes'],
@@ -96,6 +97,50 @@ export class SpacesPage implements OnInit {
 
   ngOnInit() {
   }
+
+
+
+  async checkFormValidity() {
+
+    const controlNames = {
+      spaceLocation: 'Space Location',
+      spaceType: 'Space Type',
+      spaceImage: 'Space Image',
+      spaceRules: 'Space Rules',
+      description: 'Description',
+      chargePerDay: 'Space Charge',
+      size: 'Space Size',
+      visitDays: 'Visit Days',
+      visitStartTime: 'Visit Duration',
+      visitEndTime: 'Visit Time',
+      practice: 'Practice Option',
+      musicDetails: 'Music Details',
+      additionalDetails: 'Video URL',
+    };
+
+    const invalidControls: any = [];
+    // Iterate through form controls and check their validity
+    Object.keys(this.spaceForm.controls).forEach(key => {
+      const control = this.spaceForm.get(key);
+      if (control && control.invalid) {
+        // Use custom name if available, otherwise use the key
+        const controlName = (controlNames as any)[key] || key;
+        invalidControls.push(controlName);
+      }
+    });
+    // If there are invalid controls, display a notification
+    if (invalidControls.length > 0) {
+      const toast = await this.toastController.create({
+        message: `Please fill in all required fields: ${invalidControls.join(', ')}`,
+        duration: 3000,
+        position: 'bottom'
+      });
+      toast.present();
+    }
+  }
+
+
+
 
 
   onInputChange(event: any) {
@@ -116,6 +161,10 @@ export class SpacesPage implements OnInit {
     }
     
   }
+
+    removeRule(index: number) {
+      this.rules.splice(index, 1);
+    }
 
 
   searchLocation() {
@@ -144,6 +193,10 @@ export class SpacesPage implements OnInit {
 
   async uploadSpace() {
     console.log(this.spaceForm.valid);
+    this.checkFormValidity();
+
+    if(this.spaceForm.valid) {
+
     try {
       const loading = await this.loadingController.create();
       await loading.present();
@@ -177,7 +230,7 @@ export class SpacesPage implements OnInit {
       console.error(error);
       this.showErrorAlert('Unexpected error occurred');
     }
-
+  }
   }
 
 

@@ -11,7 +11,7 @@
       <ion-title>Hi, {{ firstName }}</ion-title>
     </div>
 
-    <ion-icon class="rules" slot="end" name="trash" style="color: black;" size="large" (click)="confirmDelete()"></ion-icon>    
+    <ion-icon slot="end" name="trash" style="color: black;" size="large" (click)="confirmDelete()"></ion-icon>    
 
   </ion-toolbar>
 </ion-header>
@@ -20,10 +20,17 @@
 
 <ion-content fullscreen class="ion-padding">
 
+  <div class="container">
 
   <ion-card class="full-width-card" no-padding>
-    <div class="img-container">
-    <ion-img class="img-spacetype" *ngIf="place" [src]="place.spaceImage" (click)="selectNewImages()"></ion-img>
+    <div class="img-container" (click)="selectNewImages()">
+
+      <div class="upload-overlay">
+        <ion-icon name="cloud-upload-outline"></ion-icon>
+        <span>Click to Change</span>
+      </div>
+
+    <ion-img class="img-spacetype" *ngIf="place" [src]="place.spaceImage"></ion-img>
     <input type="file" accept="image/*" multiple="multiple" (change)="onFileChange($event)" style="display: none;">
 
     </div>
@@ -117,4 +124,5 @@
       </ion-card-content>
     </ion-card>
   
+  </div>
 </ion-content>
