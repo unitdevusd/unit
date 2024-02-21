@@ -1,0 +1,60 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+
+
+    <div class="title-and-logo">
+      <div class="logo">
+        <img src="../../../../assets/imgs/unit-logo.png" alt="Logo" style="width: 50px; height: auto;" />
+      </div>
+      <ion-title>Modify Space Location</ion-title>
+
+    </div>
+
+
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <!-- <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Modify Space Location</ion-title>
+    </ion-toolbar>
+  </ion-header> -->
+
+
+  <ion-list mode="md">
+    <ion-label position="floating" style="white-space: normal; margin-left: 15px; margin-bottom: 30px;">New Location of Space</ion-label>
+
+    <ion-item mode="md">
+      <ion-input [(ngModel)]="autocomplete.input" #autocompleteInput 
+      (ionInput)="searchLocation()" placeholder="Street name and city">
+      </ion-input>
+    </ion-item>
+  </ion-list>
+
+  <div [hidden]="autocompleteItems.length == 0" class="search_list">
+    <ion-list [hidden]="autocompleteItems.length == 0" lines="none">
+
+      <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
+        <ion-label>
+          <p class="secondary_text"> {{ item.description }} </p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+
+
+  <ion-button class="button-h" fill="solid" size="default" shape="round" expand="block" color="primary"
+  [disabled]="!autocomplete.input" (click)="modifySpace()">
+    Modify Location
+  </ion-button>
+
+
+</ion-content>

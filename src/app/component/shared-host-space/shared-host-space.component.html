@@ -1,9 +1,7 @@
       <ion-list class="card-list" *ngIf="spaces && spaces.length > 0; else noSpaces">
         <ion-item class="card-item" *ngFor="let item of spaces" (click)="place(item)" 
         >
-    
-        <!-- <div (click)="place(item)" class="image-container"> -->
-          <ion-grid class="card-grid">
+              <ion-grid class="card-grid">
             <ion-card class="card_features ion-no-padding">    
               <img class="img-spacetype" *ngIf="item?.images !== null; else noImage" 
               [src]="item.spaceImage" />

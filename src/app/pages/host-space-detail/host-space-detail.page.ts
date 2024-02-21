@@ -15,6 +15,7 @@ import { MoreDetailsModalPage } from '../more-details-modal/more-details-modal.p
 import { ContactHostModalPage } from '../contact-host-modal/contact-host-modal.page';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ModifyRulesModalPage } from '../modify-rules-modal/modify-rules-modal.page';
+import { ModifyLocationPage } from '../modify-location/modify-location.page';
 
 
 @Component({
@@ -88,6 +89,9 @@ export class HostSpaceDetailPage implements OnInit {
             loading.dismiss();
             this.place = response;
             console.log('Place Location is '+this.place.spaceLocation);
+            const url = `https://maps.google.com/maps?q=${this.place.lat},${this.place.lng}&z=10&output=embed`;
+            this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+
           },
           (error: any) => {
             console.error(error);
@@ -158,6 +162,29 @@ export class HostSpaceDetailPage implements OnInit {
   }
 
 
+  async changeLocation() {
+
+    const modal = await this.modalController.create({
+      component: ModifyLocationPage,
+      breakpoints: [0,5],
+      initialBreakpoint: 0.5,
+      handle: false,
+      componentProps: {
+        spaceId: this.spaceId
+      }
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+    
+    if (data && data.updatedSpace) {
+      this.place = data.updatedSpace;
+      this.showToast('Location updated successfully');             
+
+    }
+
+  }
 
   
   async modifyRules() {
@@ -368,6 +395,7 @@ async moreDetailsModal() {
     handle: false,
     componentProps: {
       place: this.place,
+      spaceId: this.spaceId,
     },
   });
 

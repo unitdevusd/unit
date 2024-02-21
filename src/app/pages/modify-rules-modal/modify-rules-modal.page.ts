@@ -38,8 +38,8 @@ export class ModifyRulesModalPage implements OnInit {
   }
 
   saveChanges() {
-    this.modalController.dismiss({ updatedRules: this.updatedRules });
     this.updateChanges();
+    this.modalController.dismiss({ updatedRules: this.updatedRules });
 
   }
 

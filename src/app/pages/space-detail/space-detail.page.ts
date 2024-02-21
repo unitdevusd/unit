@@ -82,9 +82,12 @@ export class SpaceDetailPage implements OnInit {
       console.log('From Tab 2');
       this.bookingButtonText = 'Book Again'
     }
+
+        const url = `https://maps.google.com/maps?q=41.8781136,-87.6297982&z=10&output=embed`;   
+        this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    
+
     this.getSpaceById();
-    const url = `https://maps.google.com/maps?q=41.8781136,-87.6297982&z=10&output=embed`;
-    this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
 
    
     
@@ -109,6 +112,9 @@ export class SpaceDetailPage implements OnInit {
           (response: any) => {
             loading.dismiss();
             this.place = response;
+            const url = `https://maps.google.com/maps?q=${this.place.lat},${this.place.lng}&z=10&output=embed`;
+            this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+        
             this.fromTab2 ? this.bookingButtonText = 'Book Again' : this.bookingButtonText = 'Click to book space';
             // this.bookingButtonText = 'Click to book space'
           },

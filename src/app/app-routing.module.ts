@@ -78,6 +78,10 @@ const routes: Routes = [
   },  {
     path: 'modify-rules-modal',
     loadChildren: () => import('./pages/modify-rules-modal/modify-rules-modal.module').then( m => m.ModifyRulesModalPageModule)
+  },
+  {
+    path: 'modify-location',
+    loadChildren: () => import('./pages/modify-location/modify-location.module').then( m => m.ModifyLocationPageModule)
   }
 
 

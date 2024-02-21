@@ -26,7 +26,8 @@ export class ApiService {
   private updateRulesUrl = this.baseUrl+'spaces/updateRulesById';
   private updateImagesUrl = this.baseUrl+'spaces/updateSpaceImages';
   private filterPreferenceUrl =  this.baseUrl+'spaces/filterspacesbyPreference';
-
+  private updateLocationUrl =  this.baseUrl+'spaces/updateLocationById';
+  private updateYoutubeUrl =  this.baseUrl+'spaces/updateUrlById';
 
 
   constructor(public http: HttpClient) { }
@@ -163,5 +164,13 @@ export class ApiService {
 
   filterPreference(payload: any): Observable<any> {
     return this.http.post(this.filterPreferenceUrl, payload);
+  }
+
+  updateLocation(payload: any): Observable<any> {
+    return this.http.post(this.updateLocationUrl, payload);
+  }
+
+  updateUrl(payload: any): Observable<any> {
+    return this.http.post(this.updateYoutubeUrl, payload);
   }
 }

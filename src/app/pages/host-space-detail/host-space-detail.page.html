@@ -6,7 +6,7 @@
 
     <div class="title-and-logo">
       <div class="logo">
-        <img src="../../../../assets/imgs/logo.png" alt="Logo" />
+        <img src="../../../../assets/imgs/unit-logo.png" alt="Logo" style="width: 50px; height: auto;" />
       </div>
       <ion-title>Hi, {{ firstName }}</ion-title>
     </div>
@@ -88,6 +88,7 @@
     <ion-card>
       <ion-card-header>
         <ion-card-title>Location</ion-card-title>
+        <ion-card-subtitle (click)="changeLocation()"><ion-icon name="pin"></ion-icon><a> Change Location</a></ion-card-subtitle>
       </ion-card-header>
       <ion-card-content>
         <!-- <ion-img src="path/to/dummy/map.png"></ion-img> -->
