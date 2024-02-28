@@ -166,8 +166,8 @@ export class HostSpaceDetailPage implements OnInit {
 
     const modal = await this.modalController.create({
       component: ModifyLocationPage,
-      breakpoints: [0,5],
-      initialBreakpoint: 0.5,
+      breakpoints: [0,9],
+      initialBreakpoint: 0.6,
       handle: false,
       componentProps: {
         spaceId: this.spaceId
@@ -180,6 +180,8 @@ export class HostSpaceDetailPage implements OnInit {
     
     if (data && data.updatedSpace) {
       this.place = data.updatedSpace;
+      const url = `https://maps.google.com/maps?q=${data.updatedSpace.lat},${data.updatedSpace.lng}&z=10&output=embed`;
+      this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
       this.showToast('Location updated successfully');             
 
     }
@@ -190,8 +192,8 @@ export class HostSpaceDetailPage implements OnInit {
   async modifyRules() {
     const modal = await this.modalController.create({
       component: ModifyRulesModalPage,
-      breakpoints: [0,5],
-      initialBreakpoint: 0.5,
+      breakpoints: [0,9],
+      initialBreakpoint: 0.6,
       handle: false,
       componentProps: {
         currentRules: this.place.spaceRules,
@@ -390,8 +392,8 @@ async openContactHostModal() {
 async moreDetailsModal() {
   const modal = await this.modalController.create({
     component: MoreDetailsModalPage,
-    breakpoints: [0,5],
-    initialBreakpoint: 0.5,
+    breakpoints: [0,9],
+    initialBreakpoint: 0.6,
     handle: false,
     componentProps: {
       place: this.place,

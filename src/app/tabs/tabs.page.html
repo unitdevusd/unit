@@ -2,11 +2,11 @@
   <ion-tab-bar slot="bottom">
     <ion-tab-button tab="tab1">
       <ion-icon name="search-outline"></ion-icon>
-      <ion-label>Explore</ion-label>
+      <ion-label>{{ role === 'HOST' ? 'My Spaces' : 'Explore' }}</ion-label>
     </ion-tab-button>
     <ion-tab-button tab="tab2">
       <ion-icon name="home-outline"></ion-icon>
-      <ion-label>{{ role === 'HOST' ? 'My Spaces' : 'Booked Spaces' }}</ion-label>
+      <ion-label>{{ role === 'HOST' ? 'Booked' : 'Booked Spaces' }}</ion-label>
       <!-- <ion-label>My Spaces</ion-label> -->
     </ion-tab-button>
     <ion-tab-button tab="tab3">

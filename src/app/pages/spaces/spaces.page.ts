@@ -87,7 +87,7 @@ export class SpacesPage implements OnInit {
       visitEndTime: new FormControl("", Validators.required),
       practice: ['yes'],
       musicDetails: new FormControl("", Validators.required),
-      additionalDetails: new FormControl("", [
+      additionalDetails: new FormControl("https://www.", [
         Validators.required,
         Validators.pattern(/^(ftp|http|https):\/\/[^ "]+$/)
       ]),

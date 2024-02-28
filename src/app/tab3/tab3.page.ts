@@ -35,7 +35,6 @@ export class Tab3Page {
     this.userId = this.userDetails?.userId;
     this.hostToggle = false;
     this.tenantToggle = false;
-    console.log('First Name is ' + this.firstName + ' and role is ' + this.role);
   }
 
   toggleDarkMode() {
@@ -78,7 +77,12 @@ export class Tab3Page {
 
             if(response !== null) {
               this.userService.setUserDetails(response);
-              this.showToast('You are now a '+this.role);
+              // this.showToast('You are now a '+this.role);
+              if (this.role === 'TENANT') {
+                this.showToast('You are now a Dancer');
+              } else {
+                this.showToast('You are now a Host');
+              }
               this.router.navigateByUrl('/tabs');               
             }
 

@@ -27,6 +27,15 @@
       <ion-label>Available day for visit: <span style="color: red;"> {{ place.visitDays}} </span></ion-label>
     </ion-item> -->
 
+    <ion-item *ngIf="place.additionalDetails">
+      <ion-label>Video URL: 
+      </ion-label>
+      <a *ngIf="!isEditing" target="_blank" href="{{ place.additionalDetails }}">{{ place.additionalDetails }}</a>
+      <ion-input *ngIf="isEditing" [(ngModel)]="editedAdditionalDetails" class="custom-input"></ion-input>
+
+      <ion-icon *ngIf="role === 'HOST'" name="{{ isEditing ? 'checkmark' : 'create' }}" slot="end" (click)="toggleEdit()"></ion-icon>
+    </ion-item>
+
     <ion-item *ngIf="place.visitDays">
       <ion-label>Available day for visit: 
         <span style="color: red;">
@@ -47,14 +56,7 @@
       <ion-label>Video URL: <a target="_blank" href="{{ place.additionalDetails }}">{{ place.additionalDetails }}</a></ion-label>
     </ion-item>  -->
 
-    <ion-item *ngIf="place.additionalDetails">
-      <ion-label>Video URL: 
-      </ion-label>
-      <a *ngIf="!isEditing" target="_blank" href="{{ place.additionalDetails }}">{{ place.additionalDetails }}</a>
-      <ion-input *ngIf="isEditing" [(ngModel)]="editedAdditionalDetails" class="custom-input"></ion-input>
-
-      <ion-icon *ngIf="role === 'HOST'" name="{{ isEditing ? 'checkmark' : 'create' }}" slot="end" (click)="toggleEdit()"></ion-icon>
-    </ion-item>
+    
 
 
    
