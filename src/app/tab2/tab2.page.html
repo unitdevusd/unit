@@ -8,8 +8,10 @@
       <div class="logo">
         <img src="../../../../assets/imgs/unit-logo.png" alt="Logo" style="width: 50px; height: auto;" />
       </div>
-      <ion-title>View your spaces</ion-title>
-    </div>
+      <ion-title>
+        {{ role === 'ADMIN' ? 'Manage your users' : 'View your spaces' }}
+      </ion-title>   
+     </div>
 
   </ion-toolbar>
 </ion-header>
@@ -17,7 +19,7 @@
 <ion-content [fullscreen]="true">
 
 
-  <div *ngIf="(tenantSpaces && tenantSpaces.length > 0) || (hostSpaces && hostSpaces.length > 0); else noSpacesTemplate">
+  <div *ngIf="(tenantSpaces && tenantSpaces.length > 0) || (hostSpaces && hostSpaces.length > 0) || (allUsers && allUsers.length > 0); else noSpacesTemplate">
 
 <ion-list class="card-list" *ngIf="userDetails?.role === 'TENANT' && tenantSpaces && tenantSpaces.length > 0;">
   
@@ -70,6 +72,64 @@
     </ion-card>
 </ion-grid>
 </ion-item>
+</ion-list>
+
+
+<ion-list class="card-list" *ngIf="userDetails?.role === 'ADMIN' && allUsers && allUsers.length > 0;">
+  
+  <ion-searchbar style="height: 66px; margin-top: 10px;" color="black" #searchbar placeholder="Search for Users" searchIcon=" "
+  (ionInput)="searchUsers($event)" clearIcon=" " (ionClear)="clearAutocomplete()">
+  <img src="../../../../assets/imgs/feather-search.png" />
+</ion-searchbar>
+
+
+<ng-container *ngIf="filteredUsers.length > 0; else noFilteredUsers">
+<ion-item class="card-item" *ngFor="let item of filteredUsers">
+
+  <ion-grid class="card-grid">
+    <ion-card class="card_features ion-no-padding">    
+      <img style="height: 50%;" class="img-spacetype" src="../../../../assets/imgs/user.png" />
+    
+    <ion-card-header>
+      <ion-card-subtitle>{{ item.firstName + ' ' + item.lastName }}</ion-card-subtitle>
+      <ion-card-title style="font-family: Verdana, Geneva, Tahoma, sans-serif; font-size: small;">
+        <ion-icon (click)="confirmDelete(item)" *ngIf="item.active === true" name="close-circle-outline" size="large"></ion-icon>
+        <ion-icon (click)="confirmDelete(item)" *ngIf="item.active !== true" name="checkmark-circle-outline" size="large"></ion-icon>
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content class="no-padding">
+    </ion-card-content>
+
+   
+  </ion-card>
+</ion-grid>
+
+  </ion-item>
+</ng-container>
+
+  <ng-template #noFilteredUsers>
+
+  <ion-item class="card-item" *ngFor="let item of allUsers">
+
+        <ion-grid class="card-grid">
+      <ion-card class="card_features ion-no-padding">    
+        <img style="height: 50%;" class="img-spacetype" src="../../../../assets/imgs/user.png" />
+      
+      <ion-card-header>
+        <ion-card-subtitle>{{ item.firstName + ' ' + item.lastName }}</ion-card-subtitle>
+        <ion-card-title style="font-family: Verdana, Geneva, Tahoma, sans-serif; font-size: small;">
+          <ion-icon (click)="confirmDelete(item)" *ngIf="item.active === true" name="close-circle-outline" size="large"></ion-icon>
+          <ion-icon (click)="confirmDelete(item)" *ngIf="item.active !== true" name="checkmark-circle-outline" size="large"></ion-icon>
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content class="no-padding">
+      </ion-card-content>
+
+     
+    </ion-card>
+</ion-grid>
+</ion-item>
+</ng-template>
 </ion-list>
 
   

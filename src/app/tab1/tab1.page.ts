@@ -111,7 +111,7 @@ export class Tab1Page implements OnInit {
       this.getAccountBalance();
     }
 
-    if(this.role === 'TENANT') {
+    if(this.role === 'TENANT' || this.role === 'ADMIN') {
       this.getSpacesAround();
     }
 
@@ -446,17 +446,23 @@ export class Tab1Page implements OnInit {
 
 
     async getMySpaces() {
-
+      const loading = await this.loadingController.create();
+      await loading.present();
       try {
-        const loading = await this.loadingController.create();
-        await loading.present();
+       
     
         if (this.userId) {
           const spaceData = {"userId" : this.userId};
           this._apiService.viewAllSpacesByUser(spaceData).subscribe(
             (response: any) => {
               loading.dismiss();
-              this.spaces = response
+              if(response == null) {
+                this.showToast('You do not have any spaces');
+              }
+              else {
+                this.spaces = response;
+              }
+              
             },
             (error: any) => {
               console.error(error);
@@ -468,6 +474,7 @@ export class Tab1Page implements OnInit {
           );
         }
       } catch (error) {
+        loading.dismiss();
         console.error(error);
       }
   
@@ -494,8 +501,9 @@ export class Tab1Page implements OnInit {
                 this.withdrawnBalance = 0;
               } else {
                 const [balance, withdrawnBalance] = response.split('~~').map(Number);
-                this.balance = isNaN(balance) ? 0 : balance;
+                this.balance = isNaN(balance) ? 0 : balance;              
                 this.withdrawnBalance = isNaN(withdrawnBalance) ? 0 : withdrawnBalance;
+                this.userService.setBalance(this.balance);
               }
             },
             (error: any) => {

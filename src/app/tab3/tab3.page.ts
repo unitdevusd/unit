@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { UserService } from '../services/user.service';
 import { ApiService } from '../services/api-service.service';
-import { AlertController, ToastController } from '@ionic/angular';
+import { AlertController, LoadingController, ModalController, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { ImageModalPage } from '../pages/image-modal/image-modal.page';
 
 @Component({
   selector: 'app-tab3',
@@ -17,6 +18,8 @@ export class Tab3Page {
   userDetails: any;
   hostToggle: boolean = false;
   tenantToggle: boolean = false;
+  profilePicture: any;
+  fromTab3: boolean = false;
 
 
   constructor(
@@ -25,16 +28,24 @@ export class Tab3Page {
     private toastController: ToastController,
     private alertController : AlertController,
     private router: Router,
+    private modalController: ModalController,
+    private loadingController: LoadingController,
 
   ) {}
 
   ionViewWillEnter() {
+    this.findProfilePic();
     this.userDetails = this.userService.getUserDetails();
     this.firstName = this.userDetails?.firstName || 'Guest';
     this.role = this.userDetails?.role;
     this.userId = this.userDetails?.userId;
     this.hostToggle = false;
     this.tenantToggle = false;
+   
+
+    
+    
+
   }
 
   toggleDarkMode() {
@@ -65,6 +76,60 @@ export class Tab3Page {
       buttons: ['OK']
     });
 
+  }
+
+  async openImageModal(imageUrl: string) {
+    const modal = await this.modalController.create({
+      component: ImageModalPage,
+      breakpoints: [0,9],
+      initialBreakpoint: 0.6,
+      handle: false,
+      componentProps: {
+        imageUrl: imageUrl,
+        fromTab3: true
+      }
+    });
+  
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+    
+    if (data && data.updatedUser) {
+      this.userService.setUserDetails(data.updatedUser);
+      this.userDetails = data.updatedUser;
+      this.profilePicture = data.updatedUser.profilePicture;
+      this.showToast('Profile picture updated successfully');             
+
+    }
+
+  }
+
+
+  async findProfilePic() {
+
+    const loading = await this.loadingController.create();
+    await loading.present();
+
+    const userData = {"userId" : this.userId};
+        this.apiService.findProfilePic(userData).subscribe(
+          (response: any) => {
+            loading.dismiss();
+
+            if(response !== null) {
+              this.profilePicture = response;
+            }
+
+            else {
+              this.showErrorAlert('Unable to load profile picture');
+            }
+             
+          },
+          (error: any) => {
+            loading.dismiss();
+            console.error(error);
+            this.showToast('Unable to load profile picture');             
+          }
+        );
   }
 
 

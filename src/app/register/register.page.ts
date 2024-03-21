@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, LoadingController } from '@ionic/angular';
@@ -10,10 +10,12 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./register.page.scss'],
 })
 export class RegisterPage implements OnInit {
-
+  @ViewChild('fileInput') fileInput: ElementRef<HTMLInputElement>;
 
 public signupForm!: FormGroup;
   role: string | null;
+  profilePictureUrl: any;
+  selectedFile: File;
 
 
   constructor(
@@ -31,6 +33,7 @@ public signupForm!: FormGroup;
     }
     this.signupForm = this.formBuilder.group({
       firstName: new FormControl('', Validators.required),
+      profilePicture: new FormControl(''),
       lastName: new FormControl('', Validators.required),
       role: new FormControl(this.role, Validators.nullValidator),
       email: new FormControl(
@@ -96,7 +99,7 @@ public signupForm!: FormGroup;
           (error) => {
             console.error(error);
             loading.dismiss();
-            this.showFailureAlert('Unexpected error occurred');
+            this.showFailureAlert('Unexpected error occurred. Use a lower image size');
           }
         );
       }
@@ -104,4 +107,65 @@ public signupForm!: FormGroup;
       console.error(error);
     }
   }
+
+
+  // onFileSelected(event: any) {
+  //   // Handle the selected file(s) here
+  //   const selectedFile = event.target.files[0];
+
+  //   // Example: Read the file contents and set the profilePictureUrl
+  //   const reader = new FileReader();
+  //   reader.onload = () => {
+  //     this.profilePictureUrl = reader.result as string;
+  //   };
+  //   reader.readAsDataURL(selectedFile);
+  // }
+
+  triggerFileInput() {
+    this.fileInput.nativeElement.click();
+  }
+
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.profilePictureUrl = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+
+    // if(file) {
+    //   this.signupForm.patchValue({
+    //     profilePicture: file
+    //   });
+    // }
+   
+
+
+    if (file) {
+      this.convertToBase64(file).then((base64) => {
+        this.signupForm.patchValue({
+          profilePicture: file,
+        });
+      });
+    }
+  }
+
+  convertToBase64(file: File): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        resolve(reader.result as string);
+      };
+
+      reader.onerror = (error) => {
+        reject(error);
+      };
+
+      reader.readAsDataURL(file);
+    });
+  }
+
 }

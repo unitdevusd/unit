@@ -1,0 +1,30 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <div class="title-and-logo">
+      <div class="logo">
+        <img src="../../../../assets/imgs/unit-logo.png" alt="Logo" style="width: 50px; height: auto;" />
+      </div>
+      <ion-title>Authenticate</ion-title>
+
+    </div>
+
+
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <ion-list mode="md">
+    <ion-item mode="md">
+      <ion-label position="floating">Password</ion-label>
+      <ion-input type="password" [(ngModel)]="password" placeholder="Enter Password"></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <p><ion-button [disabled]="!password" (click)="validate()">Submit</ion-button></p>
+</ion-content>

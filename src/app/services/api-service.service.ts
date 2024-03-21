@@ -28,6 +28,14 @@ export class ApiService {
   private filterPreferenceUrl =  this.baseUrl+'spaces/filterspacesbyPreference';
   private updateLocationUrl =  this.baseUrl+'spaces/updateLocationById';
   private updateYoutubeUrl =  this.baseUrl+'spaces/updateUrlById';
+  private removeSpaceUrl = this.baseUrl+'spaces/removeSpace';
+  private allUsersUrl = this.baseUrl+'users/getUsers';
+  private modifyUserUrl = this.baseUrl+'users/modify-user';
+  private updateProfilePicUrl = this.baseUrl+'users/updatePicture';
+  private fetchAccountsUrl = this.baseUrl+'payment/getAccounts';
+  private addAccountUrl = this.baseUrl+'payment/add-accounts';
+  private payoutUrl =  this.baseUrl+'payment/payout';
+  private profilePicUrl = this.baseUrl+'users/getPicture';
 
 
   constructor(public http: HttpClient) { }
@@ -101,9 +109,45 @@ export class ApiService {
     return this.http.post(this.viewSpaces, payload);
   }
 
+  // uploadSpace(payload: any): Observable<any> {
+  //   return this.http.post(this.addSpaces, payload);
+  // }
+
+
+
+  // uploadSpace(payload: any): Observable<any> {
+  //   const formData = new FormData();
+  //   Object.keys(payload).forEach((key) => {
+  //     formData.append(key, payload[key]);
+  //   });
+
+  //   return this.http.post(this.addSpaces, formData);
+  // }
+
+
+
   uploadSpace(payload: any): Observable<any> {
-    return this.http.post(this.addSpaces, payload);
+    const formData = new FormData();
+  
+    // Append non-file fields to formData
+    for (const key of Object.keys(payload)) {
+      if (key !== 'image') {
+        formData.append(key, payload[key]);
+      }
+    }
+  
+    // Append files under 'image' key
+    if (payload.spaceImage && Array.isArray(payload.spaceImage)) {
+      for (let i = 0; i < payload.spaceImage.length; i++) {
+        formData.append('spaceImage', payload.spaceImage[i]);
+      }
+    }
+  
+    // Make the POST request with formData
+    return this.http.post(this.addSpaces, formData);
   }
+
+
 
   getSpacesAround(payload: any): Observable<any> {
     return this.http.post(this.spacesAround, payload);
@@ -121,8 +165,20 @@ export class ApiService {
     return this.http.post(this.updateRoleUrl, payload);
   }
 
+  updateProfilePicture(payload: any): Observable<any> {
+    return this.http.post(this.updateProfilePicUrl, payload);
+  }
+
   fetchTenantSpaces(payload: any): Observable<any> {
     return this.http.post(this.tenantSpacesUrl, payload);
+  }
+
+  fetchUsers(payload: any): Observable<any> {
+    return this.http.post(this.allUsersUrl, payload);
+  }
+
+  modifyUser(payload: any): Observable<any> {
+    return this.http.post(this.modifyUserUrl, payload);
   }
 
   retrieveSpaceImages(payload: any): Observable<any> {
@@ -152,6 +208,10 @@ export class ApiService {
   deleteSpace(payload: any): Observable<any> {
     return this.http.post(this.deleteSpaceUrl, payload, { responseType: 'text' });
   }
+
+  removeSpace(payload: any): Observable<any> {
+    return this.http.post(this.removeSpaceUrl, payload, { responseType: 'text' });
+  }
  
 
   updateRules(payload: any): Observable<any> {
@@ -172,5 +232,22 @@ export class ApiService {
 
   updateUrl(payload: any): Observable<any> {
     return this.http.post(this.updateYoutubeUrl, payload);
+  }
+
+  fetchAllAccounts(payload: any): Observable<any> {
+    return this.http.post(this.fetchAccountsUrl, payload);
+  }
+
+  addAccount(payload: any): Observable<any> {
+    return this.http.post(this.addAccountUrl, payload);
+  }
+
+  makePayment(payload: any): Observable<any> {
+    return this.http.post(this.payoutUrl, payload, { responseType: 'text' });
+  }
+
+
+  findProfilePic(payload: any): Observable<any> {
+    return this.http.post(this.profilePicUrl, payload, { responseType: 'text' });
   }
 }

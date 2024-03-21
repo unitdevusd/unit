@@ -2,14 +2,30 @@
   <ion-tab-bar slot="bottom">
     <ion-tab-button tab="tab1">
       <ion-icon name="search-outline"></ion-icon>
-      <ion-label>{{ role === 'HOST' ? 'My Spaces' : 'Explore' }}</ion-label>
+      <ion-label>
+        {{
+          role === 'HOST' ? 'My Spaces' :
+          role === 'TENANT' ? 'Explore' :
+          role === 'ADMIN' ? 'Manage Spaces' :
+          'Unknown Role'
+        }}
+
+      </ion-label>
     </ion-tab-button>
     <ion-tab-button tab="tab2">
-      <ion-icon name="home-outline"></ion-icon>
-      <ion-label>{{ role === 'HOST' ? 'Booked' : 'Booked Spaces' }}</ion-label>
+      <ion-icon *ngIf="role === 'ADMIN'" name="person-outline"></ion-icon>
+      <ion-icon *ngIf="role !== 'ADMIN'" name="home-outline"></ion-icon>
+            <ion-label>
+        {{
+          role === 'HOST' ? 'Booked' :
+          role === 'TENANT' ? 'Booked Spaces' :
+          role === 'ADMIN' ? 'Manage Users' :
+          'Unknown Role'
+        }}
+      </ion-label>
       <!-- <ion-label>My Spaces</ion-label> -->
     </ion-tab-button>
-    <ion-tab-button tab="tab3">
+    <ion-tab-button tab="tab3" *ngIf="role !== 'ADMIN'">
       <ion-icon name="person-outline"></ion-icon>
       <ion-label>Profile</ion-label>
     </ion-tab-button>

@@ -122,7 +122,8 @@
       <ion-label *ngIf="showBalance" class="balance-label">{{ balance | currency: 'USD':'symbol':'1.2-2' }}</ion-label> <br>
       <ion-icon (click)="toggleBalanceVisibility()" [name]="showBalance ? 'eye' : 'eye-off'"></ion-icon> 
       <ion-label>
-        {{ showBalance ? 'Hide Account Balance' : 'View Account Balance' }}
+        <!-- {{ showBalance ? 'Hide Account Balance' : 'View Account Balance' }} -->
+        <a routerLink="/cashout"><b style="font-size: 13px; margin-left: 30px;">Withdraw</b></a>
       </ion-label>    
     </ion-card-content>
   </ion-card>
@@ -215,4 +216,64 @@
   </ion-fab>
 
 </ion-content>
+
+
+
+
+<ion-content [fullscreen]="true" *ngIf="role === 'ADMIN'">
+
+
+
+  <div class="desktop-container" style="display: flex;">
+
+        <ion-searchbar style="height: 66px; margin-top: 10px;" color="black" [(ngModel)]="autocomplete.input" #searchbar placeholder="Search for Location" searchIcon=" "
+          (ionInput)="searchLocation()" clearIcon=" " (ionFocus)="checkFocus()" (ionClear)="clearAutocomplete()">
+          <img src="../../../../assets/imgs/feather-search.png" />
+        </ion-searchbar>
+
+        <ion-icon color="unit-btn" *ngIf="hasFilter" name="funnel" (click)="clearFilters()"
+          style="margin-right: 14px; margin-top: 30px;"> </ion-icon>
+          <ion-icon name="funnel" *ngIf="!hasFilter"
+          (click)="openFilter()" style="margin-right: 14px; margin-top: 30px;"> </ion-icon>
+</div>
+  <div [hidden]="autocompleteItems.length == 0" class="search_list">
+    <ion-list [hidden]="autocompleteItems.length == 0" lines="none">
+
+      <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
+        <ion-label>
+          <img  class="image-loc" style="margin-inline-end: 0px !important;" slot="start"
+          src="../../../../assets/imgs/material-location-on.png" />
+          {{ item.description }}
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+
+
+  <div class="content">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <h3 class="top-heading">All Spaces On The App</h3>        
+        </ion-col>
+      </ion-row>
+
+      <div [hidden]="!searchResults" class="search_list">
+        <ion-icon name="search"></ion-icon> {{ searchResults }}
+        </div>
+    
+    </ion-grid>
+
+    <div *ngIf="!hasFilter">
+      <app-unit-listing [units]="placesAround" (unitClicked)='place($event)'></app-unit-listing>
+    </div>
+
+    <div *ngIf="hasFilter">
+      <app-unit-listing [units]="placesFiltered" (unitClicked)='place($event)'></app-unit-listing>
+    </div>
+  </div>
+  <div>
+  </div>
+</ion-content>
+
 

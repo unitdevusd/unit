@@ -1,0 +1,64 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+
+    <div class="title-and-logo">
+      <ion-buttons slot="start">
+        <ion-back-button class="blue-back-button" icon="chevron-back" defaultHref="/tabs"></ion-back-button>
+      </ion-buttons>
+  
+      <div class="logo">
+        <img src="../../../../assets/imgs/unit-logo.png" alt="Logo" style="width: 50px; height: auto;" />
+      </div>
+      <ion-title>Hi, {{ firstName }}</ion-title>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <p style="text-align: center; color: red;"><b>Cashout Using PayPal Account.</b></p>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>
+        <div style="display: flex;">
+          <b style="font-size: 17px;">Account Details</b>
+          <b style="margin-left: 50%; font-size: 12px;"><a (click)="addAccount()">Add New </a></b>
+        </div>
+      </ion-card-title>
+    </ion-card-header>
+    
+    <ion-card-content>
+      <div class="accounts" *ngIf="accounts && accounts?.length > 0; else noAccount">
+        <b>Registered Email(s) with PayPal</b>
+        <ion-list>
+          <ion-radio-group [allowEmptySelection]="false" [(ngModel)]="accountDetail">
+            <ion-item *ngFor="let account of accounts">
+              <ion-label>             
+                {{ account?.payPalEmail }} <br>              
+              </ion-label>
+              <ion-radio [value]="account" class="start-aligned"></ion-radio>
+            </ion-item>
+          </ion-radio-group>
+        </ion-list>
+      </div>
+
+      <ng-template #noAccount>
+        <ion-button size="small" style="font-size: 10px; color: red;" (click)="addAccount()">Add new Account information for cashout</ion-button>
+      </ng-template>
+
+      <ion-list mode="md">
+        <ion-item mode="md">
+          <ion-label position="floating">Amount to Withdraw</ion-label>
+          <ion-input type="number" [(ngModel)]="withdrawalAmount" placeholder="Enter Amount to withdraw"></ion-input>
+        </ion-item>
+      </ion-list>
+      <ion-text *ngIf="withdrawalAmount > balance" color="danger">Withdrawal amount exceeds available balance</ion-text>
+
+
+      </ion-card-content>
+
+      <p><ion-button [disabled]="withdrawalAmount > balance || !withdrawalAmount || !accountDetail" (click)="authenticate()">Cash Out</ion-button></p>
+    </ion-card>
+
+
+</ion-content>

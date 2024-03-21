@@ -40,6 +40,7 @@ export class SpacesPage implements OnInit {
   rules: string[] = [];
   totalSize: number = 0;
   largestFileSize: number = 0;
+  fileList: FileList;
   
 
 
@@ -192,7 +193,7 @@ export class SpacesPage implements OnInit {
 
 
   async uploadSpace() {
-    console.log(this.spaceForm.valid);
+
     this.checkFormValidity();
 
     if(this.spaceForm.valid) {
@@ -251,6 +252,7 @@ export class SpacesPage implements OnInit {
       buttons: ['OK']
     });
 
+    await alert.present();
   }
 
   get spaceTypeFormArray() {
@@ -316,14 +318,17 @@ export class SpacesPage implements OnInit {
 
 
   onFileChange(event: any) {
-    const files: FileList = event.target.files;
+    const files = event.target.files;
   
     this.totalSize = 0;
     this.largestFileSize = 0;
+    
+   
+
   
     if (files && files.length > 0) {
   
-      const promises: Promise<string>[] = [];
+      const promises: Promise<File>[] = [];
   
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
@@ -334,12 +339,25 @@ export class SpacesPage implements OnInit {
         }
   
         if (file) {
-          promises.push(this.convertToBase64(file));
+
+          const filePromise = new Promise<File>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (event: ProgressEvent<FileReader>) => {
+              // Resolve the promise with the loaded file
+              resolve(new File([event.target!.result as ArrayBuffer], file.name, { type: file.type }));
+            };
+            reader.onerror = (error) => {
+              // Reject the promise if there's an error reading the file
+              reject(error);
+            };
+            // Read the file as ArrayBuffer
+            reader.readAsArrayBuffer(file);
+          });
+          promises.push(filePromise);
         }
+        
       }
   
-      console.log(this.totalSize);
-      console.log(this.largestFileSize);
   
       // Update message display based on total size and largest file size
       const maxTotalUploadMessage = document.getElementById('max-total-upload-message');
@@ -350,8 +368,10 @@ export class SpacesPage implements OnInit {
       }
   
       if (maxUploadPerFileMessage) {
-        maxUploadPerFileMessage.style.display = this.largestFileSize > 2 * 1024 * 1024 ? 'block' : 'none';
+        maxUploadPerFileMessage.style.display = this.largestFileSize > 5 * 1024 * 1024 ? 'block' : 'none';
       }
+
+  
   
       Promise.all(promises)
         .then((base64Array) => {

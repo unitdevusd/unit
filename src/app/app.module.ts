@@ -25,6 +25,7 @@ import { AppVersion } from '@ionic-native/app-version/ngx';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { Tab1PageModule } from './tab1/tab1.module';
+import { Stripe } from '@ionic-native/stripe/ngx';
 
 
 
@@ -35,7 +36,6 @@ import { Tab1PageModule } from './tab1/tab1.module';
     IonicModule.forRoot({hardwareBackButton: false}), 
     AppRoutingModule,
     HttpClientModule, 
-    // AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
     AngularFirestoreModule,
     AngularFireStorageModule,
@@ -51,6 +51,7 @@ import { Tab1PageModule } from './tab1/tab1.module';
     SocialSharing,
     AppVersion,
     Network,
+    Stripe,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent],

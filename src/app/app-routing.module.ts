@@ -75,14 +75,30 @@ const routes: Routes = [
   {
     path: 'host-space-detail/:spaceId',
     loadChildren: () => import('./pages/host-space-detail/host-space-detail.module').then( m => m.HostSpaceDetailPageModule)
-  },  {
+  },
+  {
     path: 'modify-rules-modal',
     loadChildren: () => import('./pages/modify-rules-modal/modify-rules-modal.module').then( m => m.ModifyRulesModalPageModule)
   },
   {
     path: 'modify-location',
     loadChildren: () => import('./pages/modify-location/modify-location.module').then( m => m.ModifyLocationPageModule)
-  }
+  },  {
+    path: 'image-modal',
+    loadChildren: () => import('./pages/image-modal/image-modal.module').then( m => m.ImageModalPageModule)
+  },
+  {
+    path: 'cashout',
+    loadChildren: () => import('./pages/cashout/cashout.module').then( m => m.CashoutPageModule)
+  },
+  {
+    path: 'add-account',
+    loadChildren: () => import('./pages/add-account/add-account.module').then( m => m.AddAccountPageModule)
+  },
+  {
+    path: 'auth-modal',
+    loadChildren: () => import('./pages/auth-modal/auth-modal.module').then( m => m.AuthModalPageModule)
+  },
 
 
 

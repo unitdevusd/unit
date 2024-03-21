@@ -6,12 +6,17 @@
             </div>
             <ion-title>Profile</ion-title>
           </div>
+
+          <ion-avatar slot="end" style="width: 50px; height: 50px; cursor: pointer;">
+            <ion-img (click)="openImageModal(profilePicture)" class="img-spacetype" [src]="profilePicture ? profilePicture : '../../../../assets/imgs/user.png'"></ion-img>
+            </ion-avatar>
+
               
-      <ion-buttons slot="end">
+      <!-- <ion-buttons slot="end">
         <ion-button (click)="toggleDarkMode()">
           <ion-icon [name]="darkMode ? 'sunny' : 'moon'"></ion-icon>
         </ion-button>
-      </ion-buttons>
+      </ion-buttons> -->
     </ion-toolbar>
   </ion-header>
   
