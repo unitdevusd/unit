@@ -7,10 +7,18 @@
     </ion-buttons>
 
     <div class="title-and-logo">
-      <div class="logo">
+      <div class="logo" style="display: flex;">
         <img src="../../../../assets/imgs/unit-logo.png" alt="Logo" style="width: 50px; height: auto;" />
+        <div #svgContainer style="width: 100px; height: 30px; margin-top: 10px;"></div>    
+
       </div>
-      <ion-title>Welcome, {{ firstName }}</ion-title>
+      <ion-title>
+        <div class="title-content" style="display: flex; margin-top: 20px;">
+        <b style="height: 50px; color: #212121;">{{ firstName }}   </b>
+        </div>       
+      </ion-title>
+
+        <!-- Welcome, {{ svgText }} {{ firstName }}</ion-title> -->
     </div>
 
 
@@ -23,6 +31,7 @@
 <ion-content [fullscreen]="true" *ngIf="role === 'TENANT'">
 
 
+  <!-- <div #svgContainer></div> -->
 
   <div class="desktop-container" style="display: flex;">
   <!-- <ion-grid class="ion-no-padding pad-lr">

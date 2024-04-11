@@ -20,10 +20,24 @@
 <ion-content [fullscreen]="true">
 
   <form class="form" [formGroup]="accountForm" style="font-size: small;">
+    
+
     <ion-list mode="md">
       <ion-item mode="md">
-        <ion-label position="floating">Email registered with PayPal</ion-label>
-        <ion-input type="email" formControlName="payPayEmail" placeholder="Paypal Email account"></ion-input>
+        <ion-label position="floating">BTC Address</ion-label>
+        <ion-input type="text" formControlName="payPayEmail" placeholder="BTC Wallet Address"></ion-input>
+      </ion-item>
+    </ion-list>
+
+
+    <ion-list mode="md">
+      <ion-item mode="md">
+        <ion-label position="floating" style="margin-bottom: 20px;">BTC Network</ion-label>
+        <ion-select formControlName="network">
+          <ion-select-option class="custom-color" value="" selected disabled>Select BTC Network</ion-select-option>
+          <ion-select-option value="chain">Bitcoin</ion-select-option>
+          <ion-select-option value="ln">Lightening(Fast and Less charges)</ion-select-option>
+        </ion-select>
       </ion-item>
     </ion-list>
 

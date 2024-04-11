@@ -1,5 +1,5 @@
 import { Component, ElementRef, NgZone, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
@@ -8,10 +8,11 @@ import {
   NativeGeocoderResult,
   NativeGeocoderOptions
 } from '@ionic-native/native-geocoder/ngx';
-import { AlertController, LoadingController, ToastController } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { AlertController, LoadingController, ModalController, NavController, ToastController } from '@ionic/angular';
+import { NavigationExtras, Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api-service.service';
 import { fromEventPattern } from 'rxjs';
+import { TimeSlotModalPage } from '../time-slot-modal/time-slot-modal.page';
 
 declare var google: any;
 
@@ -41,6 +42,16 @@ export class SpacesPage implements OnInit {
   totalSize: number = 0;
   largestFileSize: number = 0;
   fileList: FileList;
+  endTimeError: boolean = false;
+
+
+  availableTimeSlots: any[] = []; // Array to hold time slots
+  date: string = ''; // Selected date
+  startTime: string = ''; // Start time
+  endTime: string = ''; // End time
+  startDateExpanded: any;
+  endDateExpanded: any;
+
   
 
 
@@ -57,6 +68,8 @@ export class SpacesPage implements OnInit {
     private apiService: ApiService,
     private alertController: AlertController,
     private toastController: ToastController,
+    private navCtrl: NavController,
+    private modalCtrl: ModalController
 
 
 
@@ -97,6 +110,81 @@ export class SpacesPage implements OnInit {
    }
 
   ngOnInit() {
+  }
+
+
+
+  async openTimeModal() {
+
+    const modal = await this.modalCtrl.create({
+      component: TimeSlotModalPage,
+      breakpoints: [0, 11],
+      initialBreakpoint: 0.8,
+      handle: false,
+      componentProps: {
+        availableSlots: this.availableTimeSlots
+      }
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+
+    if (data && data.startDate && data.startTime && data.endTime) {
+
+      
+      this.addTimeSlot(data.startDate, data.startTime, data.endTime);
+      console.log(data.startDate);
+      console.log(data.startTime);
+      console.log(data.endTime);
+
+    }
+  }
+
+
+
+  addTimeSlot(startDate: any, startTime: any, endTime: any) {
+    const day = this.getDayOfWeek(new Date(this.date)); // Calculate day of the week
+    this.availableTimeSlots.push({ date: startDate, startTime: startTime, endTime: endTime });
+    // this.date = '';
+    // this.startTime = '';
+    // this.endTime = '';
+  }
+
+  removeTimeSlot(index: number) {
+    this.availableTimeSlots.splice(index, 1);
+  }
+
+  getDayOfWeek(date: Date): string {
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    return days[date.getDay()];
+  }
+
+  async openDateModal() {
+    // const modal = await this.modalCtrl.create({
+    //   component: DateModalComponent,
+    // });
+    // modal.onDidDismiss().then((data: any) => {
+    //   if (data && data.data && data.data.selectedDate) {
+    //     console.log('Selected date:', data.data.selectedDate);
+    //     // Handle the selected date here
+    //   }
+    // });
+    // return await modal.present();
+  }
+
+
+
+
+  onEndTimeChange(event: any) {
+    const startTime = this.spaceForm.get('visitStartTime')?.value;
+    const endTime = event.target.value;
+    // Perform validation check
+    if (startTime && endTime && startTime > endTime) {
+      this.endTimeError = true;
+    } else {
+      this.endTimeError = false;
+    }
   }
 
 
@@ -149,12 +237,9 @@ export class SpacesPage implements OnInit {
   }
 
   addRule() {
-    console.log('Adding rule');
-    console.log('New rule:', this.newRule);
     if (this.newRule.input !== '') {
       this.rules.push(this.newRule.input);
       this.newRule.input = '';
-      console.log(this.rules);
       const inputElement = document.getElementById('rules');
       if (inputElement) {
         (inputElement as HTMLInputElement).value = '';
@@ -212,11 +297,18 @@ export class SpacesPage implements OnInit {
   
             if (response.code !== "00") {
               this.showErrorAlert(response.message); 
-              this.router.navigateByUrl('/tabs', { replaceUrl: true });                
+              this.router.navigateByUrl('/tabs', { replaceUrl: true });                            
+              
             } else {
               this.showSuccessAlert(response.message);
               setTimeout(() => {
-                this.router.navigateByUrl('/tabs', { replaceUrl: true });             
+                let navigationExtras: NavigationExtras = {
+                  state: {
+                    navigationData: true
+                  }
+                };
+                this.router.navigateByUrl(`/tabs`, navigationExtras);
+                  // this.router.navigateByUrl('/tabs', { replaceUrl: true });             
               }, 2000);              
             }
           },
@@ -260,61 +352,12 @@ export class SpacesPage implements OnInit {
   }
 
 
-  openCamera() {
-    const options: CameraOptions = {
-      quality: 100,
-      destinationType: this.camera.DestinationType.FILE_URI,
-      encodingType: this.camera.EncodingType.JPEG,
-      mediaType: this.camera.MediaType.PICTURE
-    };
-
-    this.camera.getPicture(options).then(
-      (imageData: any) => {
-        // imageData is the file URI of the captured image
-        this.spaceForm.patchValue({
-          spaceImage: imageData
-        });
-      },
-      (err: any) => {
-        console.error(err);
-      }
-    );
-  }
-
   useCurrentLocation(){
     if(this.lat && this.long){
       this.filters['location'] = [this.lat,this.long];
     }
   }
 
-
-  // onFileChange(event: any) {
-  //   const file = event.target.files[0];
-
-  //   if (file) {
-  //     this.convertToBase64(file).then((base64) => {
-  //       this.spaceForm.patchValue({
-  //         spaceImage: base64,
-  //       });
-  //     });
-  //   }
-  // }
-
-  // convertToBase64(file: File): Promise<string> {
-  //   return new Promise<string>((resolve, reject) => {
-  //     const reader = new FileReader();
-
-  //     reader.onloadend = () => {
-  //       resolve(reader.result as string);
-  //     };
-
-  //     reader.onerror = (error) => {
-  //       reject(error);
-  //     };
-
-  //     reader.readAsDataURL(file);
-  //   });
-  // }
 
 
   onFileChange(event: any) {
@@ -400,6 +443,5 @@ convertToBase64(file: File): Promise<string> {
     reader.readAsDataURL(file);
   });
 }
-
 
 }

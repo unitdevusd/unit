@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AlertController, LoadingController } from '@ionic/angular';
+import { NavigationExtras, Router } from '@angular/router';
+import { AlertController, LoadingController, NavController } from '@ionic/angular';
 import { AuthService } from '../services/auth.service';
 // import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { UserService } from '../services/user.service';
@@ -21,9 +21,16 @@ export class LoginPage implements OnInit {
     private loadingController: LoadingController,
     private alertController: AlertController,
     // private afs: AngularFirestore,
-    private userService: UserService
+    private userService: UserService,
+    private navCtrl: NavController
     ) {
 
+  
+  }
+
+  
+
+  ngOnInit() {
     this.loginForm = this.formBuilder.group({
       email: new FormControl(
         "",
@@ -34,38 +41,9 @@ export class LoginPage implements OnInit {
       ),
       password: new FormControl("", Validators.required),
     });
-  }
 
-  ngOnInit() { }
+   }
 
-  // async login() {
-  //   const loading = await this.loadingController.create();
-  //   await loading.present();
-  //   console.log(this.loginForm.value);
-  //   if (this.loginForm.value) {
-  //     let loginData = this.loginForm.value;
-  //     console.log(loginData.email);
-  //     this.authService.loginUser(loginData.email, loginData.password).then(async response => {
-  //     await loading.dismiss();
-
-  //       this.afs.collection('users').doc(response.user.uid).valueChanges().subscribe((userDetails: any) => {       
-          
-  //         if (userDetails) {
-  //           const firstName = userDetails?.firstName;
-  //           this.userService.setUserDetails(userDetails);
-  //           console.log(firstName);
-  //         }
-
-  //       this.router.navigateByUrl('/tabs', { replaceUrl: true });
-  //       this.showSuccessAlert(); 
-  //       });
-  //     }).catch(async error => {
-  //       console.log(error);
-  //       await loading.dismiss();
-  //       this.showErrorAlert('Unexpected Error occurred. Try again later');
-  //     });
-  //   }
-  // }
   registerpage() {
     // this.router.navigateByUrl('/register-role', { replaceUrl: true });
     this.router.navigateByUrl('/register-role');
@@ -108,7 +86,15 @@ export class LoginPage implements OnInit {
             if (response.email) {
               this.userService.setUserDetails(response);
               this.showSuccessAlert();
-              this.router.navigateByUrl('/tabs');   
+
+              let navigationExtras: NavigationExtras = {
+                state: {
+                  navigationData: true
+                }
+              };
+              this.router.navigateByUrl(`/tabs`, navigationExtras);
+          
+              // this.router.navigateByUrl('/tabs');   
 
             } else {
               this.showErrorAlert(response.message);    

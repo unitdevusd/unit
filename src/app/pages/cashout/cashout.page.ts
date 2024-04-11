@@ -22,6 +22,8 @@ export class CashoutPage implements OnInit {
   withdrawalAmount: number;
   accountDetail: any;
   firstName: any;
+  convertedAmount: any = 0;
+  charges: number;
 
   constructor(
     private userService: UserService,
@@ -39,32 +41,32 @@ export class CashoutPage implements OnInit {
     this.balance = userService.getBalance();
     this.firstName = this.userDetails.firstName;
     this.getAccounts();
-   }
+  }
 
   ngOnInit() {
   }
 
   async getAccounts() {
 
-      const userData = {"userId" : this.userId};
-      console.log(userData);
-      const loading = await this.loadingController.create();
-      await loading.present();
-  
-  
-      this.apiService.fetchAllAccounts(userData).subscribe(
-        (response: any) => {
-          loading.dismiss(); 
-          console.log(response);
-          this.accounts = response;
-           
-        },
-        (error: any) => {
-          console.error(error);
-          loading.dismiss();
-        }
-      );
-    
+    const userData = { "userId": this.userId };
+    console.log(userData);
+    const loading = await this.loadingController.create();
+    await loading.present();
+
+
+    this.apiService.fetchAllAccounts(userData).subscribe(
+      (response: any) => {
+        loading.dismiss();
+        console.log(response);
+        this.accounts = response;
+
+      },
+      (error: any) => {
+        console.error(error);
+        loading.dismiss();
+      }
+    );
+
   }
 
 
@@ -73,8 +75,8 @@ export class CashoutPage implements OnInit {
 
     const modal = await this.modalController.create({
       component: AddAccountPage,
-      breakpoints: [0,9],
-      initialBreakpoint: 0.8,
+      breakpoints: [0, 9],
+      initialBreakpoint: 1.0,
       handle: false,
       componentProps: {
         userId: this.userId
@@ -84,17 +86,17 @@ export class CashoutPage implements OnInit {
     await modal.present();
 
     const { data } = await modal.onDidDismiss();
-    
+
     if (data && data.updatedAccounts) {
       console.log(data.updatedAccounts[0].account_number);
       this.accounts = data.updatedAccounts;
-      this.showToast('Accounts updated successfully');             
+      this.showToast('Accounts updated successfully');
 
-    }   
+    }
   }
 
   selectAccount(account: any) {
-    console.log('In here '+account);
+    console.log('In here ' + account);
     this.accountDetail = account;
   }
 
@@ -112,7 +114,7 @@ export class CashoutPage implements OnInit {
 
     const modal = await this.modalController.create({
       component: AuthModalPage,
-      breakpoints: [0,9],
+      breakpoints: [0, 9],
       initialBreakpoint: 0.6,
       handle: false,
       componentProps: {
@@ -123,46 +125,50 @@ export class CashoutPage implements OnInit {
     await modal.present();
 
     const { data } = await modal.onDidDismiss();
-    
-    if (data && data.updatedUser) {
-      this.showToast('Successfully validated'); 
-      console.log(this.accountDetail);  
-      console.log(this.withdrawalAmount);          
-      this.processPayment(this.accountDetail, this.withdrawalAmount)
 
-    }   
+    if (data && data.updatedUser) {
+      this.showToast('Successfully validated');
+      console.log(this.accountDetail);
+      console.log(this.withdrawalAmount);
+      this.processPayment(this.accountDetail, (this.convertedAmount - (this.convertedAmount * 0.1)).toFixed(7))
+
+    }
   }
 
-  
+
 
   async processPayment(accounts: any, amount: any) {
 
-    const paymentData = {"recipientEmail" : accounts.payPalEmail,                    
-                        "currency" : "usd",
-                        "amount": amount,
-                        "userId": this.userId};
+    const paymentData = {
+      "type": accounts.network,
+      "btcAmount": amount,
+      "address": accounts.payPalEmail,
+      "callback_url": "",
+      "userId" : this.userId,
+      "usdAmount" : this.withdrawalAmount
+    };
     console.log(paymentData);
     const loading = await this.loadingController.create();
     await loading.present();
 
     this.apiService.makePayment(paymentData).subscribe(
       (response: any) => {
-        loading.dismiss();         
-        console.log(response);    
+        loading.dismiss();
+        console.log(response);
 
-        if(response === 'PENDING') {
+        if (response === 'confirmed') {
           this.showSuccessAlert("This request is currently being processed. Please expect an email");
-          this.router.navigateByUrl('/tabs');     
+          this.router.navigateByUrl('/tabs');
         }
         else {
-          this.showErrorAlert("The payout request failed. Please try again");             
+          this.showErrorAlert(response);
         }
-         
+
       },
       (error: any) => {
         console.error(error);
         loading.dismiss();
-        this.showToast('Error transferring funds. Try again later');             
+        this.showToast('Error transferring funds. Try again later');
 
       }
     );
@@ -188,6 +194,74 @@ export class CashoutPage implements OnInit {
     });
 
     await alert.present();
+  }
+
+  async convert() {
+
+    const loading = await this.loadingController.create();
+    await loading.present();
+    this.convertedAmount = 0;
+
+    this.apiService.convertToBtc().subscribe(
+      (response: string) => {
+        loading.dismiss();
+        console.log(response);
+        console.log(this.withdrawalAmount);
+
+        if (response != null) {
+          this.convertedAmount = this.withdrawalAmount * parseFloat(response);
+          console.log("BTC Amount:: " + this.convertedAmount);
+        }
+        else {
+          this.showToast("Conversion Failed. Try again later");
+        }
+
+      },
+      (error: any) => {
+        console.error(error);
+        loading.dismiss();
+        this.showToast('Error transferring funds. Try again later');
+
+      }
+    );
+
+  }
+
+
+  async deleteAccount(accountsId: any) {
+
+    const paymentData = { "bankDetailsId": accountsId };
+    console.log(paymentData);
+    const loading = await this.loadingController.create();
+    await loading.present();
+
+    this.apiService.deleteBankDetails(paymentData).subscribe(
+      (response: any) => {
+        loading.dismiss();
+        console.log(response);
+
+        if (response === 'Deleted') {
+          this.showToast("Account Successfully deleted");    
+          let indexToRemove = this.accounts.findIndex((item: any) => item.bankDetailsId === accountsId);
+          if (indexToRemove !== -1) {
+            this.accounts.splice(indexToRemove, 1);
+          }      
+        }
+        else {
+          this.showToast("Failed to delete wallet");          
+        }
+
+      },
+      (error: any) => {
+        console.error(error);
+        loading.dismiss();
+        this.showToast('Error deleting wallet address');
+
+      }
+    );
+
+
+
   }
 
 }

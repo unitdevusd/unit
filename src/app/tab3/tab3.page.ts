@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { UserService } from '../services/user.service';
 import { ApiService } from '../services/api-service.service';
 import { AlertController, LoadingController, ModalController, ToastController } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { ImageModalPage } from '../pages/image-modal/image-modal.page';
 
 @Component({
@@ -148,7 +148,14 @@ export class Tab3Page {
               } else {
                 this.showToast('You are now a Host');
               }
-              this.router.navigateByUrl('/tabs');               
+              // this.router.navigateByUrl('/tabs');               
+              let navigationExtras: NavigationExtras = {
+                state: {
+                  navigationData: true
+                }
+              };
+              this.router.navigateByUrl(`/tabs`, navigationExtras);
+
             }
 
             else {

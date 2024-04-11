@@ -57,7 +57,8 @@ export class ImageModalPage implements OnInit {
 
     if (file) {
       this.convertToBase64(file).then((base64) => {
-        this.imageUrl = base64;
+        // this.imageUrl = base64;
+        this.imageUrl = file;
         this.modifyProfilePicture();
       });
     }

@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AlertController, IonInput, LoadingController, ModalController, PickerController, ToastController } from '@ionic/angular';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { AlertController, IonInput, LoadingController, ModalController, NavController, PickerController, Platform, ToastController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api-service.service';
 import { ContactHostModalPage } from '../contact-host-modal/contact-host-modal.page';
 import { StripeService } from 'src/app/services/stripe.service';
@@ -10,6 +10,13 @@ import { MoreDetailsModalPage } from '../more-details-modal/more-details-modal.p
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { loadStripe } from '@stripe/stripe-js';
 import { ImageModalPage } from '../image-modal/image-modal.page';
+import { Observable, Subject, Subscription, interval } from 'rxjs';
+import { Plugins, Capacitor } from '@capacitor/core';
+import { finalize, take, takeUntil } from 'rxjs/operators';
+import { Browser } from '@capacitor/browser';
+
+// const { Browser } = Plugins;
+
 
 
 declare var paypal: any;
@@ -19,9 +26,22 @@ declare var paypal: any;
   templateUrl: './space-detail.page.html',
   styleUrls: ['./space-detail.page.scss'],
 })
-export class SpaceDetailPage implements OnInit {
+export class SpaceDetailPage implements OnInit, OnDestroy {
 
-  title = 'angular-stripe';
+  isDay = (dateString: string) => {
+    const allowedDays = this.convertDaysToNumbers(this.place?.visitDays);
+    const date = new Date(dateString);
+    const utcDay = date.getUTCDay();
+      const currentDate = new Date();
+    const currentUtcDay = currentDate.getUTCDay();
+      if (date.getTime() >= currentDate.getTime() && (allowedDays.includes(utcDay) || allowedDays.includes(7))) {
+      return true;
+    }
+  
+    return false;
+  };
+
+    title = 'angular-stripe';
   priceId = 'price_1HSxpTFHabj9XRH6DMA8pC7l';
   product = {
     title: 'Classic Peace Lily',
@@ -52,6 +72,14 @@ export class SpaceDetailPage implements OnInit {
   role: any;
   isPayPalButtonRendered = false;
   hoursDifference: any = 0;
+  validTimes: string[] = [];
+  visitStartTime: any;
+  visitEndTime : any;
+
+  TRACKING_INTERVAL_MS = 10000;
+  intervalSubscription: Subscription | undefined;
+
+
 
   constructor(
     private router: Router,
@@ -66,7 +94,8 @@ export class SpaceDetailPage implements OnInit {
     private formBuilder: FormBuilder,
     private pickerController: PickerController,
     private alertController: AlertController,
-
+    private navCtrl: NavController,
+    private platform: Platform,
   ) { 
     this.hoursForm = this.formBuilder.group({
       // hoursValue: ['', [Validators.required, Validators.pattern('^[0-9]*$')], disabled: true],
@@ -91,17 +120,70 @@ export class SpaceDetailPage implements OnInit {
         const url = `https://maps.google.com/maps?q=41.8781136,-87.6297982&z=10&output=embed`;   
         this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     
-
-    this.getSpaceById();
-
-   
+    
     
 
   }
 
-  ngOnInit() {
-    this.calculateHours();
+  ngOnDestroy() {
+    if (this.intervalSubscription) {
+      this.intervalSubscription.unsubscribe();
+    }
+    }
+
+  async ngOnInit() {
+
+    console.log('Entering:::');
+    this.place = history.state.place;
+    console.log(this.place.visitStartTime);
+
+    this.visitStartTime = history.state.visitStartTime || "00:00"
+    this.visitEndTime = this.place.visitEndTime || "23:00";
+    const url = `https://maps.google.com/maps?q=${this.place.lat},${this.place.lng}&z=10&output=embed`;
+    this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+
+    this.fromTab2 ? this.bookingButtonText = 'Book Again' : this.bookingButtonText = 'Click to book space';
+
+
+    if(this.place == null) {
+      this.getSpaceById();
+    }
+    
+    this.generateValidTimes();
+
+    this.calculateHours(); 
+   
   }
+
+
+  
+
+  generateValidTimes() {
+    const startTime = parseInt(this.visitStartTime.split(':')[0], 10);
+    const endTime = parseInt(this.visitEndTime.split(':')[0], 10);
+
+    console.log('Start and End time is '+startTime+' and '+endTime);
+
+    // const startTime = 8;
+    // const endTime = 14; 
+
+    this.validTimes = [];
+    for (let hour = startTime; hour <= endTime; hour++) {
+      // Filter out times outside the desired range
+      if (hour >= startTime && hour <= endTime) {
+        this.validTimes.push(`${hour < 10 ? '0' : ''}${hour}:00`);
+      }
+    }
+      }
+
+
+  // isTimeInRange(selectedTime: string): boolean {
+  //   const selectedDateTime = new Date(`2000-01-01T${selectedTime}`); // Use a common date for comparison
+  //   const startDateTime = new Date(`2000-01-01T${this.place.visitStartTime}`);
+  //   const endDateTime = new Date(`2000-01-01T${this.place.visitEndTime}`);
+  
+  //   return selectedDateTime >= startDateTime && selectedDateTime <= endDateTime;
+  // }
 
 
   async getSpaceById() {
@@ -137,6 +219,24 @@ export class SpaceDetailPage implements OnInit {
   }
 
 
+  convertDaysToNumbers(days: string[]): number[] {
+    const daysMap: { [key: string]: number } = {
+      Sunday: 0,
+      Monday: 1,
+      Tuesday: 2,
+      Wednesday: 3,
+      Thursday: 4,
+      Friday: 5,
+      Saturday: 6,
+      Anyday: 7
+    };
+  
+    // Map each day string to its corresponding number
+    const numbersArray = days.map(day => daysMap[day]);
+  
+    return numbersArray;
+  }
+
   async showToast(message: any) {
 
     setTimeout(async () => {
@@ -154,45 +254,45 @@ export class SpaceDetailPage implements OnInit {
 
 
 
-  async pay(amount: number) {
-    const currentHours = this.hoursForm.get('hoursValue')!.value;
-    const loading = await this.loadingController.create();
-    if(currentHours === "" || currentHours === "0") {
-      this.showToast('Enter hours needed');
-    }
+//   async pay(amount: number) {
+//     const currentHours = this.hoursForm.get('hoursValue')!.value;
+//     const loading = await this.loadingController.create();
+//     if(currentHours === "" || currentHours === "0") {
+//       this.showToast('Enter hours needed');
+//     }
 
-    else {
-      await loading.present();
-      try {
-        if(amount == 0) {
-          this.bookSpace();
-        }
-        else {
-          const token: any = await this.stripeService.pay(amount);
-          const response: any = await this.stripeService.sendTokenToBackend(token, amount);  
-          loading.dismiss();
-          console.log('Response is ' + response);
+//     else {
+//       await loading.present();
+//       try {
+//         if(amount == 0) {
+//           this.bookSpace();
+//         }
+//         else {
+//           const token: any = await this.stripeService.pay(amount);
+//           const response: any = await this.stripeService.sendTokenToBackend(token, amount);  
+//           loading.dismiss();
+//           console.log('Response is ' + response);
   
-          if (response.startsWith('Payment successful')) {
-              this.showSuccessAlert('Payment successful');
-              this.bookSpace();
+//           if (response.startsWith('Payment successful')) {
+//               this.showSuccessAlert('Payment successful');
+//               this.bookSpace();
 
-          } else {
-              this.showErrorAlert(response);
-          }
+//           } else {
+//               this.showErrorAlert(response);
+//           }
 
-        }
+//         }
   
-      } catch (error) {
-          // Handle payment error
-          loading.dismiss();
-          console.error('Payment failed:', error);
-          this.showErrorAlert('Payment Failed');
-      } finally {
-          loading.dismiss();
-      }
-  }
-}
+//       } catch (error) {
+//           // Handle payment error
+//           loading.dismiss();
+//           console.error('Payment failed:', error);
+//           this.showErrorAlert('Payment Failed');
+//       } finally {
+//           loading.dismiss();
+//       }
+//   }
+// }
   
 
   async showSuccessAlert(message: any) {
@@ -218,16 +318,24 @@ export class SpaceDetailPage implements OnInit {
 
 
 
-async bookSpace() {
+async bookSpace(id: any, status: any) {
   const spaceData = {"spaceId" : this.spaceId, "bookingStatus" : "BOOKED", "duration" : this.hoursForm.get('hoursValue')!.value, "userId" : this.userDetails?.userId, 
   "startDateTime" : this.hoursForm.get('startDateTime')!.value,
-  "endDateTime" : this.hoursForm.get('endDateTime')!.value};
+  "endDateTime" : this.hoursForm.get('endDateTime')!.value,
+  "chargeId" : id, "chargeIdStatus" : status};
   this._apiService.bookSpace(spaceData).subscribe(
     (response: any) => {
       console.log(response.message);
       this.bookingButtonText = 'Successfully booked';
       setTimeout(() => {
-        this.router.navigateByUrl('/tabs');
+
+        let navigationExtras: NavigationExtras = {
+          state: {
+            navigationData: true
+          }
+        };
+        this.router.navigateByUrl(`/tabs`, navigationExtras);
+  // this.router.navigateByUrl('/tabs');
       }, 2000);
     },
     (error: any) => {
@@ -303,9 +411,7 @@ async openImageModal(imageUrl: string) {
       else if(this.hoursDifference > 1) {
 
         this.rentCharges = this.place?.chargePerDay * this.hoursDifference || 0;
-        console.log(this.place?.chargePerDay);
         this.serviceCharges = this.rentCharges * 0.1;
-        console.log(this.serviceCharges);
         this.totalFees = this.rentCharges + this.serviceCharges;
   
         this.showToast('Space will be booked for '+this.hoursDifference+' hours');
@@ -313,9 +419,7 @@ async openImageModal(imageUrl: string) {
       else {
 
         this.rentCharges = this.place?.chargePerDay * this.hoursDifference || 0;
-        console.log(this.place?.chargePerDay);
         this.serviceCharges = this.rentCharges * 0.1;
-        console.log(this.serviceCharges);
         this.totalFees = this.rentCharges + this.serviceCharges;
   
         this.showToast('Space will be booked for '+this.hoursDifference+' hour');
@@ -384,7 +488,6 @@ async openImageModal(imageUrl: string) {
         console.error(error);
         loading.dismiss();
         this.showToast('Unable to delete space');             
-        // this.showErrorAlert('Unexpected error occurred');
       }
     );
 
@@ -392,35 +495,149 @@ async openImageModal(imageUrl: string) {
 
 
 
-  initPayPalButton(amount: any) {
-    if (!this.isPayPalButtonRendered) {
-      paypal.Buttons({
-        createOrder: (_data: any, actions: any) => {
-          return actions.order.create({
-            purchase_units: [{
-              amount: {
-                value: amount // Set the payment amount
-              }
-            }]
-          });
-        },
-        onApprove: (data: any, actions: any) => {
-          return actions.order.capture().then((details: any) => {
-            // Payment successful, handle further actions
-            console.log('Transaction completed by ' + details.payer.name.given_name);
-            this.showSuccessAlert('Payment successful');
-            this.bookSpace();
-          });
-        },
-        onError: (err: any) => {
-          // Handle payment error
-          this.showErrorAlert(err);
-          console.error('PayPal payment error:', err);
-        }
-      }).render('#paypal-button-container'); // Render PayPal button in specified container
+  // initPayPalButton(amount: any) {
+  //   if (!this.isPayPalButtonRendered) {
+  //     paypal.Buttons({
+  //       createOrder: (_data: any, actions: any) => {
+  //         return actions.order.create({
+  //           purchase_units: [{
+  //             amount: {
+  //               value: amount // Set the payment amount
+  //             }
+  //           }]
+  //         });
+  //       },
+  //       onApprove: (data: any, actions: any) => {
+  //         return actions.order.capture().then((details: any) => {
+  //           this.showSuccessAlert('Payment successful');
+  //           this.bookSpace();
+  //         });
+  //       },
+  //       onError: (err: any) => {
+  //         this.showErrorAlert(err);
+  //         console.error('PayPal payment error:', err);
+  //       }
+  //     }).render('#paypal-button-container'); // Render PayPal button in specified container
       
-      this.isPayPalButtonRendered = true; // Set flag to true after rendering
+  //     this.isPayPalButtonRendered = true; // Set flag to true after rendering
+  //   }
+  // }
+
+
+  async sendCrypto(amount: any) {
+
+    const paymentData = {"amount" : amount, "currency" : "USD", "description" : "Payment from "+this.userDetails?.fullName,
+    "customer_name" : this.userDetails?.fullName, "customer_email" : this.userDetails?.email,
+    "order_id" : "", "callback_url" : "", "success_url" : ""};
+
+    const loading = await this.loadingController.create();
+    await loading.present();
+
+
+    this._apiService.generateCharges(paymentData).subscribe(
+      (response: any) => {
+        if(response != null) {
+        loading.dismiss();  
+        // this.showToast('Checkout page to be opened'); 
+        const checkoutUrl = 'https://checkout.opennode.com/' + response;      
+        this.openExternalURL(checkoutUrl);
+
+        // this.trackIdInterval = setInterval(() => {
+        //   this.trackId(response);
+        // }, 7000);  
+        this.startIntervalOperation(10000, response);
+
+
+
+      }
+      else {
+        loading.dismiss(); 
+        this.showToast('Unable to generate checkout ID. Try again later');             
+      }                
+
+      },
+      (error: any) => {
+        console.error(error);
+        loading.dismiss();
+        this.showToast('Unable to generate checkout ID. Try again later');             
+      }
+    );
+  }
+
+  startIntervalOperation(intervalTime: number, id: any) {
+    if (this.intervalSubscription) {
+      this.intervalSubscription.unsubscribe();
     }
+  
+    const completionSubject = new Subject<void>();
+    let intervalsCompleted = 0;
+  
+    this.intervalSubscription = interval(intervalTime).pipe(
+      takeUntil(completionSubject),
+    ).subscribe(() => {
+      intervalsCompleted++;
+      this.trackId(id);
+  
+      if (intervalsCompleted >= 20) {
+        completionSubject.next(); 
+        completionSubject.complete();
+      }
+    });
+  
+    completionSubject.subscribe(() => {
+      this.showToast('We did not receive any payment from you. Please try again');
+      this.bookingButtonText = 'Click to book space';
+      console.log('All operations completed');
+      if (this.intervalSubscription) {
+        this.intervalSubscription.unsubscribe();
+      }
+    });
+  }
+
+  async openExternalURL(url: string) {
+    if (Capacitor.isNativePlatform()) {
+      await Browser.open({url: url});
+    } else {
+      window.open(url, '_blank'); // Fallback for web
+    }
+  }
+
+  async trackId(id: string) {
+    console.log('In here again');
+    
+
+    try{
+
+      const loading = await this.loadingController.create(
+        {
+          message: "Please wait while we confirm payment",
+          backdropDismiss: true
+        }
+      );
+      await loading.present();
+
+      const paymentData = {"id" : id};
+      this._apiService.trackCharges(paymentData).subscribe(
+        (response: any) => {   
+          if (response === 'paid') {
+            this.intervalSubscription?.unsubscribe();
+            this.bookSpace(id, response);
+            this.showSuccessAlert("Transfer successful and space booked. Thank you for booking");
+          }     
+          console.log('Processed tracking response: ' + response);
+          loading.dismiss();
+          this.bookingButtonText = response;
+        },
+        (error: any) => {
+          loading.dismiss();
+          this.intervalSubscription?.unsubscribe();
+          console.error('Error tracking charges:', error);
+        }
+      );
+    }catch(error) {
+      console.error('Error '+error);
+    }
+
   }
 
 }

@@ -1,7 +1,8 @@
 <ion-header>
   <ion-toolbar>
+
     <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
+      <ion-back-button class="blue-back-button" icon="chevron-back" defaultHref="/tabs"></ion-back-button>
     </ion-buttons>
 
     <div class="title-and-logo">
@@ -19,9 +20,6 @@
 
 
 
-
-
-
 <ion-content>
   <!-- Image and "Click to book slot" section -->
   <ion-card class="full-width-card" no-padding>
@@ -34,11 +32,15 @@
   
   <ion-modal [keepContentsMounted]="true">
     <ng-template>
-      <ion-datetime [preferWheel]="true" [showDefaultButtons]="true" id="startDateTime" minuteValues="0" displayFormat="HH:mm" (ionChange)="calculateHours()" [(ngModel)]="startDateTime">
+      <!-- [preferWheel]="true" -->
+      <ion-datetime [isDateEnabled]="isDay" hourCycle="h24" [hourValues]="validTimes" [showDefaultButtons]="true" id="startDateTime" minuteValues="0" displayFormat="HH:mm" (ionChange)="calculateHours()" [(ngModel)]="startDateTime">
         <span slot="title">Select start Date/Time</span>
       </ion-datetime>
     </ng-template>
   </ion-modal>
+
+
+
   
   <ion-icon name="swap-horizontal-outline" size="large" color="primary"></ion-icon>
 
@@ -46,13 +48,15 @@
   
   <ion-modal [keepContentsMounted]="true">
     <ng-template>
-      <ion-datetime [preferWheel]="true" [showDefaultButtons]="true" id="endDateTime" minuteValues="0" [(ngModel)]="endDateTime" (ionChange)="calculateHours()">
+      <ion-datetime [isDateEnabled]="isDay" hourCycle="h24" [hourValues]="validTimes" [showDefaultButtons]="true" id="endDateTime" minuteValues="0" [(ngModel)]="endDateTime" (ionChange)="calculateHours()">
         <span slot="title">Select end Date/Time</span>
       </ion-datetime>
     </ng-template>
   </ion-modal>
   
   </div>
+
+
 
       
       <!-- Rent Charges, Service Charges, and Total Fees -->
@@ -95,12 +99,13 @@
       <ion-row class="info-row">
         <ion-col size="5">
           <ion-label *ngIf="place && place.dateAdded">
-            Space added on {{ place.dateAdded | date: 'medium' }}
+            <!-- Space type is {{ place.dateAdded | date: 'medium' }} -->
+            <b>Space type is {{ place.spaceType }}</b>
           </ion-label>
         </ion-col>
         <ion-col size="7">
           <!-- <ion-button expand="full" (click)="pay(totalFees)">{{ bookingButtonText }}</ion-button> -->
-          <ion-button expand="full" [disabled]="0 >= hoursDifference" (click)="initPayPalButton(totalFees)">{{ bookingButtonText }}</ion-button>
+          <ion-button expand="full" [disabled]="0 >= hoursDifference" (click)="sendCrypto(totalFees)">{{ bookingButtonText }}</ion-button>
           
         </ion-col>
       </ion-row>

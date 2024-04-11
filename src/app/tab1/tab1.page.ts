@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, NgZone, OnInit, ViewChild } from '@angular/core';
-import { NavigationExtras, Router } from '@angular/router';
-import { IonicSlides, IonSearchbar, LoadingController, ModalController, ToastController } from '@ionic/angular';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { IonicSlides, IonSearchbar, LoadingController, ModalController, NavParams, ToastController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api-service.service';
 import { GlobalService } from 'src/app/services/global.service';
 import { ToastService } from 'src/app/services/toast.service';
@@ -18,6 +18,7 @@ import { LoaderService } from '../services/loader-service.service';
 import { UserService } from '../services/user.service';
 import { async } from 'rxjs';
 import { Plugins } from '@capacitor/core';
+import { HttpClient } from '@angular/common/http';
 
 const { Geocoder } = Plugins;
 
@@ -32,6 +33,8 @@ declare var google: any;
 })
 export class Tab1Page implements OnInit {
   
+  @ViewChild('svgContainer', { static: false }) svgContainer: ElementRef;
+
   @ViewChild(IonicSlides) slides: any;
   @ViewChild('swiper') swiperRef: ElementRef;
   @ViewChild('searchbar', { static: false }) searchbar: IonSearchbar;
@@ -71,6 +74,7 @@ export class Tab1Page implements OnInit {
   userId: any;
   userDetails: any;
   showBalance: boolean = true;
+  svgText: string;
 
 
 
@@ -87,16 +91,16 @@ export class Tab1Page implements OnInit {
     public zone: NgZone,
     public modalCtrl : ModalController,
     private userService : UserService,
-    private loadingController : LoadingController
+    private loadingController : LoadingController,
+    private route: ActivatedRoute,
+    private http: HttpClient,
+    
     ) {
     this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
     this.autocomplete = { input: '' };
     this.autocompleteItems = [];
-  }
 
-  ionViewWillEnter() {
 
-    console.log('ionViewDidEnter is triggered');
     this.hasFilter = false;
 
     this.userDetails = this.userService.getUserDetails();
@@ -115,6 +119,77 @@ export class Tab1Page implements OnInit {
       this.getSpacesAround();
     }
 
+  }
+
+  ionViewWillEnter() {
+
+
+  let url = "";
+    
+  const reloadPage = history.state.navigationData || false;
+    if (reloadPage) {
+    this.hasFilter = false;
+    this.userDetails = this.userService.getUserDetails();
+    this.firstName = this.userDetails?.firstName || 'Guest';
+    this.role = this.userDetails?.role;
+    this.userId = this.userDetails?.userId;
+
+    this.getCurrentLocation();
+
+    if(this.role === 'HOST') {
+      url = 'assets/imgs/Host-Tag.svg';
+      this.getMySpaces();
+      this.getAccountBalance();
+    }
+
+    if(this.role === 'TENANT' || this.role === 'ADMIN') {
+      url = 'assets/imgs/Dancer-Tag.svg';
+      this.getSpacesAround();
+    }
+
+    }
+
+    this.fetchSvgFile(url);
+
+
+  }
+
+  ngAfterViewInit() {
+    var url;
+    if(this.role == 'HOST') {
+      url = 'assets/imgs/Host-Tag.svg';
+    }
+    else {
+      url = 'assets/imgs/Dancer-Tag.svg';
+    }
+    this.fetchSvgFile(url);
+
+  }
+
+  fetchSvgFile(svgPath: string) {
+    console.log('Fetching data::::::');
+    this.http.get(svgPath, { responseType: 'text' })
+      .subscribe(
+        (svgData: string) => {
+          const parser = new DOMParser();
+          const svgDoc = parser.parseFromString(svgData, 'image/svg+xml');
+          this.renderSvg(svgDoc);
+        },
+        (error) => {
+          console.error('Error loading SVG file:', error);
+        }
+      );
+  }
+
+
+  renderSvg(svgDoc: Document) {
+    const svgElement = svgDoc.querySelector('svg');
+    if (svgElement) {
+      const svgContainer = this.svgContainer.nativeElement;
+      svgContainer.innerHTML = ''; // Clear any previous content
+      svgContainer.appendChild(svgElement);
+
+    }
   }
 
   toggleBalanceVisibility() {
@@ -361,10 +436,12 @@ export class Tab1Page implements OnInit {
     console.log('Place is '+place.spaceLocation);
     let navigationExtras: NavigationExtras = {
       state: {
+        visitStartTime: place.visitStartTime,
+        visitEndTime: place.visitEndTime,
         place: place
       }
     };
-    this.router.navigateByUrl(`/space-detail/${place.spaceId}`);
+    this.router.navigateByUrl(`/space-detail/${place.spaceId}`, navigationExtras);
   }
 
   space(place: any) {

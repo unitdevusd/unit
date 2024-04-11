@@ -1,8 +1,9 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
+      <ion-back-button class="blue-back-button" icon="chevron-back" defaultHref="/tabs"></ion-back-button>
     </ion-buttons>
+
 
     <div class="title-and-logo">
       <div class="logo">
@@ -139,7 +140,7 @@
           </ion-list>
           <b style="color: red; margin-bottom: 6px; text-align: left; font-size: medium;">Preferences</b>
 
-          <ion-list mode="md">
+          <!-- <ion-list mode="md">
             <ion-item mode="md">
               <ion-label position="floating" style="margin-bottom: 20px;">When can dancers come session?</ion-label>
               <ion-select formControlName="visitDays" multiple="true">
@@ -164,7 +165,7 @@
             <ion-item mode="md">
               <div class="visit-time" style="display: block;">
                 <ion-label>From:</ion-label>
-                <input class="native-input sc-ion-input-md" style="max-width: 500%; width: 350%;" type="time" formControlName="visitStartTime">
+                <ion-input class="native-input sc-ion-input-md"  style="max-width: 500%; width: 300%;" type="time" formControlName="visitStartTime"></ion-input>
               </div>
             </ion-item>
           </ion-list>
@@ -173,10 +174,81 @@
             <ion-item mode="md">
               <div class="visit-time" style="display: block;">
                 <ion-label>Until:</ion-label>
-                <input class="native-input sc-ion-input-md" style="max-width: 500%; width: 350%;" type="time" formControlName="visitEndTime">
+                <ion-input class="native-input sc-ion-input-md" style="max-width: 500%; width: 300%;" type="time" (ionChange)="onEndTimeChange($event)" formControlName="visitEndTime"></ion-input>
               </div>
+              <ion-text *ngIf="endTimeError" color="danger">
+                End time cannot be behind start time.
+              </ion-text>
+            </ion-item>
+          </ion-list> -->
+
+
+
+
+
+
+          <!-- <ion-list>
+          <ion-row>
+            <ion-col [size]="startDateExpanded ? '9' : '6'" (click)="toggleStartDate()">
+            <ion-accordion-group>
+              <ion-accordion value="start">
+                <ion-item slot="header">
+                  <ion-label>Start Date</ion-label>
+                  <ion-note slot="end" id="datetimeValue"></ion-note>
+                </ion-item>
+                <ion-datetime
+                  id="datetime"
+                  slot="content"
+                  display-format="MMMM YY"
+                  min="1989-06-04"
+                  max="2034-08-23"
+                  
+                ></ion-datetime>
+              </ion-accordion>
+            </ion-accordion-group>
+
+          </ion-col>
+
+
+          <ion-col [size]="endDateExpanded ? '9' : '6'" (click)="toggleEndDate()">
+            <ion-accordion-group>
+              <ion-accordion value="start">
+                <ion-item slot="header">
+                  <ion-label>End Date</ion-label>
+                  <ion-note slot="end" id="datetimeValue"></ion-note>
+                </ion-item>
+                <ion-datetime
+                  id="datetime"
+                  slot="content"
+                  display-format="MMMM YY"
+                  min="1989-06-04"
+                  max="2034-08-23"
+                  
+                ></ion-datetime>
+              </ion-accordion>
+            </ion-accordion-group>
+          </ion-col>
+          </ion-row>
+          </ion-list> -->
+
+
+
+          <ion-list>
+            <ion-label position="floating" style="margin-bottom: 20px; text-align: left; font-size: medium; display: block; margin-left: 16px;"><b>Available Time Slots For Session</b></ion-label>
+  
+            <ion-item>
+              <ion-text (click)="openTimeModal()" style="cursor: pointer;">Click to Add slots</ion-text>
+                <ion-icon name="add" slot="end" style="cursor: pointer;" (click)="openTimeModal()"></ion-icon>
+            
+            </ion-item>
+            <ion-item *ngFor="let slot of availableTimeSlots; let i = index">
+              {{ slot.date }} {{ slot.startTime }} - {{ slot.endTime }}
+              <ion-icon name="remove-circle" slot="end" (click)="removeTimeSlot(i)"></ion-icon>
             </ion-item>
           </ion-list>
+  
+
+
 
 
           <ion-list>
@@ -236,7 +308,7 @@
         </ion-button> -->
 
         <ion-button class="button-h" fill="solid" size="default" shape="round" expand="block" color="primary"
-        [disabled]="totalSize > 10 * 1024 * 1024 || largestFileSize > 5 * 1024 * 1024" (click)="uploadSpace()">
+        [disabled]="totalSize > 10 * 1024 * 1024 || largestFileSize > 5 * 1024 * 1024 || endTimeError" (click)="uploadSpace()">
           Add Space
         </ion-button>
       </ion-col>

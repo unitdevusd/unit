@@ -1,6 +1,6 @@
 import { Component, ElementRef, NgZone, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AlertController, LoadingController, ModalController, ToastController } from '@ionic/angular';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { AlertController, LoadingController, ModalController, NavController, ToastController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api-service.service';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
@@ -55,6 +55,7 @@ export class HostSpaceDetailPage implements OnInit {
     private alertController: AlertController,
     private modalController: ModalController,
     private sanitizer: DomSanitizer,
+    private navCtrl: NavController
 
 
 
@@ -140,8 +141,16 @@ export class HostSpaceDetailPage implements OnInit {
     this._apiService.deleteSpace(spaceData).subscribe(
       (response: any) => {
         if(response == 'Deleted') {
-        loading.dismiss();           
-        this.router.navigateByUrl('/tabs', { replaceUrl: true }); 
+        loading.dismiss(); 
+        
+        
+        let navigationExtras: NavigationExtras = {
+          state: {
+            navigationData: true
+          }
+        };
+        this.router.navigateByUrl(`/tabs`, navigationExtras);
+  // this.router.navigateByUrl('/tabs', { replaceUrl: true }); 
         this.showToast('Space deleted successfully');   
       }
       else {

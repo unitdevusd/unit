@@ -99,6 +99,10 @@ const routes: Routes = [
     path: 'auth-modal',
     loadChildren: () => import('./pages/auth-modal/auth-modal.module').then( m => m.AuthModalPageModule)
   },
+  {
+    path: 'time-slot-modal',
+    loadChildren: () => import('./pages/time-slot-modal/time-slot-modal.module').then( m => m.TimeSlotModalPageModule)
+  },
 
 
 

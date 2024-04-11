@@ -33,6 +33,7 @@ export class AddAccountPage implements OnInit {
 
     this.accountForm = this.formBuilder.group({
       payPayEmail: new FormControl("", Validators.required),
+      network: new FormControl("", Validators.required),
       userId: this.userId,
     });
 

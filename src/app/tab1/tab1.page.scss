@@ -307,6 +307,15 @@
     margin-top: 2px;
   }
 
+  #svgContainer {
+    width: 200px; /* Adjust width as needed */
+    height: auto; /* Maintain aspect ratio */
+  }
+
+  ion-title {
+    --display: flex;
+    --align-items: center; /* Align items vertically in the title */
+  }
 
   
 

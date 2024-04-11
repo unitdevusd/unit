@@ -34,8 +34,12 @@ export class ApiService {
   private updateProfilePicUrl = this.baseUrl+'users/updatePicture';
   private fetchAccountsUrl = this.baseUrl+'payment/getAccounts';
   private addAccountUrl = this.baseUrl+'payment/add-accounts';
-  private payoutUrl =  this.baseUrl+'payment/payout';
+  private payoutUrl =  this.baseUrl+'crypto/withdraw';
   private profilePicUrl = this.baseUrl+'users/getPicture';
+  private generateChargesUrl = this.baseUrl+'crypto/getCharges';
+  private trackChargesUrl = this.baseUrl+'crypto/track-charges';
+  private getRatesUrl = this.baseUrl+'crypto/rates';
+  private deleteBankUrl = this.baseUrl+'payment/deleteAccounts';
 
 
   constructor(public http: HttpClient) { }
@@ -165,9 +169,26 @@ export class ApiService {
     return this.http.post(this.updateRoleUrl, payload);
   }
 
+  // updateProfilePicture(payload: any): Observable<any> {
+  //   return this.http.post(this.updateProfilePicUrl, payload);
+  // }
+
+
   updateProfilePicture(payload: any): Observable<any> {
-    return this.http.post(this.updateProfilePicUrl, payload);
+    // Create FormData object
+    const formData = new FormData();
+    // Append form fields to FormData object
+    Object.keys(payload).forEach((key) => {
+      formData.append(key, payload[key]);
+    });
+
+    // Send POST request with form data
+    return this.http.post(this.updateProfilePicUrl, formData);
   }
+
+
+  
+
 
   fetchTenantSpaces(payload: any): Observable<any> {
     return this.http.post(this.tenantSpacesUrl, payload);
@@ -212,7 +233,24 @@ export class ApiService {
   removeSpace(payload: any): Observable<any> {
     return this.http.post(this.removeSpaceUrl, payload, { responseType: 'text' });
   }
+
+  generateCharges(payload: any): Observable<any> {
+    return this.http.post(this.generateChargesUrl, payload, { responseType: 'text' });
+  }
+
+  trackCharges(payload: any): Observable<any> {
+    return this.http.post(this.trackChargesUrl, payload, { responseType: 'text' });
+  }
+
+  convertToBtc(): Observable<string> {
+    return this.http.get(this.getRatesUrl, { responseType: 'text' });
+  }
+
+  deleteBankDetails(payload: any): Observable<string> {
+    return this.http.post(this.deleteBankUrl, payload, { responseType: 'text' });
+  }
  
+  
 
   updateRules(payload: any): Observable<any> {
     return this.http.post(this.updateRulesUrl, payload);
