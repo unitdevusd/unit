@@ -13,6 +13,8 @@ import { NavigationExtras, Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api-service.service';
 import { fromEventPattern } from 'rxjs';
 import { TimeSlotModalPage } from '../time-slot-modal/time-slot-modal.page';
+import { HttpClient } from '@angular/common/http';
+import { TimeSlots } from 'src/app/shared/time-slots';
 
 declare var google: any;
 
@@ -23,6 +25,8 @@ declare var google: any;
   styleUrls: ['./spaces.page.scss'],
 })
 export class SpacesPage implements OnInit {
+  @ViewChild('svgContainer', { static: false }) svgContainer: ElementRef;
+
   @ViewChild('autocompleteInput') autocompleteInput: ElementRef;
   public spaceForm!: FormGroup;
   userId: any;
@@ -43,9 +47,12 @@ export class SpacesPage implements OnInit {
   largestFileSize: number = 0;
   fileList: FileList;
   endTimeError: boolean = false;
+  role: string;
 
 
-  availableTimeSlots: any[] = []; // Array to hold time slots
+
+  // availableTimeSlots: any[] = [];
+  availableTimeSlots: TimeSlots[] = [];
   date: string = ''; // Selected date
   startTime: string = ''; // Start time
   endTime: string = ''; // End time
@@ -69,7 +76,9 @@ export class SpacesPage implements OnInit {
     private alertController: AlertController,
     private toastController: ToastController,
     private navCtrl: NavController,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private http: HttpClient,
+
 
 
 
@@ -85,10 +94,12 @@ export class SpacesPage implements OnInit {
 
     this.userDetails = this.userService.getUserDetails();
     this.userId = this.userDetails?.userId;
+    this.role = this.userDetails?.role;
     this.firstName = this.userDetails?.firstName || 'Guest';
 
     this.spaceForm = this.formBuilder.group({
       spaceLocation: new FormControl("", Validators.required),
+      spotName: new FormControl("", Validators.required),
       userId: this.userId,
       spaceType: new FormControl("", Validators.required),
       spaceImage: new FormControl([], Validators.required),
@@ -96,12 +107,10 @@ export class SpacesPage implements OnInit {
       description: new FormControl("", Validators.required),
       chargePerDay: new FormControl("", Validators.required),
       size: new FormControl("", Validators.required),
-      visitDays: new FormControl([], Validators.required),
-      visitStartTime: new FormControl("", Validators.required),
-      visitEndTime: new FormControl("", Validators.required),
+      timeSlot: new FormControl(this.availableTimeSlots),
       practice: ['yes'],
       musicDetails: new FormControl("", Validators.required),
-      additionalDetails: new FormControl("https://www.", [
+      additionalDetails: new FormControl("https://", [
         Validators.required,
         Validators.pattern(/^(ftp|http|https):\/\/[^ "]+$/)
       ]),
@@ -111,6 +120,45 @@ export class SpacesPage implements OnInit {
 
   ngOnInit() {
   }
+
+  ngAfterViewInit() {
+    var url;
+    if(this.role == 'HOST') {
+      url = 'assets/imgs/Host-Tag.svg';
+    }
+    else {
+      url = 'assets/imgs/Dancer-Tag.svg';
+    }
+    this.fetchSvgFile(url);
+
+  }
+
+  fetchSvgFile(svgPath: string) {
+    console.log('Fetching data::::::');
+    this.http.get(svgPath, { responseType: 'text' })
+      .subscribe(
+        (svgData: string) => {
+          const parser = new DOMParser();
+          const svgDoc = parser.parseFromString(svgData, 'image/svg+xml');
+          this.renderSvg(svgDoc);
+        },
+        (error) => {
+          console.error('Error loading SVG file:', error);
+        }
+      );
+  }
+
+
+  renderSvg(svgDoc: Document) {
+    const svgElement = svgDoc.querySelector('svg');
+    if (svgElement) {
+      const svgContainer = this.svgContainer.nativeElement;
+      svgContainer.innerHTML = ''; // Clear any previous content
+      svgContainer.appendChild(svgElement);
+
+    }
+  }
+
 
 
 
@@ -144,11 +192,11 @@ export class SpacesPage implements OnInit {
 
 
   addTimeSlot(startDate: any, startTime: any, endTime: any) {
-    const day = this.getDayOfWeek(new Date(this.date)); // Calculate day of the week
-    this.availableTimeSlots.push({ date: startDate, startTime: startTime, endTime: endTime });
-    // this.date = '';
-    // this.startTime = '';
-    // this.endTime = '';
+    const day = this.getDayOfWeek(new Date(this.date));
+    const newTimeSlot = new TimeSlots(startDate, startTime, endTime);
+    this.availableTimeSlots.push(newTimeSlot);
+
+    console.log(this.availableTimeSlots);
   }
 
   removeTimeSlot(index: number) {
@@ -199,9 +247,7 @@ export class SpacesPage implements OnInit {
       description: 'Description',
       chargePerDay: 'Space Charge',
       size: 'Space Size',
-      visitDays: 'Visit Days',
-      visitStartTime: 'Visit Duration',
-      visitEndTime: 'Visit Time',
+      timeSlot: 'Time Slots',
       practice: 'Practice Option',
       musicDetails: 'Music Details',
       additionalDetails: 'Video URL',

@@ -18,7 +18,6 @@
         </div>       
       </ion-title>
 
-        <!-- Welcome, {{ svgText }} {{ firstName }}</ion-title> -->
     </div>
 
 
@@ -38,19 +37,20 @@
     <ion-row class="ion-no-padding">
       <ion-col size-sm="10" offset-sm="3" class="ion-no-padding" [size]="10"> -->
 
-        <ion-searchbar style="height: 66px; margin-top: 10px;" color="black" [(ngModel)]="autocomplete.input" #searchbar placeholder="Search for Location" searchIcon=" "
+        <ion-searchbar class="searchbar-input" style="height: 48px; margin-left: 20px; margin-right: 20px; margin-top: 10px;" color="black" [(ngModel)]="autocomplete.input" #searchbar placeholder="Search for a spot" searchIcon=" "
           (ionInput)="searchLocation()" clearIcon=" " (ionFocus)="checkFocus()" (ionClear)="clearAutocomplete()">
-          <img src="../../../../assets/imgs/feather-search.png" />
+          <!-- <img src="../../../../assets/imgs/feather-search.png" /> -->
+          <ion-icon slot="start" name="search" class="custom-search-icon"></ion-icon>
         </ion-searchbar>
 
 
 
       <!-- </ion-col> -->
       <!-- <ion-col [size]="2" class="noti"> -->
-        <ion-icon color="unit-btn" *ngIf="hasFilter" name="funnel" (click)="clearFilters()"
-          style="margin-right: 14px; margin-top: 30px;"> </ion-icon>
-          <ion-icon name="funnel" *ngIf="!hasFilter"
-          (click)="openFilter()" style="margin-right: 14px; margin-top: 30px;"> </ion-icon>
+        <ion-icon color="unit-btn" *ngIf="hasFilter" name="filter" (click)="clearFilters()"
+          style="width: 48px; height: 48px; margin-top: 2px;"> </ion-icon>
+          <ion-icon name="filter" *ngIf="!hasFilter"
+          (click)="openFilter()" style="width: 48px; height: 48px; margin-top: 2px;"> </ion-icon>
       <!-- </ion-col>
     </ion-row>
   </ion-grid> -->
@@ -88,7 +88,7 @@
     <ion-grid>
       <ion-row>
         <ion-col>
-          <h3 class="top-heading">Places Around You</h3>        
+          <h3 class="top-heading">Session spots near you</h3>        
         </ion-col>
       </ion-row>
 
@@ -176,14 +176,24 @@
   </ion-grid> -->
 
   <div class="desktop-container" style="display: flex;">
-          <ion-searchbar style="height: 66px; margin-top: 10px;" color="black" [(ngModel)]="autocomplete.input" #searchbar placeholder="Search for Location" searchIcon=" "
+
+    <ion-searchbar class="searchbar-input" style="height: 48px; margin-left: 20px; margin-right: 20px; margin-top: 10px;" color="black" [(ngModel)]="autocomplete.input" #searchbar placeholder="Search for your spot" searchIcon=" "
+    (ionInput)="searchLocation()" clearIcon=" " (ionFocus)="checkFocus()" (ionClear)="clearAutocomplete()">
+    <!-- <img src="../../../../assets/imgs/feather-search.png" /> -->
+    <ion-icon slot="start" name="search" class="custom-search-icon"></ion-icon>
+  </ion-searchbar>
+
+
+          <!-- <ion-searchbar style="height: 66px; margin-top: 10px;" color="black" [(ngModel)]="autocomplete.input" #searchbar placeholder="Search for Location" searchIcon=" "
             (ionInput)="searchLocation()" clearIcon=" " (ionFocus)="checkFocus()" (ionClear)="clearAutocomplete()">
             <img src="../../../../assets/imgs/feather-search.png" />
-          </ion-searchbar> 
-          <ion-icon color="unit-btn" *ngIf="hasFilter" name="funnel" (click)="clearFilters()"
-            style="margin-right: 14px; margin-top: 30px;"> </ion-icon>
-            <ion-icon name="funnel" *ngIf="!hasFilter"
-            (click)="openFilter()" style="margin-right: 14px; margin-top: 30px;"> </ion-icon>
+          </ion-searchbar>  -->
+
+            <ion-icon color="unit-btn" *ngIf="hasFilter" name="filter" (click)="clearFilters()"
+            style="width: 48px; height: 48px; margin-top: 2px;"> </ion-icon>
+            <ion-icon name="filter" *ngIf="!hasFilter"
+            (click)="openFilter()" style="width: 48px; height: 48px; margin-top: 2px;"> </ion-icon>
+  
   </div>
   
 

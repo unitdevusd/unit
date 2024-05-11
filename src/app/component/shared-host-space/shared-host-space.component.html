@@ -1,7 +1,7 @@
       <ion-list class="card-list" *ngIf="spaces && spaces.length > 0; else noSpaces">
         <ion-item class="card-item" *ngFor="let item of spaces" (click)="place(item)" 
         >
-              <ion-grid class="card-grid">
+              <ion-grid class="card-grid" style="width: 312px !important; height: 380px !important;">
             <ion-card class="card_features ion-no-padding">    
               <img class="img-spacetype" *ngIf="item?.images !== null; else noImage" 
               [src]="item.spaceImage" />
@@ -10,15 +10,18 @@
               </ng-template>
 
             <ion-card-header>
-              <ion-card-subtitle>{{item?.size}}</ion-card-subtitle>
-              <ion-card-title>{{item?.spaceType}} ({{item?.spaceLocation}})</ion-card-title>
+              <ion-card-subtitle>{{item?.spotName}}, {{item?.spaceLocation}}</ion-card-subtitle>
+              <ion-card-title style="font-size: 13px;"> fits {{item?.size}}</ion-card-title>
             </ion-card-header>
             <ion-card-content class="no-padding">
-              <div class="card-content">
-                <span>$</span>{{item?.chargePerDay}}/<span>hour</span>
+              <div class="card-content" style="display: flex;">
+                <div class="charges" style="margin-top: 5px;">
+                <span>$</span><b>{{item?.chargePerDay}} per hour</b>
+              </div>
 
-                <ion-icon name="share-social-outline" color="dark" style="font-size: 20px;" class="mr-l"
-                (click)="shareByFacebook(space)"></ion-icon>
+                <div class="floor-type" style="margin-left: 60%;">
+                <ion-icon style="right: 0;" slot="end" size="large" name="layers-outline" color="dark" style="font-size: 20px;" class="mr-l"></ion-icon>
+              </div>
 
               </div>
             </ion-card-content>

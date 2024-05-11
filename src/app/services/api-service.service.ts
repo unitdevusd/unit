@@ -9,8 +9,8 @@ import { Observable, throwError } from 'rxjs';
 export class ApiService {
 
   jsonData: any;
-  private baseUrl = 'https://unitsession.com/';
-  // private baseUrl = 'http://localhost:8088/';
+  // private baseUrl = 'https://unitsession.com/';
+  private baseUrl = 'http://localhost:8088/';
   private viewSpaces = this.baseUrl+'spaces/getSpaces';
   private addSpaces = this.baseUrl+'spaces/add-space';
   private spacesAround = this.baseUrl+'map/getnearestlocations';
@@ -146,6 +146,16 @@ export class ApiService {
         formData.append('spaceImage', payload.spaceImage[i]);
       }
     }
+
+    formData.append('timeSlots', JSON.stringify(payload.timeSlot));
+    // if (payload.timeSlots && Array.isArray(payload.timeSlots)) {
+    //   for (let i = 0; i < payload.timeSlots.length; i++) {
+    //     const timeSlot = payload.timeSlots[i];
+    //     formData.append(`timeSlots[${i}].date`, timeSlot.date);
+    //     formData.append(`timeSlots[${i}].startTime`, timeSlot.startTime);
+    //     formData.append(`timeSlots[${i}].endTime`, timeSlot.endTime);
+    //   }
+    // }
   
     // Make the POST request with formData
     return this.http.post(this.addSpaces, formData);

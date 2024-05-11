@@ -1,1 +1,26 @@
+// ion-tab-button[aria-selected="true"]{
+//     --color-selected: #e40e40 !important;
+  
+//     ion-icon {
+//       color: var(--color-selected);
+//     }
+  
+//     ion-label {
+//       color: var(--color-selected);
+//     }
+//   }
 
+
+  ion-tab-button{
+    // font-size: 10px;
+    --background-focused: #e40e40;
+    --color-selected: #e40e40;
+    // --padding-end: 0px;
+    // --padding-start: 10px;
+    // --padding-bottom: 0px;
+    // --margin-left:0px;
+    // --margin-right:0px;
+    // ion-icon{
+    //     font-size: 67.5px;
+    // }
+}
