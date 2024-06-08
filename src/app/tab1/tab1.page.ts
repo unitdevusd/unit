@@ -695,7 +695,7 @@ export class Tab1Page implements OnInit {
               this.isLoading = false;
               this.totalPages = response.totalPages;
               this.placesAround = [...this.placesAround, ...response.content];
-              if(response.last == true) {
+              if(response.empty == true) {
                 const infiniteScroll = document.querySelector('ion-infinite-scroll');
                   if (infiniteScroll) {
                     (infiniteScroll as HTMLIonInfiniteScrollElement).disabled = true;
