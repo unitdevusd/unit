@@ -182,9 +182,6 @@ export class SpacesPage implements OnInit {
 
       
       this.addTimeSlot(data.startDate, data.startTime, data.endTime);
-      console.log(data.startDate);
-      console.log(data.startTime);
-      console.log(data.endTime);
 
     }
   }

@@ -1,0 +1,30 @@
+ion-modal {
+    &.center {
+      --width: calc(100% - 2em);
+      align-items: center;
+      --height: auto;
+      .ion-page {
+        position: relative;
+        display: block;
+        contain: content;
+      }
+    }
+  }
+
+
+  .button-like {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 2px solid #101010;
+    margin: 10px 20px;
+    transition: background-color 0.3s ease;
+    background-color: #3171e0;
+  }
+  
+  .button-like:hover {
+    background-color: #3171e0;
+  }

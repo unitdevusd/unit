@@ -1,31 +1,33 @@
       <ion-list class="card-list" *ngIf="spaces && spaces.length > 0; else noSpaces">
         <ion-item class="card-item" *ngFor="let item of spaces" (click)="place(item)" 
         >
-              <ion-grid class="card-grid" style="width: 312px !important; height: 380px !important;">
-            <ion-card class="card_features ion-no-padding">    
-              <img class="img-spacetype" *ngIf="item?.images !== null; else noImage" 
-              [src]="item.spaceImage" />
-              <ng-template #noImage>
+              <ion-grid class="card-grid" style="width: 312px !important; height: auto !important;">
+            <ion-card class="card_features ion-no-padding">  
+              <img class="img-spacetype" *ngIf="item?.images !== null; else noimage" [src]="item.spaceImage" style="border-radius: 10px;" />
+                <ng-template #noImage>
                 <img class="img-spacetype" src="../../../../assets/imgs/dummys.png" />
               </ng-template>
 
-            <ion-card-header>
-              <ion-card-subtitle>{{item?.spotName}}, {{item?.spaceLocation}}</ion-card-subtitle>
-              <ion-card-title style="font-size: 13px;"> fits {{item?.size}}</ion-card-title>
-            </ion-card-header>
-            <ion-card-content class="no-padding">
-              <div class="card-content" style="display: flex;">
-                <div class="charges" style="margin-top: 5px;">
-                <span>$</span><b>{{item?.chargePerDay}} per hour</b>
-              </div>
-
-                <div class="floor-type" style="margin-left: 60%;">
-                <ion-icon style="right: 0;" slot="end" size="large" name="layers-outline" color="dark" style="font-size: 20px;" class="mr-l"></ion-icon>
-              </div>
-
-              </div>
-            </ion-card-content>
-          </ion-card>
+              <ion-card-header>
+                <ion-card-subtitle style="font-size: 14px;">{{item?.spotName}}, {{item?.spaceLocation}}</ion-card-subtitle>
+                <!-- <ion-card-title style="font-size: 13px;"> fits {{item?.size}}</ion-card-title> -->
+              </ion-card-header>
+              <ion-card-content class="no-padding">
+                <div class="card-content" style="display: flex; margin-top: 0; font-size: 12px; color: #6F6F6F !important;">
+                  <div class="charges" style="width: 100%;">
+                    <ion-card-title style="font-size: 13px;"> fits {{item?.size}}</ion-card-title>
+  
+                  <span>$</span><b>{{item?.chargePerDay}} per hour</b>
+                </div>
+                  <!-- <ion-icon name="map-outline"></ion-icon> -->
+  
+                  <div class="floor-type">
+                  <ion-icon style="right: 0;" slot="end" size="large" name="layers-outline" color="dark" style="font-size: 20px;" class="mr-l"></ion-icon>
+                </div>
+  
+                </div>
+              </ion-card-content>
+            </ion-card>
       </ion-grid>
       </ion-item>
       </ion-list>

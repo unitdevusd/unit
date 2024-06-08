@@ -103,6 +103,10 @@ const routes: Routes = [
     path: 'time-slot-modal',
     loadChildren: () => import('./pages/time-slot-modal/time-slot-modal.module').then( m => m.TimeSlotModalPageModule)
   },
+  {
+    path: 'payment-modal',
+    loadChildren: () => import('./pages/payment-modal/payment-modal.module').then( m => m.PaymentModalPageModule)
+  },
 
 
 

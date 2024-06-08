@@ -6,9 +6,9 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
   styleUrls: ['./unit-listing.component.scss'],
 })
 export class UnitListingComponent implements OnInit {
-  // slideOpts = { slidesPerView: 'auto', zoom: false, grabCursor: true };
   @Input() units: any;
   @Output() unitClicked = new EventEmitter();
+  @Output() loadMoreUnits = new EventEmitter();
 
 
   constructor() { }
@@ -17,6 +17,10 @@ export class UnitListingComponent implements OnInit {
 
   place(placeInfo: any){
     this.unitClicked.emit(placeInfo);
+  }
+
+  loadMore(event: any) {
+    this.loadMoreUnits.emit(event);
   }
 
 }

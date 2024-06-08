@@ -63,7 +63,14 @@
           <div class="forgot-pass">
             <a routerLink="/forgot-password">Forgot Password?</a>
           </div>
-          <ion-button class="button-h custom-cursor" fill="solid" size="default" shape="round" expand="block" color="primary" [disabled]="!loginForm.valid" (click)="loginUser()">Login</ion-button>
+
+          <ion-button class="button-h" fill="solid" size="default" expand="block" color="custom" style="--ion-color-base: #e40e40; margin-top: 10% !important; --border-radius: 4px;"
+          [disabled]="!loginForm.valid" (click)="loginUser()">
+           Login
+          </ion-button>
+    
+
+          <!-- <ion-button class="button-h custom-cursor" fill="solid" size="default" shape="round" expand="block" color="primary" [disabled]="!loginForm.valid" (click)="loginUser()">Login</ion-button> -->
           <p class="have">Don't have an account? <br><a class="signup-text" (click)="registerpage()"> Sign up </a></p>
         </form>
       </div>

@@ -20,6 +20,7 @@ export class Tab3Page {
   tenantToggle: boolean = false;
   profilePicture: any;
   fromTab3: boolean = false;
+  referralCode: any;
 
 
   constructor(
@@ -38,6 +39,7 @@ export class Tab3Page {
     this.userDetails = this.userService.getUserDetails();
     this.firstName = this.userDetails?.firstName || 'Guest';
     this.role = this.userDetails?.role;
+    this.referralCode = this.userDetails?.referralCode;
     this.userId = this.userDetails?.userId;
     this.hostToggle = false;
     this.tenantToggle = false;
@@ -132,6 +134,10 @@ export class Tab3Page {
         );
   }
 
+  logout() {
+    this.userService.clearUserDetails();
+    this.router.navigate(['/login']);
+  }
 
 
   async updateRole() {

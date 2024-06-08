@@ -1,27 +1,25 @@
 <ion-header style="background-color: red;">
   <ion-toolbar style="background-color: red;">
-    <ion-buttons slot="end">
+    <!-- <ion-buttons slot="end">
       <ion-button (click)="logout()">
         <ion-icon name="log-out-outline"></ion-icon>
       </ion-button>
-    </ion-buttons>
+    </ion-buttons> -->
 
     <div class="title-and-logo">
       <div class="logo" style="display: flex;">
-        <img src="../../../../assets/imgs/unit-logo.png" alt="Logo" style="width: 50px; height: auto;" />
+        <img src="../../../../assets/imgs/unit-logo.png" alt="Logo" style="width: 50px; height: auto; margin-bottom: 17px;" />
         <div #svgContainer style="width: 100px; height: 30px; margin-top: 10px;"></div>    
 
       </div>
       <ion-title>
         <div class="title-content" style="display: flex; margin-top: 20px;">
-        <b style="height: 50px; color: #212121;">{{ firstName }}   </b>
+        <b style="height: 50px; color: #212121; margin-left: 100px;">{{ firstName +' '+ lastName }}   </b>
         </div>       
       </ion-title>
 
     </div>
 
-
-    <!-- <ion-title color="primary" class="left-title">Welcome, {{ firstName }}</ion-title> -->
   </ion-toolbar>
 </ion-header>
 
@@ -37,7 +35,7 @@
     <ion-row class="ion-no-padding">
       <ion-col size-sm="10" offset-sm="3" class="ion-no-padding" [size]="10"> -->
 
-        <ion-searchbar class="searchbar-input" style="height: 48px; margin-left: 20px; margin-right: 20px; margin-top: 10px;" color="black" [(ngModel)]="autocomplete.input" #searchbar placeholder="Search for a spot" searchIcon=" "
+        <ion-searchbar class="searchbar-input" style="height: 48px; margin-left: 20px; margin-right: 20px; margin-top: 13px;" color="black" [(ngModel)]="autocomplete.input" #searchbar placeholder="Search for a spot" searchIcon=" "
           (ionInput)="searchLocation()" clearIcon=" " (ionFocus)="checkFocus()" (ionClear)="clearAutocomplete()">
           <!-- <img src="../../../../assets/imgs/feather-search.png" /> -->
           <ion-icon slot="start" name="search" class="custom-search-icon"></ion-icon>
@@ -45,15 +43,14 @@
 
 
 
-      <!-- </ion-col> -->
-      <!-- <ion-col [size]="2" class="noti"> -->
-        <ion-icon color="unit-btn" *ngIf="hasFilter" name="filter" (click)="clearFilters()"
-          style="width: 48px; height: 48px; margin-top: 2px;"> </ion-icon>
-          <ion-icon name="filter" *ngIf="!hasFilter"
-          (click)="openFilter()" style="width: 48px; height: 48px; margin-top: 2px;"> </ion-icon>
-      <!-- </ion-col>
-    </ion-row>
-  </ion-grid> -->
+
+        <img src="../../../../assets/imgs/Filter_icon.png" *ngIf="hasFilter" name="filter" (click)="clearFilters()" style="width: 48px; height: 48px; margin-top: 3px;" />
+        <img src="../../../../assets/imgs/Filter_icon_off.png" *ngIf="!hasFilter" name="filter" (click)="openFilter()" style="width: 48px; height: 48px; margin-top: 3px;" />
+
+        <!-- <ion-icon color="unit-btn" *ngIf="hasFilter" name="filter" (click)="clearFilters()"
+          style="width: 48px; height: 48px; margin-top: 2px;"> </ion-icon> -->
+          <!-- <ion-icon name="filter" *ngIf="!hasFilter"
+          (click)="openFilter()" style="width: 48px; height: 48px; margin-top: 2px;"> </ion-icon> -->
 </div>
   <div [hidden]="autocompleteItems.length == 0" class="search_list">
     <!-- <ion-list lines="none">
@@ -99,14 +96,16 @@
     </ion-grid>
 
     <div *ngIf="!hasFilter">
-      <app-unit-listing [units]="placesAround" (unitClicked)='place($event)'></app-unit-listing>
+      <app-unit-listing [units]="placesAround" (unitClicked)='place($event)' (loadMoreUnits)="ionInfiniteScroll($event)"></app-unit-listing>
     </div>
 
     <div *ngIf="hasFilter">
       <app-unit-listing [units]="placesFiltered" (unitClicked)='place($event)'></app-unit-listing>
     </div>
-  </div>
-  <div>
+    <ion-infinite-scroll threshold="0" (ionInfinite)="ionInfiniteScroll($event)">
+      <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Fetching more spots...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>  
   </div>
 </ion-content>
 

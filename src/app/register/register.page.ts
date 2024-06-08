@@ -34,6 +34,7 @@ public signupForm!: FormGroup;
     this.signupForm = this.formBuilder.group({
       firstName: new FormControl('', Validators.required),
       profilePicture: new FormControl(''),
+      referralCode: new FormControl('', Validators.required),
       lastName: new FormControl('', Validators.required),
       role: new FormControl(this.role, Validators.nullValidator),
       email: new FormControl(

@@ -1,29 +1,23 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button class="blue-back-button" icon="chevron-back" defaultHref="/tabs"></ion-back-button>
-    </ion-buttons>
 
-
-    <!-- <div class="title-and-logo">
-      <div class="logo">
-        <img src="../../../../assets/imgs/unit-logo.png" alt="Logo" style="width: 50px; height: auto;" />
-      </div>
-      <ion-title>Hi, {{ firstName }}</ion-title>
-    </div> -->
 
 
     <div class="title-and-logo">
+      <ion-buttons slot="start">
+        <ion-back-button class="blue-back-button" icon="chevron-back" defaultHref="/tabs"></ion-back-button>
+      </ion-buttons>
+  
       <div class="logo" style="display: flex;">
-        <img src="../../../../assets/imgs/unit-logo.png" alt="Logo" style="width: 50px; height: auto;" />
+        <img src="../../../../assets/imgs/unit-logo.png" alt="Logo" style="width: 50px; height: auto; margin-bottom: 17px;" />
         <div #svgContainer style="width: 100px; height: 30px; margin-top: 10px;"></div>    
 
       </div>
-      <ion-title>
+      <!-- <ion-title>
         <div class="title-content" style="display: flex; margin-top: 20px;">
-        <b style="height: 50px; color: #212121;">{{ firstName }}   </b>
+        <b style="height: 50px; color: #212121; margin-left: 100px;">{{ firstName }}   </b>
         </div>       
-      </ion-title>
+      </ion-title> -->
 
     </div>
 
@@ -85,8 +79,8 @@
               <ion-label position="floating" style="margin-bottom: 20px;">What type of floor is available?</ion-label>
               <ion-select formControlName="spaceType">
                 <!-- <ion-select-option value="" selected disabled>Select Space Type</ion-select-option> -->
-                <ion-select-option value="Linoleum / Dance Floor">Linoleum / Dance Floor</ion-select-option>
-                <ion-select-option value="Padded / Gym Floor">Padded / Gym Floor</ion-select-option>
+                <ion-select-option value="Linoleum">Linoleum / Dance Floor</ion-select-option>
+                <ion-select-option value="Mats">Mats</ion-select-option>
                 <ion-select-option value="Trampoline">Trampoline</ion-select-option>
                 <ion-select-option value="Grass">Grass</ion-select-option>
                 <ion-select-option value="Concrete">Concrete</ion-select-option>

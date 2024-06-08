@@ -9,8 +9,8 @@ import { Observable, throwError } from 'rxjs';
 export class ApiService {
 
   jsonData: any;
-  // private baseUrl = 'https://unitsession.com/';
-  private baseUrl = 'http://localhost:8088/';
+  private baseUrl = 'https://unit-session.com/';
+  // private baseUrl = 'http://localhost:8088/';
   private viewSpaces = this.baseUrl+'spaces/getSpaces';
   private addSpaces = this.baseUrl+'spaces/add-space';
   private spacesAround = this.baseUrl+'map/getnearestlocations';

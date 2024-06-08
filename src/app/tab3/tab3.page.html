@@ -21,7 +21,15 @@
   </ion-header>
   
   <ion-content fullscreen [ngClass]="{'dark-theme': darkMode}">
+
+    
+
     <ion-list>
+
+      <ion-item lines="full">
+        <ion-label>Referral Code - </ion-label><b style="margin-left: 0;">{{referralCode}}</b>
+      </ion-item>
+
       <ion-item lines="full">
         <ion-label>Referrals</ion-label>
       </ion-item>
@@ -33,6 +41,11 @@
       <ion-item lines="full">
         <ion-label>Consult a legal pro</ion-label>
       </ion-item>
+
+      <ion-item lines="full">
+        <ion-label (click)="logout()">Log out</ion-label>
+      </ion-item>
+
   
       <!-- <ion-item lines="full">
         <ion-label *ngIf="role !== null && role === 'HOST'">Switch to Tenant</ion-label>

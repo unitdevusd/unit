@@ -402,7 +402,27 @@
   .searchbar-input-container.sc-ion-searchbar-ios {
     height: 44px;
   }
+
   
-  ion-tab-button[aria-selected="true"] {
-    --color-selected: #e40e40;
-  }
+// * {
+//   color: #212121; 
+// }
+
+  :root{
+    .tab-selected{
+        font-size: 14px !important;
+        text-decoration: underline;
+
+        ion-tab-button{
+          background: #e40e40 !important;
+          color: #e40e40 !important;
+      }
+    
+    } 
+}
+
+ion-tab-button{
+  --background-focused: #e40e40 !important;
+  --color-selected: #e40e40 !important;
+}
+

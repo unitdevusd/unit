@@ -14,6 +14,7 @@ import { Observable, Subject, Subscription, interval } from 'rxjs';
 import { Plugins, Capacitor } from '@capacitor/core';
 import { finalize, take, takeUntil } from 'rxjs/operators';
 import { Browser } from '@capacitor/browser';
+import { PaymentModalPage } from '../payment-modal/payment-modal.page';
 
 // const { Browser } = Plugins;
 
@@ -28,17 +29,23 @@ declare var paypal: any;
 })
 export class SpaceDetailPage implements OnInit, OnDestroy {
 
-  isDay = (dateString: string) => {
-    const allowedDays = this.convertDaysToNumbers(this.place?.visitDays);
-    const date = new Date(dateString);
-    const utcDay = date.getUTCDay();
-      const currentDate = new Date();
-    const currentUtcDay = currentDate.getUTCDay();
-      if (date.getTime() >= currentDate.getTime() && (allowedDays.includes(utcDay) || allowedDays.includes(7))) {
-      return true;
-    }
+  // isDay = (dateString: string) => {
+  //   const allowedDays = this.convertDaysToNumbers(this.place?.visitDays);
+  //   const date = new Date(dateString);
+  //   const utcDay = date.getUTCDay();
+  //     const currentDate = new Date();
+  //   const currentUtcDay = currentDate.getUTCDay();
+  //     if (date.getTime() >= currentDate.getTime() && (allowedDays.includes(utcDay) || allowedDays.includes(7))) {
+  //     return true;
+  //   }
   
-    return false;
+  //   return false;
+  // };
+
+  isDay = (dateString: string) => {
+    const date = new Date(dateString).toDateString();
+  
+    return this.place.timeSlots.some((slot: { date: string | number | Date; }) => new Date(slot.date).toDateString() === date);
   };
 
     title = 'angular-stripe';
@@ -75,10 +82,10 @@ export class SpaceDetailPage implements OnInit, OnDestroy {
   validTimes: string[] = [];
   visitStartTime: any;
   visitEndTime : any;
+  floorTypeUrl: any;
 
   TRACKING_INTERVAL_MS = 10000;
   intervalSubscription: Subscription | undefined;
-
 
 
   constructor(
@@ -133,9 +140,8 @@ export class SpaceDetailPage implements OnInit, OnDestroy {
 
   async ngOnInit() {
 
-    console.log('Entering:::');
     this.place = history.state.place;
-    console.log(this.place.visitStartTime);
+    this.floorTypeUrl = '../../../../assets/floors/'+this.place.spaceType+'.png';
 
     this.visitStartTime = history.state.visitStartTime || "00:00"
     this.visitEndTime = this.place.visitEndTime || "23:00";
@@ -156,7 +162,23 @@ export class SpaceDetailPage implements OnInit, OnDestroy {
   }
 
 
+
+
+
+  async openPaymentModal() {
+    const modal = await this.modalController.create({
+      component: PaymentModalPage,
+      breakpoints: [0,5],
+      initialBreakpoint: 0.5,
+      handle: false,
+      componentProps: {
+        place: this.place,
+      },
+    });
   
+    await modal.present();
+  }
+
 
   generateValidTimes() {
     const startTime = parseInt(this.visitStartTime.split(':')[0], 10);
@@ -164,8 +186,6 @@ export class SpaceDetailPage implements OnInit, OnDestroy {
 
     console.log('Start and End time is '+startTime+' and '+endTime);
 
-    // const startTime = 8;
-    // const endTime = 14; 
 
     this.validTimes = [];
     for (let hour = startTime; hour <= endTime; hour++) {

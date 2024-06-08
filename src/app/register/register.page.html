@@ -21,6 +21,11 @@
       </ion-list>
 
 
+      <ion-list class="line-input" mode="md">
+        <ion-item mode="md">
+          <ion-input placeholder="Referral Code" type="text" formControlName="referralCode"></ion-input>
+        </ion-item>
+      </ion-list>
 
 
 
@@ -58,10 +63,17 @@
           </ion-input>
         </ion-item>
       </ion-list>
-      <ion-button style="margin-top: 10% !important;" fill="solid" size="default" shape="round" expand="block"
+
+      <ion-button class="button-h" fill="solid" size="default" expand="block" color="custom" style="--ion-color-base: #e40e40; margin-top: 10% !important; --border-radius: 4px;"
+      [disabled]="!signupForm.valid" (click)="createUser()">
+       Sign Up
+      </ion-button>
+
+
+      <!-- <ion-button style="margin-top: 10% !important;" fill="solid" size="default" shape="round" expand="block"
         [disabled]="!signupForm.valid" (click)="createUser()">
         Sign up
-      </ion-button>
+      </ion-button> -->
       <p>
         Already have an account? <br>
         <a routerLink="/login" class="login-text"> Login </a>

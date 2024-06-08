@@ -19,6 +19,7 @@ import { UserService } from '../services/user.service';
 import { async } from 'rxjs';
 import { Plugins } from '@capacitor/core';
 import { HttpClient } from '@angular/common/http';
+import { InfiniteScrollCustomEvent } from '@ionic/angular';
 
 const { Geocoder } = Plugins;
 
@@ -70,11 +71,16 @@ export class Tab1Page implements OnInit {
   user : string = 'User';
   clearFilter: boolean = false;
   firstName: string;
+  lastName: string;
   role: string;
   userId: any;
   userDetails: any;
   showBalance: boolean = true;
   svgText: string;
+  current_page = 0;
+  page_size = 6;
+  isLoading = false;
+  totalPages = 1;
 
 
 
@@ -82,17 +88,13 @@ export class Tab1Page implements OnInit {
     private router: Router,
     private toastController: ToastController,
     private _apiService: ApiService,
-    private _loader: LoaderService,
     private _gs: GlobalService,
-    private storage : Storage,
-    private _toast: ToastService,
     private geolocation : Geolocation,
     private nativeGeocoder: NativeGeocoder,
     public zone: NgZone,
     public modalCtrl : ModalController,
     private userService : UserService,
     private loadingController : LoadingController,
-    private route: ActivatedRoute,
     private http: HttpClient,
     
     ) {
@@ -105,6 +107,7 @@ export class Tab1Page implements OnInit {
 
     this.userDetails = this.userService.getUserDetails();
     this.firstName = this.userDetails?.firstName || 'Guest';
+    this.lastName = this.userDetails?.lastName || 'Guest';
     this.role = this.userDetails?.role;
     this.userId = this.userDetails?.userId;
 
@@ -116,7 +119,8 @@ export class Tab1Page implements OnInit {
     }
 
     if(this.role === 'TENANT' || this.role === 'ADMIN') {
-      this.getSpacesAround();
+      // this.getSpacesAround();
+      this.getSpacesAround(0, this.page_size);
     }
 
   }
@@ -144,7 +148,8 @@ export class Tab1Page implements OnInit {
 
     if(this.role === 'TENANT' || this.role === 'ADMIN') {
       url = 'assets/imgs/Dancer-Tag.svg';
-      this.getSpacesAround();
+      this.getSpacesAround(0, this.page_size);
+      // this.getSpacesAround();
     }
 
     }
@@ -623,22 +628,33 @@ export class Tab1Page implements OnInit {
     }
 
 
-    async getSpacesAround() {
+    async getSpacesAround(page: number, size: number) {
+
+      if (this.isLoading) {
+        return;
+      }
 
       try {
         const loading = await this.loadingController.create();
         await loading.present();
     
         if (this.userId) {
-          const spaceData = {"latitude" : this.lat, "longitude" : this.long};
+          const spaceData = {"latitude" : this.lat, "longitude" : this.long, "page": page, "size" : size};
           this._apiService.getSpacesAround(spaceData).subscribe(
             (response: any) => {
               loading.dismiss();
-              this.placesAround = response
+              this.isLoading = false;
+              this.totalPages = response.totalPages;
+              if (page === 0) {
+                this.placesAround = response.content;
+              } else {
+                this.placesAround = [...this.placesAround, ...response.content];
+              }
             },
             (error: any) => {
               console.error(error);
               loading.dismiss();
+              this.isLoading = false;
               this.showToast('Unable to fetch spaces');             
               // this.showErrorAlert('Unexpected error occurred');
             }
@@ -651,7 +667,53 @@ export class Tab1Page implements OnInit {
   
     }
 
+    ionInfiniteScroll(event: any) {
+
+      setTimeout(() => {
+        this.getSpaces(this.page_size);      
+        (event as InfiniteScrollCustomEvent).target.complete();  
+      }, 1500);
+    }
+
   
+
+
+    async getSpaces(size: number) {
+
+      if (this.isLoading) {
+        return;
+      }
+
+      try {    
+        this.isLoading = true;
+
+
+        this.current_page++;
+          const spaceData = {"latitude" : this.lat, "longitude" : this.long, "page": this.current_page, "size" : size};
+          this._apiService.getSpacesAround(spaceData).subscribe(
+            (response: any) => {
+              this.isLoading = false;
+              this.totalPages = response.totalPages;
+              this.placesAround = [...this.placesAround, ...response.content];
+              if(response.last == true) {
+                const infiniteScroll = document.querySelector('ion-infinite-scroll');
+                  if (infiniteScroll) {
+                    (infiniteScroll as HTMLIonInfiniteScrollElement).disabled = true;
+                }
+              }
+            },
+            (error: any) => {
+              console.error(error);
+              this.isLoading = false;
+              this.showToast('Unable to fetch spaces');             
+            }
+          );
+      } catch (error) {
+        console.error(error);
+      }
+        
+    }
+
   
 }
 

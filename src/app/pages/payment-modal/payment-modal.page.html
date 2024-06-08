@@ -1,0 +1,75 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Payments</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="dismissModal()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <ion-list>
+    <ion-item id="open-modal" class="button-like">
+      <ion-label>Select Preferred Date </ion-label>
+      <ion-note slot="end">{{dateExample | date}}</ion-note>
+    </ion-item>
+    <ion-modal trigger="open-modal" [cssClass]="'center'">
+      <ng-template>
+        <ion-datetime
+          presentation="date"
+          (ionChange)="onDateChange()"
+          [(ngModel)]="dateExample"
+          [isDateEnabled]="isDateEnabled.bind(this)"
+          size="cover"
+        ></ion-datetime>
+
+        <div *ngIf="filteredTimeSlots.length">
+          <ion-list>
+            <ion-item *ngFor="let timeSlot of filteredTimeSlots">
+              <ion-label>
+                {{ timeSlot.startTime }} - {{ timeSlot.endTime }}
+              </ion-label>
+              <ion-checkbox
+                slot="start"
+                (ionChange)="selectTimeSlot($event, timeSlot)"
+              ></ion-checkbox>
+            </ion-item>
+          </ion-list>
+        </div>        
+      </ng-template>
+    </ion-modal>
+
+    <ion-item>
+          <ion-label>Rent Charges</ion-label>
+          <ion-note>{{ rentCharges | currency:'USD':'symbol':'1.2-2'}}</ion-note>
+
+    </ion-item>
+
+    <ion-item>
+          <ion-label>Service Charges(10%)</ion-label>
+          <ion-note>{{ serviceCharges | currency:'USD':'symbol':'1.2-2'}} </ion-note>
+
+    </ion-item>
+
+    <ion-item>
+          <ion-label>Total Fees</ion-label>
+          <ion-note>{{ totalFees | currency:'USD':'symbol':'1.2-2'}}</ion-note>
+
+    </ion-item>
+  </ion-list>
+
+
+
+  <ion-button (click)="sendCrypto(totalFees)" class="button-h" fill="solid" size="default" expand="block" color="custom" style="--ion-color-base: #e40e40; margin-top: 10% !important; --border-radius: 4px;"
+  >
+   {{ bookingButtonText }}
+  </ion-button>
+
+
+  
+</ion-content>
