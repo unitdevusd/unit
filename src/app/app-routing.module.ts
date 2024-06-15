@@ -107,6 +107,10 @@ const routes: Routes = [
     path: 'payment-modal',
     loadChildren: () => import('./pages/payment-modal/payment-modal.module').then( m => m.PaymentModalPageModule)
   },
+  {
+    path: 'forgot-password',
+    loadChildren: () => import('./pages/forgot-password/forgot-password.module').then( m => m.ForgotPasswordPageModule)
+  },
 
 
 

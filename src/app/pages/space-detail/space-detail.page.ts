@@ -120,7 +120,6 @@ export class SpaceDetailPage implements OnInit, OnDestroy {
     this.spaceId = this.route.snapshot.paramMap.get('spaceId');
     this.fromTab2 = history.state.fromTab2;
     if (this.fromTab2) {
-      console.log('From Tab 2');
       this.bookingButtonText = 'Book Again'
     }
 
@@ -184,7 +183,6 @@ export class SpaceDetailPage implements OnInit, OnDestroy {
     const startTime = parseInt(this.visitStartTime.split(':')[0], 10);
     const endTime = parseInt(this.visitEndTime.split(':')[0], 10);
 
-    console.log('Start and End time is '+startTime+' and '+endTime);
 
 
     this.validTimes = [];
@@ -345,7 +343,6 @@ async bookSpace(id: any, status: any) {
   "chargeId" : id, "chargeIdStatus" : status};
   this._apiService.bookSpace(spaceData).subscribe(
     (response: any) => {
-      console.log(response.message);
       this.bookingButtonText = 'Successfully booked';
       setTimeout(() => {
 
@@ -418,8 +415,6 @@ async openImageModal(imageUrl: string) {
     if (this.startDateTime && this.endDateTime) {
       const startDate = new Date(this.startDateTime);
       const endDate = new Date(this.endDateTime);
-      // console.log('Start date is '+startDate);
-      // console.log('End date is '+endDate);
       const timeDifference = endDate.getTime() - startDate.getTime();
       this.hoursDifference = Math.ceil(timeDifference / (1000 * 60 * 60));
       
@@ -456,7 +451,6 @@ async openImageModal(imageUrl: string) {
         endDateTimeForm.setValue(endDate);
       }
 
-      console.log('Number of hours between the selected dates/times:', this.hoursDifference);
     }
   }
 
@@ -607,7 +601,6 @@ async openImageModal(imageUrl: string) {
     completionSubject.subscribe(() => {
       this.showToast('We did not receive any payment from you. Please try again');
       this.bookingButtonText = 'Click to book space';
-      console.log('All operations completed');
       if (this.intervalSubscription) {
         this.intervalSubscription.unsubscribe();
       }
@@ -623,7 +616,6 @@ async openImageModal(imageUrl: string) {
   }
 
   async trackId(id: string) {
-    console.log('In here again');
     
 
     try{
@@ -644,7 +636,6 @@ async openImageModal(imageUrl: string) {
             this.bookSpace(id, response);
             this.showSuccessAlert("Transfer successful and space booked. Thank you for booking");
           }     
-          console.log('Processed tracking response: ' + response);
           loading.dismiss();
           this.bookingButtonText = response;
         },

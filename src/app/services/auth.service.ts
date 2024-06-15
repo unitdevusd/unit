@@ -15,6 +15,9 @@ export class AuthService {
   // private baseUrl = 'http://localhost:8088/';
   private signUpUrl = this.baseUrl+'users/create';
   private loginUrl = this.baseUrl+'users/authenticate';
+  private validateUserUrl = this.baseUrl+'users/validateUserEmail';
+  private validateOtpUrl = this.baseUrl+'users/validateOtp';
+  private resetPasswordUrl = this.baseUrl+'users/resetPassword';
 
 
 
@@ -45,6 +48,17 @@ export class AuthService {
     return this.http.post(this.loginUrl, payload);
   }
 
+  validateEmail(payload: any): Observable<any> {
+    return this.http.post(this.validateUserUrl, payload);
+  }
+
+  validateOtp(payload: any): Observable<any> {
+    return this.http.post(this.validateOtpUrl, payload);
+  }
+
+  resetUserPassword(payload: any): Observable<any> {
+    return this.http.post(this.resetPasswordUrl, payload);
+  }
 }
 
 
