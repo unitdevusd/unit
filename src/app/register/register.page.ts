@@ -135,22 +135,13 @@ public signupForm!: FormGroup;
       this.profilePictureUrl = reader.result as string;
     };
     reader.readAsDataURL(file);
-
-    // if(file) {
-    //   this.signupForm.patchValue({
-    //     profilePicture: file
-    //   });
-    // }
    
-
-
-    if (file) {
-      this.convertToBase64(file).then((base64) => {
-        this.signupForm.patchValue({
-          profilePicture: file,
-        });
+    if(file) {
+      this.signupForm.patchValue({
+        profilePicture: file,
       });
     }
+
   }
 
   convertToBase64(file: File): Promise<string> {

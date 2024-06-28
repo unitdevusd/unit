@@ -9,6 +9,7 @@ export class UnitListingComponent implements OnInit {
   @Input() units: any;
   @Output() unitClicked = new EventEmitter();
   @Output() loadMoreUnits = new EventEmitter();
+  floorTypeUrl: any;
 
 
   constructor() { }

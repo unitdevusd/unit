@@ -392,3 +392,14 @@
     padding: 10px;
   }
   
+
+  .name-ellipsis {
+    display: inline-block;
+    max-width: calc(100% - 100px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 50px;
+    color: #212121;
+    margin-left: 100px;
+  }

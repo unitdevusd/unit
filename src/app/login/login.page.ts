@@ -101,7 +101,7 @@ export class LoginPage implements OnInit {
   
             if (response.email) {
               this.userService.setUserDetails(response);
-              this.showSuccessAlert();
+              // this.showSuccessAlert();
 
               let navigationExtras: NavigationExtras = {
                 state: {

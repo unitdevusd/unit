@@ -46,12 +46,16 @@
 
   
   <ng-template #noSpaces>
+    <div class="centered-container">
     <img class="img-spacetype-data" src="../../../../assets/imgs/dummy_space.png" />
+  </div>
+
   
     <div class="no-item">
       <p style="text-align: center;"><b><h5>You have not added any space</h5></b></p>
       <ion-button class="custom-cursor" expand="full" (click)="addClicked()">Click to add your first space</ion-button>
     </div>
+
   </ng-template>
   
   <div class="clear" *ngIf="clearFilter">

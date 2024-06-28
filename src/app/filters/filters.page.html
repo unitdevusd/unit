@@ -9,8 +9,11 @@
   </ion-toolbar>
 
   <div [hidden]="!searchResults" class="search_list">
-    <ion-icon name="search"></ion-icon> {{ searchResults }}
-    </div>
+    <ion-icon name="search"></ion-icon>
+    <span [ngClass]="{'no-location': searchResults?.startsWith('No Location')}">
+      {{ searchResults }}
+    </span>
+      </div>
 
 </ion-header>
 <ion-content>
@@ -50,11 +53,12 @@
       <ion-label position="floating" style="margin-bottom: 20px;">Preferred space type</ion-label>
       <ion-select [(ngModel)]="spaceFloor">
         <!-- <ion-select-option value="" selected disabled>Select Space Type</ion-select-option> -->
-        <ion-select-option value="Linoleum / Dance Floor">Linoleum / Dance Floor</ion-select-option>
-        <ion-select-option value="Padded / Gym Floor">Padded / Gym Floor</ion-select-option>
+        <ion-select-option value="Linoleum">Linoleum / Dance Floor</ion-select-option>
+        <ion-select-option value="Mats">Mats</ion-select-option>
         <ion-select-option value="Trampoline">Trampoline</ion-select-option>
         <ion-select-option value="Grass">Grass</ion-select-option>
         <ion-select-option value="Concrete">Concrete</ion-select-option>
+
       </ion-select>
     </ion-item>
   <!-- </ion-list> -->

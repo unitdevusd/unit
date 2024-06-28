@@ -43,7 +43,7 @@ export class FiltersPage implements OnInit {
   endPrice: number = 80;
   priceRange: { lower: number, upper: number } = { lower: this.startPrice, upper: this.endPrice };
   spaceFloor: string;
-  searchResults: string;
+  searchResults: string = '';
   constructor(
     private api: ApiService,
     private _gs: GlobalService,

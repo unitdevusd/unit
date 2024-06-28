@@ -1,10 +1,5 @@
 <ion-header style="background-color: red;">
   <ion-toolbar style="background-color: red;">
-    <!-- <ion-buttons slot="end">
-      <ion-button (click)="logout()">
-        <ion-icon name="log-out-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons> -->
 
     <div class="title-and-logo">
       <div class="logo" style="display: flex;">
@@ -14,7 +9,7 @@
       </div>
       <ion-title>
         <div class="title-content" style="display: flex; margin-top: 20px;">
-        <b style="height: 50px; color: #212121; margin-left: 100px;">{{ firstName +' '+ lastName }}   </b>
+        <b class="name-ellipsis" style="height: 50px; color: #212121; margin-left: 100px;">{{ firstName +' '+ lastName }}   </b>
         </div>       
       </ion-title>
 
@@ -146,8 +141,8 @@
     </ion-card-header>
     <ion-card-content>
       <ion-label *ngIf="showBalance" class="balance-label">{{ withdrawnBalance | currency: 'USD':'symbol':'1.2-2' }}</ion-label> <br>
-      <ion-icon (click)="toggleBalanceVisibility()" [name]="showBalance ? 'eye' : 'eye-off'"></ion-icon> 
-      <ion-label>
+      <ion-icon style="cursor: pointer;" (click)="toggleBalanceVisibility()" [name]="showBalance ? 'eye' : 'eye-off'"></ion-icon> 
+      <ion-label style="cursor: pointer;" (click)="toggleBalanceVisibility()">
         {{ showBalance ? 'Hide Account Balance' : 'View Account Balance' }}
       </ion-label>    
 
@@ -188,10 +183,14 @@
             <img src="../../../../assets/imgs/feather-search.png" />
           </ion-searchbar>  -->
 
-            <ion-icon color="unit-btn" *ngIf="hasFilter" name="filter" (click)="clearFilters()"
+            <!-- <ion-icon color="unit-btn" *ngIf="hasFilter" name="filter" (click)="clearFilters()"
             style="width: 48px; height: 48px; margin-top: 2px;"> </ion-icon>
             <ion-icon name="filter" *ngIf="!hasFilter"
             (click)="openFilter()" style="width: 48px; height: 48px; margin-top: 2px;"> </ion-icon>
+ -->
+            <img src="../../../../assets/imgs/Filter_icon.png" *ngIf="hasFilter" name="filter" (click)="clearFilters()" style="width: 48px; height: 48px; margin-top: 3px;" />
+            <img src="../../../../assets/imgs/Filter_icon_off.png" *ngIf="!hasFilter" name="filter" (click)="openFilter()" style="width: 48px; height: 48px; margin-top: 3px;" />
+    
   
   </div>
   

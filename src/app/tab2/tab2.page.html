@@ -6,10 +6,10 @@
 
     <div class="title-and-logo">
       <div class="logo">
-        <img src="../../../../assets/imgs/unit-logo.png" alt="Logo" style="width: 50px; height: auto;" />
+        <img src="../../../../assets/imgs/unit-logo.png" alt="Logo" style="width: 50px; height: auto; margin-bottom: 10px;" />
       </div>
       <ion-title>
-        {{ role === 'ADMIN' ? 'Manage your users' : 'View your spaces' }}
+        {{ role === 'ADMIN' ? 'Manage your users' : 'View your spots' }}
       </ion-title>   
      </div>
 
@@ -133,12 +133,14 @@
 </ion-list>
 
   
-
 </div>
 
 <ng-template #noSpacesTemplate>
 
+  <div class="centered-container">
+
   <img class="img-spacetype-unit" src="../../../../assets/imgs/emptyList.png" />
+  </div>
   <div class="no-item-unit">
     <ion-button (click)="bookSpace()">{{ userDetails?.role === 'HOST' ? 'No Space added yet' : 'No bookings yet' }}</ion-button>
   </div>

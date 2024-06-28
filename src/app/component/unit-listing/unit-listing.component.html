@@ -19,7 +19,12 @@
                 <span>$</span><b>{{item?.chargePerDay}} per hour</b>
               </div>
                 <div class="floor-type">
-                <ion-icon style="right: 0;" slot="end" size="large" name="layers-outline" color="dark" style="font-size: 20px;" class="mr-l"></ion-icon>
+                  <ion-img
+                  style="width: 48px; height: 48px;"
+                  [src]="'../../../../assets/floors/' + item?.spaceType + '.png'"
+                  alt="Logo">
+                </ion-img> 
+                               <!-- <ion-icon style="right: 0;" slot="end" size="large" name="layers-outline" color="dark" style="font-size: 20px;" class="mr-l"></ion-icon> -->
               </div>
 
               </div>
@@ -32,10 +37,13 @@
 
 
 <ng-template #noUnits>
+
+  <div class="centered-container">
   <img class="img-spacetype-unit" src="../../../../assets/imgs/emptyList.png" />
+  </div>
 
   <div class="no-item-unit">
-    <p><b><h5>No Spaces around you</h5></b></p>
+    <p style="text-align: center;"><b><h5>No Spaces around you</h5></b></p>
   </div>
 </ng-template>
 

@@ -81,6 +81,7 @@ export class Tab1Page implements OnInit {
   page_size = 6;
   isLoading = false;
   totalPages = 1;
+  floorTypeUrl: string;
 
 
 
@@ -126,6 +127,8 @@ export class Tab1Page implements OnInit {
   }
 
   ionViewWillEnter() {
+
+
 
 
   let url = "";
@@ -415,9 +418,9 @@ export class Tab1Page implements OnInit {
     const modal = await this.modalCtrl.create({
       component: FiltersPage,
       cssClass: 'my-custom-modal-css',
-      breakpoints: [0,5],
-      initialBreakpoint: 0.6,
-      handle: false,
+      breakpoints: [0,1],
+      initialBreakpoint: 0.7,
+      handle: true,
 
       // componentProps: {
       //   filters: JSON.stringify(this.filters)

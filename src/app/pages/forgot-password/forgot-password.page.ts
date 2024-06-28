@@ -187,7 +187,6 @@ export class ForgotPasswordPage implements OnInit {
       return;
     }
 
-    // Update the specific index with the input value
     this.otpArray[index] = val;
 
     // Move focus to the next input if there is a value
@@ -247,7 +246,6 @@ export class ForgotPasswordPage implements OnInit {
         }
       }
   
-      // Log only when input is added to the last box
       if (index + pastedText.length - 1 === this.otpArray.length - 1) {
         this.emitOtpEntered();
       }

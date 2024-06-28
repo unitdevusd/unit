@@ -366,3 +366,12 @@ ion-card, ion-grid {
 ion-card::part(content) {
   border-bottom: 1px solid #000; /* Adjust border style as needed */
 }
+
+.centered-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+}
