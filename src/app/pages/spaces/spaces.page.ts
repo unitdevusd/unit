@@ -107,7 +107,7 @@ export class SpacesPage implements OnInit {
       description: new FormControl("", Validators.required),
       chargePerDay: new FormControl("", Validators.required),
       size: new FormControl("", Validators.required),
-      timeSlot: new FormControl(this.availableTimeSlots),
+      timeSlot: new FormControl(this.availableTimeSlots, Validators.required),
       practice: ['yes'],
       musicDetails: new FormControl("", Validators.required),
       additionalDetails: new FormControl("https://", [

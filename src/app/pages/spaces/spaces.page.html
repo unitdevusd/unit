@@ -129,11 +129,17 @@
           </ion-item>
         </ion-list> -->
 
+        <!-- <ion-list mode="md">
+          <ion-item mode="md">
+            <ion-label position="floating">Cost(per hour)</ion-label> -->
 
-        <ion-list>
-          <ion-label position="floating" style="margin-bottom: 20px; text-align: left; font-size: medium; display: block; margin-left: 16px;">House Rules</ion-label>
+            <!-- style="margin-bottom: 20px; text-align: left; font-size: medium; display: block; margin-left: 16px;" -->
+        <ion-list mode="md">
+          
 
           <ion-item>
+            <ion-label >House Rules</ion-label>
+
             <ion-input type="text" placeholder="Type house rules" (input)="onInputChange($event)" id="rules"></ion-input>
               <ion-icon name="add" slot="end" (click)="addRule()"></ion-icon>
           
@@ -172,15 +178,17 @@
           <div style="display: block; text-align: left;">
             <b style="margin-bottom: 6px; text-align: left; font-size: large;">Set Session availability</b>
 
-          </div>
+          </div> <br>
 
 
 
 
           <ion-list>
-            <ion-label position="floating" style="margin-bottom: 20px; text-align: left; font-size: medium; display: block; margin-left: 16px;"><b>Choose upcoming dates</b></ion-label>
   
+            <ion-label style="margin-bottom: 10px; text-align: left; font-size: medium; display: block; margin-left: 16px;"><b>Choose upcoming dates</b></ion-label>
+
             <ion-item>
+
               <ion-text (click)="openTimeModal()" style="cursor: pointer;">Click to Add slots</ion-text>
                 <ion-icon name="add" slot="end" style="cursor: pointer;" (click)="openTimeModal()"></ion-icon>
             
