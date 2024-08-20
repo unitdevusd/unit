@@ -30,7 +30,7 @@
     <ion-row class="ion-no-padding">
       <ion-col size-sm="10" offset-sm="3" class="ion-no-padding" [size]="10"> -->
 
-        <ion-searchbar class="searchbar-input" style="height: 48px; margin-left: 20px; margin-right: 20px; margin-top: 13px;" color="black" [(ngModel)]="autocomplete.input" #searchbar placeholder="Search for a spot" searchIcon=" "
+        <ion-searchbar class="searchbar-input search-bar"  color="black" [(ngModel)]="autocomplete.input" #searchbar placeholder="Search for a spot" searchIcon=" "
           (ionInput)="searchLocation()" clearIcon=" " (ionFocus)="checkFocus()" (ionClear)="clearAutocomplete()">
           <!-- <img src="../../../../assets/imgs/feather-search.png" /> -->
           <ion-icon slot="start" name="search" class="custom-search-icon"></ion-icon>

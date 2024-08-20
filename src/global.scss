@@ -254,7 +254,7 @@
       // }
   
       .searchbar-input {
-        font-size: 14px;
+        font-size: 14px !important;
         font-weight: 400;
         letter-spacing: 0.5px;
     }
@@ -383,8 +383,10 @@
   }
   .searchbar-input-container {
     input{
-      font-size: 11px !important;
+      font-size: 14px !important;
       padding-left: 17px !important;
+      height: 60px !important;
+      letter-spacing: 0.5px; 
     }
   }
   .native-input{

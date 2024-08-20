@@ -163,7 +163,7 @@
     --icon-color: #ed1b25;
     --border-radius: 24px;
     --box-shadow: 0px 0px 5px #e0dbdb;
-    width: 256px !important;
+    width: 100%;
     padding-top: 0;
     --box-shadow: 0px 0px 10px #d6d5d5;
     --placeholder-opacity: 1;
@@ -355,18 +355,29 @@
     background-color: #a3a4a7;
   }
 
-
+    .search-bar {
+      height: 80px;
+      padding: 24px 0px 24px 24px !important;
+      width: 100%;
+      input {
+        height: 50px !important;
+        font-size: 14px !important;
+        width: 100%; 
+      }
+    }
 
 
   .desktop-container {
-    max-width: 90%;
-    margin: 0 auto;
+    max-width: 100%;
+    margin: 15px auto;
+    align-items: center;
+    gap: 10px;
   }
 
   @media only screen and (min-width: 600px) {
     .desktop-container {
-      max-width: 70%;
-      // margin: 0 auto;
+      max-width: 100%;
+      margin: 24px auto;
     }
 
   }
