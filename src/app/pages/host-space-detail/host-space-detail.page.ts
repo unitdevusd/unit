@@ -16,6 +16,8 @@ import { ContactHostModalPage } from '../contact-host-modal/contact-host-modal.p
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ModifyRulesModalPage } from '../modify-rules-modal/modify-rules-modal.page';
 import { ModifyLocationPage } from '../modify-location/modify-location.page';
+import { TimeSlotModalPage } from '../time-slot-modal/time-slot-modal.page';
+import { TimeSlots } from 'src/app/shared/time-slots';
 
 
 @Component({
@@ -42,6 +44,10 @@ export class HostSpaceDetailPage implements OnInit {
   totalSize: number = 0;
   largestFileSize: number = 0;
   public sanitizedUrl: SafeResourceUrl;
+  availableTimeSlots: TimeSlots[] = [];
+  date: string = '';
+
+
 
 
   constructor(
@@ -55,7 +61,8 @@ export class HostSpaceDetailPage implements OnInit {
     private alertController: AlertController,
     private modalController: ModalController,
     private sanitizer: DomSanitizer,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private modalCtrl: ModalController,
 
 
 
@@ -397,12 +404,79 @@ async openContactHostModal() {
   await modal.present();
 }
 
+async openTimeModal() {
+
+  const modal = await this.modalCtrl.create({
+    component: TimeSlotModalPage,
+    breakpoints: [0, 11],
+    initialBreakpoint: 0.8,
+    handle: false,
+    componentProps: {
+      availableSlots: this.availableTimeSlots
+    }
+  });
+
+  await modal.present();
+
+  const { data } = await modal.onDidDismiss();
+
+  if (data && data.startDate && data.startTime && data.endTime) {   
+    this.addTimeSlot(data.startDate, data.startTime, data.endTime);
+  }
+}
+
+addTimeSlot(startDate: any, startTime: any, endTime: any) {
+  const newTimeSlot = new TimeSlots(startDate, startTime, endTime);
+  this.availableTimeSlots.push(newTimeSlot);
+  this.updateTimeSlot(newTimeSlot, 'update');
+  this.place.timeSlots.push(newTimeSlot);
+  console.log(this.availableTimeSlots);
+}
+
+getDayOfWeek(date: Date): string {
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  return days[date.getDay()];
+}
+
+async deleteTime(slotToDelete: any) {
+  this.place.timeSlots = this.place.timeSlots.filter((slot: any) => slot !== slotToDelete);
+  this.updateTimeSlot(slotToDelete, 'delete');
+}
+
+async updateTimeSlot(timeSlot: TimeSlots, operation: any) {
+
+  const loading = await this.loadingController.create();
+  await loading.present();
+
+  const spaceData = {"spaceId" : this.spaceId, "times" : timeSlot, "operation" : operation};
+
+  this._apiService.updateTimeSlot(spaceData).subscribe(
+    (response: any) => {
+      if(response.code == '00') {
+      loading.dismiss();           
+      this.showToast('Time Slots updated successfully');   
+    }
+    else {
+      loading.dismiss(); 
+      this.showToast('Unable to update time slots. Try again later');             
+    }                
+
+    },
+    (error: any) => {
+      console.error(error);
+      loading.dismiss();
+      this.showToast('Unable to update time slots. Try again later');             
+    }
+  );
+
+}
+
 
 async moreDetailsModal() {
   const modal = await this.modalController.create({
     component: MoreDetailsModalPage,
     breakpoints: [0,9],
-    initialBreakpoint: 0.6,
+    initialBreakpoint: 1.0,
     handle: false,
     componentProps: {
       place: this.place,
@@ -411,6 +485,10 @@ async moreDetailsModal() {
   });
 
   await modal.present();
+  const { data } = await modal.onWillDismiss();
+  if (data) {
+    this.place = data.place;
+  }
 }
 
 

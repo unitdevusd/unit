@@ -15,61 +15,80 @@
       <ion-button (click)="dismiss()">
         <ion-icon name="close"></ion-icon>
       </ion-button>
+      <ion-button *ngIf="role === 'HOST'" (click)="toggleEdit()">
+          <ion-icon *ngIf="role === 'HOST'" name="{{ isEditing ? 'checkmark' : 'create' }}"></ion-icon>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-list>
+    <ion-item *ngIf="place.chargePerDay">
+      <ion-label>Charge per day:</ion-label>
+      <ion-label *ngIf="!isEditing">{{ place.chargePerDay }} USD</ion-label>
 
 
-    <!-- <ion-item *ngIf="place.visitDays">
-      <ion-label>Available day for visit: <span style="color: red;"> {{ place.visitDays}} </span></ion-label>
-    </ion-item> -->
+      <ion-item *ngIf="isEditing && role === 'HOST'" >
+      <ion-input 
+        *ngIf="isEditing && role === 'HOST'" 
+        [(ngModel)]="editedChargePerDay" 
+        class="custom-input" 
+        type="number"
+        placeholder="Enter charge per day">
+      </ion-input>
+    </ion-item>
 
+    </ion-item>
+  
     <ion-item *ngIf="place.additionalDetails">
-      <ion-label>Video URL: 
+      <ion-label>Video URL:</ion-label>
+      <ion-label *ngIf="!isEditing">
+        <a target="_blank" href="{{ place.additionalDetails }}">
+          {{ place.additionalDetails }}
+        </a>
       </ion-label>
-      <a *ngIf="!isEditing" target="_blank" href="{{ place.additionalDetails }}">{{ place.additionalDetails }}</a>
       <ion-input *ngIf="isEditing" [(ngModel)]="editedAdditionalDetails" class="custom-input"></ion-input>
-
-      <ion-icon *ngIf="role === 'HOST'" name="{{ isEditing ? 'checkmark' : 'create' }}" slot="end" (click)="toggleEdit()"></ion-icon>
     </ion-item>
-
-    <ion-item *ngIf="place.visitDays">
-      <ion-label>Available day for visit: 
-        <span style="color: red;">
-          {{ place.visitDays.join(', ') }}
-        </span>
-      </ion-label>
-    </ion-item>
-
-    <ion-item *ngIf="place.visitStartTime && place.visitEndTime">
-      <ion-label>Visit time range: {{ place.visitStartTime }} and {{ place.visitEndTime }}</ion-label>
-    </ion-item>
-
+  
+  
     <ion-item *ngIf="place.description">
-      <ion-label>Size(Feet): {{ place.description }}</ion-label>
+      <ion-label>Space Description:</ion-label>
+      <ion-input 
+        *ngIf="isEditing && role === 'HOST'" 
+        [(ngModel)]="editedDescription" 
+        class="custom-input" 
+        type="text"
+        placeholder="Describe your space">
+      </ion-input>
+      <ion-label *ngIf="!isEditing">{{ place.description }}</ion-label>
     </ion-item>
-
-    <!-- <ion-item *ngIf="place.additionalDetails">
-      <ion-label>Video URL: <a target="_blank" href="{{ place.additionalDetails }}">{{ place.additionalDetails }}</a></ion-label>
-    </ion-item>  -->
-
-    
-
-
-   
-
-
+  
     <ion-item *ngIf="place.practice">
-      <ion-label>Practice with tenant: {{ place.practice }}</ion-label>
-    </ion-item>
+      <ion-label>Practice with tenant:</ion-label>
+      <ion-label *ngIf="!isEditing">{{ place.practice }}</ion-label>
 
+      <ion-select *ngIf="isEditing" [(ngModel)]="editedPractice" placeholder="Select option">
+        <ion-select-option value="yes">Yes, Dancers will have privacy</ion-select-option>
+        <ion-select-option value="no">No, I will be at each session</ion-select-option>
+      </ion-select> 
+
+
+    </ion-item>
+  
     <ion-item *ngIf="place.musicDetails">
-      <ion-label>Music Availability: {{ place.musicDetails }} </ion-label>
+      <ion-label>Music Availability:</ion-label>
+      <ion-input 
+        *ngIf="isEditing && role === 'HOST'" 
+        [(ngModel)]="editedMusicDetails" 
+        class="custom-input" 
+        type="text"
+        placeholder="Should tenant come with their music?">
+      </ion-input>
+      <ion-label *ngIf="!isEditing">{{ place.musicDetails }}</ion-label>
     </ion-item>
   </ion-list>
+  
 
     <!-- <ion-button fill="solid" expand="full">
       <ion-icon slot="start" name="paper-plane"></ion-icon>

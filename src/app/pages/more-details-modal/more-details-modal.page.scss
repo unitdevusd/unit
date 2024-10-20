@@ -14,6 +14,24 @@
   }
 
 
+  // .custom-input {
+  //   width: calc(100% - 30px); /* Adjust the width as needed */
+  // }
+
+  ion-item {
+    display: flex;
+    align-items: center; /* Aligns items vertically */
+  }
+  
+  ion-label {
+    flex: 1; /* Allows the label to take up available space */
+    margin-right: 8px; /* Space between label and input */
+  }
+  
   .custom-input {
-    width: calc(100% - 30px); /* Adjust the width as needed */
+    flex: 2; /* Adjust as needed for input width */
+  }
+  
+  a {
+    margin-left: 8px; /* Space between the label and link */
   }

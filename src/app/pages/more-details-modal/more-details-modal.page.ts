@@ -16,6 +16,11 @@ export class MoreDetailsModalPage implements OnInit {
   spaceId: any;
   role: string;
   userDetails: any;
+  editedChargePerDay: number | null = null;
+  editedDescription: string | '';
+  editedPractice: string | '';
+  editedMusicDetails: string | '';
+
 
 
 
@@ -27,6 +32,13 @@ export class MoreDetailsModalPage implements OnInit {
     // private iab: InAppBrowser,
   ) { 
     this.place = this.navParams.get('place');
+    this.editedAdditionalDetails = this.place.additionalDetails;
+    this.editedChargePerDay = this.place.chargePerDay;
+    this.editedAdditionalDetails = this.place.additionalDetails;
+    this.editedDescription = this.place.description;
+    this.editedPractice = this.place.practice;
+    this.editedMusicDetails = this.place.musicDetails;
+    
     this.spaceId = this.navParams.get('spaceId');
 
     this.userDetails = this.userService.getUserDetails();
@@ -34,7 +46,9 @@ export class MoreDetailsModalPage implements OnInit {
   }
 
   dismiss() {
-    this.modalController.dismiss();
+    this.modalController.dismiss({
+      place: this.place,
+    });
   }
 
   ngOnInit() {
@@ -44,17 +58,22 @@ export class MoreDetailsModalPage implements OnInit {
   //   const browser = this.iab.create(url);
   // }
 
+  formatTimeSlots(timeSlots: any[]): string {
+    return timeSlots.map(slot => `${slot.date} from ${slot.startTime} to ${slot.endTime}`).join(', ');
+  }
+
   toggleEdit() {
     if (this.isEditing) {
-      // Save the edited value and perform any necessary actions
-      this.place.additionalDetails = this.editedAdditionalDetails;
+      const spaceData = {"spaceId" : this.spaceId, "additionalDetails" : this.editedAdditionalDetails,
+      "description": this.editedDescription, "chargePerDay": this.editedChargePerDay, "practice" : this.editedPractice,
+    "musicDetails" : this.editedMusicDetails};
 
-      const spaceData = {"spaceId" : this.spaceId, "additionalDetails" : this.editedAdditionalDetails};
+    console.log(spaceData);
 
       this.apiService.updateUrl(spaceData).subscribe(
         (response: any) => {
-          // this.modalController.dismiss({ updatedSpace: response });
-  
+          console.log(response);
+          this.place = response;
         },
         (error: any) => {
           console.error(error);
@@ -64,8 +83,12 @@ export class MoreDetailsModalPage implements OnInit {
 
 
     } else {
-      // Set the initial value of the edited field
       this.editedAdditionalDetails = this.place.additionalDetails;
+      this.editedChargePerDay = this.place.chargePerDay;
+      this.editedAdditionalDetails = this.place.additionalDetails;
+      this.editedDescription = this.place.description;
+      this.editedPractice = this.place.practice;
+      this.editedMusicDetails = this.place.musicDetails;
     }
     this.isEditing = !this.isEditing;
   }

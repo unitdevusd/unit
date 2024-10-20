@@ -5,9 +5,9 @@ android {
     compileSdk 34
     defaultConfig {
         applicationId "com.unit.session"
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 58
+      minSdk 33
+      targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 62
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {

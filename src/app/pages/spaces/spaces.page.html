@@ -155,10 +155,6 @@
           <ion-list mode="md">
             <ion-item mode="md">
               <ion-label position="floating">Upload photos of your spot</ion-label>
-              <!-- <ion-input id="spaceImage" multiple="multiple" type="file" accept="image/*" (change)="onFileChange($event)"
-                formControlName="spaceImage" style="margin-top: 16px;">
-              </ion-input> -->
-
               <input id="spaceImage" multiple="multiple" type="file" accept="image/*" (change)="onFileChange($event)"
               formControlName="spaceImage" style="display: none;">
             <!-- Custom label for file input -->
@@ -170,6 +166,12 @@
               <span id="max-total-upload-message" style="display: none; color: red;" class="message"><b>max total upload of 10MB</b></span>
               <span id="max-upload-per-file-message" style="display: none; color: red;" class="message"><b>max upload per file of 5MB</b></span>
     
+              <div *ngIf="imageCount > 0">
+                <p>{{ imageCount }} image uploaded</p>
+                <ion-thumbnail *ngIf="imageThumbnails.length > 0">
+                  <img [src]="imageThumbnails[0]" />
+                </ion-thumbnail>
+              </div>
             </ion-label>
 
           </ion-list>

@@ -58,6 +58,8 @@ export class SpacesPage implements OnInit {
   endTime: string = ''; // End time
   startDateExpanded: any;
   endDateExpanded: any;
+  imageCount: number = 0;
+  imageThumbnails: string[] = [];
 
   
 
@@ -107,7 +109,7 @@ export class SpacesPage implements OnInit {
       description: new FormControl("", Validators.required),
       chargePerDay: new FormControl("", Validators.required),
       size: new FormControl("", Validators.required),
-      timeSlot: new FormControl(this.availableTimeSlots, Validators.required),
+      timeSlot: new FormControl(this.availableTimeSlots),
       practice: ['yes'],
       musicDetails: new FormControl("", Validators.required),
       additionalDetails: new FormControl("https://", [
@@ -255,12 +257,11 @@ export class SpacesPage implements OnInit {
     Object.keys(this.spaceForm.controls).forEach(key => {
       const control = this.spaceForm.get(key);
       if (control && control.invalid) {
-        // Use custom name if available, otherwise use the key
         const controlName = (controlNames as any)[key] || key;
         invalidControls.push(controlName);
       }
     });
-    // If there are invalid controls, display a notification
+
     if (invalidControls.length > 0) {
       const toast = await this.toastController.create({
         message: `Please fill in all required fields: ${invalidControls.join(', ')}`,
@@ -408,12 +409,14 @@ export class SpacesPage implements OnInit {
   
     this.totalSize = 0;
     this.largestFileSize = 0;
+    this.imageCount = 0;
     
    
 
   
     if (files && files.length > 0) {
   
+      this.imageCount = files.length;
       const promises: Promise<File>[] = [];
   
       for (let i = 0; i < files.length; i++) {
@@ -425,7 +428,8 @@ export class SpacesPage implements OnInit {
         }
   
         if (file) {
-
+          const url = URL.createObjectURL(file);
+          this.imageThumbnails.push(url);
           const filePromise = new Promise<File>((resolve, reject) => {
             const reader = new FileReader();
             reader.onload = (event: ProgressEvent<FileReader>) => {
@@ -460,31 +464,31 @@ export class SpacesPage implements OnInit {
   
   
       Promise.all(promises)
-        .then((base64Array) => {
+        .then((file) => {
           this.spaceForm.patchValue({
-            spaceImage: base64Array,
+            spaceImage: file,
           });
         })
         .catch((error) => {
-          console.error('Error converting files to base64:', error);
+          console.error('Error setting files:', error);
         });
     }
   }
   
-convertToBase64(file: File): Promise<string> {
-  return new Promise<string>((resolve, reject) => {
-    const reader = new FileReader();
+// convertToBase64(file: File): Promise<string> {
+//   return new Promise<string>((resolve, reject) => {
+//     const reader = new FileReader();
 
-    reader.onloadend = () => {
-      resolve(reader.result as string);
-    };
+//     reader.onloadend = () => {
+//       resolve(reader.result as string);
+//     };
 
-    reader.onerror = (error) => {
-      reject(error);
-    };
+//     reader.onerror = (error) => {
+//       reject(error);
+//     };
 
-    reader.readAsDataURL(file);
-  });
-}
+//     reader.readAsDataURL(file);
+//   });
+// }
 
 }

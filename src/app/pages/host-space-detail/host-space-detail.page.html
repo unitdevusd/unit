@@ -26,13 +26,14 @@
   <ion-card class="full-width-card" no-padding>
     <div class="img-container" (click)="selectNewImages()">
 
-      <div class="upload-overlay">
-        <ion-icon name="cloud-upload-outline"></ion-icon>
-        <span>Click to Change</span>
-      </div>
-
-    <ion-img class="img-spacetype" *ngIf="place" [src]="place.spaceImage"></ion-img>
-    <input type="file" accept="image/*" multiple="multiple" (change)="onFileChange($event)" style="display: none;">
+      <div class="image-container">
+        <ion-img style="margin-top: 1px;" class="img-spacetype" *ngIf="place" [src]="place.spaceImage"></ion-img>
+        <input type="file" accept="image/*" multiple="multiple" (change)="onFileChange($event)" style="display: none;">
+        <div class="upload-overlay">
+          <ion-icon name="cloud-upload-outline"></ion-icon>
+          <span>Click to Change</span>
+        </div>
+    </div>
 
     </div>
 
@@ -63,6 +64,28 @@
           <b>No Content available</b>
         </ng-template>
       </ion-card-content>
+    </ion-card>
+
+
+    <ion-card class="full-width-card" no-padding>
+      <ion-card-header>
+        <ion-card-title>Space Availability</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+
+        <ion-list>
+          <ion-item *ngFor="let slot of place?.timeSlots">
+            <span style="color: red;">
+              {{ slot.date }} from {{ slot.startTime }} to {{ slot.endTime }}
+            </span>
+            <ion-icon (click)="deleteTime(slot)" size="small" style="font-size: 10px;" name="trash" slot="end"></ion-icon>       
+          </ion-item>       
+        </ion-list>
+      </ion-card-content>
+      <ion-item class="rules" lines="none">
+        <ion-icon name="add-circle" slot="start" (click)="openTimeModal()"></ion-icon>
+        <ion-label (click)="openTimeModal()">Add Time</ion-label>
+      </ion-item>
     </ion-card>
     
 

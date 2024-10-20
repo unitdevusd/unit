@@ -28,6 +28,7 @@ export class ApiService {
   private filterPreferenceUrl =  this.baseUrl+'spaces/filterspacesbyPreference';
   private updateLocationUrl =  this.baseUrl+'spaces/updateLocationById';
   private updateYoutubeUrl =  this.baseUrl+'spaces/updateUrlById';
+  private updateTimeSlotUrl = this.baseUrl+'spaces/updateTimeSlot';
   private removeSpaceUrl = this.baseUrl+'spaces/removeSpace';
   private allUsersUrl = this.baseUrl+'users/getUsers';
   private modifyUserUrl = this.baseUrl+'users/modify-user';
@@ -177,6 +178,10 @@ export class ApiService {
 
   updateUserRole(payload: any): Observable<any> {
     return this.http.post(this.updateRoleUrl, payload);
+  }
+
+  updateTimeSlot(payload: any): Observable<any> {
+    return this.http.post(this.updateTimeSlotUrl, payload);
   }
 
   // updateProfilePicture(payload: any): Observable<any> {
