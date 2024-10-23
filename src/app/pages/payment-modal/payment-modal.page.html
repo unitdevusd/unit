@@ -16,8 +16,10 @@
   <ion-list>
     <ion-item id="open-modal" class="button-like">
       <ion-label>Select Preferred Date </ion-label>
-      <ion-note slot="end">{{dateExample | date}}</ion-note>
-    </ion-item>
+      <ion-note slot="end" *ngIf="selectedTimeSlots.length > 0">
+        {{ selectedTimeSlots[0].date }} {{ selectedTimeSlots[0].startTime }} - {{ selectedTimeSlots[0].endTime }}
+      </ion-note>
+        </ion-item>
     <ion-modal trigger="open-modal" [cssClass]="'center'">
       <ng-template>
         <ion-datetime

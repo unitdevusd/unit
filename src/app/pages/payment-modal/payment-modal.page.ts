@@ -79,6 +79,12 @@ export class PaymentModalPage implements OnInit {
       ...slot,
       date: this.formatDateToISO(slot.date),
     }));
+    this.dateExample = this.place.timeSlots[0]?.date;
+
+    this.filteredTimeSlots = this.place.timeSlots.filter(
+      (timeSlot: TimeSlot) => timeSlot.date === this.dateExample
+    );
+    
 
   }
 
@@ -98,6 +104,7 @@ export class PaymentModalPage implements OnInit {
 
   selectTimeSlot(event: any, timeSlot: TimeSlot) {
     console.log(timeSlot);
+    this.selectedTimeSlots.splice(0, this.selectedTimeSlots.length);
     if (event.detail.checked) {
       this.selectedTimeSlots.push(timeSlot);
       this.dismissModal();
@@ -155,7 +162,7 @@ export class PaymentModalPage implements OnInit {
         this.rentCharges = this.place?.chargePerDay * this.hoursDifference || 0;
         this.serviceCharges = this.rentCharges * 0.1;
         this.totalFees = this.rentCharges + this.serviceCharges;
-  
+        this.bookingButtonText = 'Process Payment($'+this.totalFees+')';
         this.showToast('Space will be booked for '+this.hoursDifference+' hour');
       }
 

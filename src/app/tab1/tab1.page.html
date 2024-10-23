@@ -77,10 +77,16 @@
 
 
   <div class="content">
+
     <ion-grid>
+
       <ion-row>
-        <ion-col>
-          <h3 class="top-heading">Session spots near you</h3>        
+        <ion-col>      
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 class="top-heading">Session spots near you</h3>
+            <ion-icon name="reload"
+            [class.spin]="isSpinning"  (click)="getSpacesAround(0, 6)" style="font-size: 24px; margin: 0;"></ion-icon>
+          </div>           
         </ion-col>
       </ion-row>
 

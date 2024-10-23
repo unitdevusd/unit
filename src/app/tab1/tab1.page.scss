@@ -414,3 +414,12 @@
     color: #212121;
     margin-left: 100px;
   }
+
+  .spin {
+    animation: spin 0.5s linear;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }

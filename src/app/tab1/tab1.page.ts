@@ -82,6 +82,7 @@ export class Tab1Page implements OnInit {
   isLoading = false;
   totalPages = 1;
   floorTypeUrl: string;
+  isSpinning = false;
 
 
 
@@ -175,7 +176,6 @@ export class Tab1Page implements OnInit {
   }
 
   fetchSvgFile(svgPath: string) {
-    console.log('Fetching data::::::');
     this.http.get(svgPath, { responseType: 'text' })
       .subscribe(
         (svgData: string) => {
@@ -638,6 +638,7 @@ export class Tab1Page implements OnInit {
       }
 
       try {
+        this.isSpinning = true;
         const loading = await this.loadingController.create();
         await loading.present();
     
@@ -664,7 +665,11 @@ export class Tab1Page implements OnInit {
           );
         }
       } catch (error) {
+        this.isLoading = false;
         console.error(error);
+      }
+      finally {
+        this.isSpinning = false;
       }
   
   
