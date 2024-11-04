@@ -49,6 +49,7 @@
         <img src="../../../../assets/imgs/unit-logo.png">
       </div>
       <div class="form-container">
+       <div class="message" style="color: red; font-size: 12px;"> {{ message }} </div>
         <form class="form" [formGroup]="loginForm" (submit)="loginUser()">
           <ion-list mode="md">
             <ion-item mode="md">
@@ -68,6 +69,16 @@
           [disabled]="!loginForm.valid" type="submit">
            Login
           </ion-button>
+
+          <div class="fingerprint-container">
+            <ion-icon
+              *ngIf="available"
+              (click)="handleFingerprintScan()"
+              name="finger-print-outline"
+              class="fingerprint-icon"
+              style="cursor: pointer; font-size: 50px;"
+            ></ion-icon>
+          </div>
     
 
           <!-- <ion-button class="button-h custom-cursor" fill="solid" size="default" shape="round" expand="block" color="primary" [disabled]="!loginForm.valid" (click)="loginUser()">Login</ion-button> -->

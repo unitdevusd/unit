@@ -7,6 +7,8 @@ import { IonicModule } from '@ionic/angular';
 import { LoginPageRoutingModule } from './login-routing.module';
 
 import { LoginPage } from './login.page';
+import { FingerprintAIO } from '@ionic-native/fingerprint-aio/ngx';
+import { Device } from '@ionic-native/device/ngx';
 
 @NgModule({
   imports: [
@@ -16,6 +18,7 @@ import { LoginPage } from './login.page';
     IonicModule,
     LoginPageRoutingModule
   ],
-  declarations: [LoginPage]
+  declarations: [LoginPage],
+  providers: [FingerprintAIO, Device],
 })
 export class LoginPageModule {}

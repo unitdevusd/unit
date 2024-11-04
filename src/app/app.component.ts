@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { register } from 'swiper/element/bundle';
+import { InactivityService } from './services/inactivity.service';
 
 register();
 
@@ -9,5 +10,5 @@ register();
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor() {}
+  constructor(private inactivityService: InactivityService) {}
 }

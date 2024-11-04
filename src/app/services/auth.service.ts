@@ -12,12 +12,13 @@ import { Observable } from 'rxjs/internal/Observable';
 export class AuthService {
   userdata: any;
   private baseUrl = 'https://unit-session.com/';
-  // private baseUrl = 'http://localhost:8088/';
+  // private baseUrl = 'https://localhost:8088/';
   private signUpUrl = this.baseUrl+'users/create';
   private loginUrl = this.baseUrl+'users/authenticate';
   private validateUserUrl = this.baseUrl+'users/validateUserEmail';
   private validateOtpUrl = this.baseUrl+'users/validateOtp';
   private resetPasswordUrl = this.baseUrl+'users/resetPassword';
+  private biometricsUrl = this.baseUrl+'users/validate-biometrics'
 
 
 
@@ -58,6 +59,10 @@ export class AuthService {
 
   resetUserPassword(payload: any): Observable<any> {
     return this.http.post(this.resetPasswordUrl, payload);
+  }
+
+  validateFingerPrint(payload: any): Observable<any> {
+    return this.http.post(this.biometricsUrl, payload);
   }
 }
 

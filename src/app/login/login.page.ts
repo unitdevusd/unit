@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { NavigationExtras, Router } from '@angular/router';
-import { AlertController, LoadingController, NavController } from '@ionic/angular';
+import { AlertController, LoadingController, NavController, Platform, ToastController } from '@ionic/angular';
 import { AuthService } from '../services/auth.service';
 // import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { UserService } from '../services/user.service';
+import { FingerprintAIO, FingerprintOptions } from '@ionic-native/fingerprint-aio/ngx';
+import { Device } from '@ionic-native/device/ngx';
+
+
 
 @Component({
   selector: 'app-login',
@@ -14,6 +18,8 @@ import { UserService } from '../services/user.service';
 export class LoginPage implements OnInit {
 
   public loginForm!: FormGroup;
+  message: string | null = null;
+  available: boolean = false;
   constructor(
     private formBuilder: FormBuilder,
     public authService: AuthService,
@@ -22,9 +28,19 @@ export class LoginPage implements OnInit {
     private alertController: AlertController,
     // private afs: AngularFirestore,
     private userService: UserService,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private fingerprintAIO: FingerprintAIO,
+    private platform: Platform,
+    private device: Device,
+    private toastController: ToastController
+
+
     ) {
 
+      const navigation = this.router.getCurrentNavigation();
+      if (navigation && navigation.extras.state) {
+        this.message = navigation.extras.state['message'];
+      }
   
   }
 
@@ -41,6 +57,7 @@ export class LoginPage implements OnInit {
       password: new FormControl("", Validators.required),
     });
 
+    this.checkAvailability();
 
   }
 
@@ -113,19 +130,90 @@ export class LoginPage implements OnInit {
               // this.router.navigateByUrl('/tabs');   
 
             } else {
-              this.showErrorAlert(response.message);    
+              this.showToast(response.message);
             }
           },
           (error: any) => {
             console.error(error);
             loading.dismiss();
-            this.showErrorAlert('Unexpected error occurred');
+            this.showToast('Unexpected error occurred');
           }
         );
       }
     } catch (error) {
       console.error(error);
     }
+  }
+
+  async handleFingerprintScan() {
+    // Your logic for handling the fingerprint scan
+    if (this.platform.is('cordova')) {
+      try {
+        const options: FingerprintOptions = {
+          title: 'Scan your fingerprint',
+          description: 'Please authenticate',
+          disableBackup: true,
+        };
+
+        const result = await this.fingerprintAIO.show(options);
+        console.log(result);
+
+        if (result === 'biometric_success') {
+          const loading = await this.loadingController.create();
+
+          await loading.present();
+
+          const id = this.device.uuid;
+          const payload = { deviceId: id };
+
+          try {
+            const response: any = this.authService.validateFingerPrint(payload);
+            loading.dismiss();
+            if (response.email) {
+              this.userService.setUserDetails(response);
+              let navigationExtras: NavigationExtras = {
+                state: {
+                  navigationData: true
+                }
+              };
+              this.router.navigateByUrl(`/tabs`, navigationExtras);
+            } else {
+              this.showErrorAlert(response.message);
+            }
+          } catch (error) {
+            loading.dismiss();
+            console.error('Error ', error);
+            alert(error);
+          }
+        } else {
+          ('Invalid Fingerprint');
+        }
+      } catch (error) {
+        console.log({ error });
+      }
+    } else {
+      console.log('Biometric authentication is not supported in this environment.');
+    }  }
+
+  async checkAvailability(): Promise<boolean> {
+    try {
+      const result = await this.fingerprintAIO.isAvailable();
+      this.available = true
+      return true;
+    } catch (error) {
+      console.error('Fingerprint availability check failed', error);
+      this.available = false;
+      return false;
+    }
+  }
+
+  async showToast(message: any) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000,
+      position: 'bottom',
+    });
+    toast.present();
   }
 }
 

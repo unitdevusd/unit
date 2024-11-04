@@ -27,39 +27,57 @@
     <ion-list>
 
       <ion-item lines="full">
-        <ion-label>Referral Code - </ion-label><b style="margin-left: 0;">{{referralCode}}</b>
-      </ion-item>
+        <ion-avatar slot="start" style="position: relative; display: flex; align-items:center;justify-content: center" >
+          <ion-icon name="key" style="font-size: 22px; color: #ED1B25;" color="#ED1B25"></ion-icon>
+        </ion-avatar>
+        <ion-label>Referral Code - </ion-label>
+        <b style="margin-left: 0; margin-right: 2px;">{{referralCode}}</b>
+        <ion-icon name="copy-outline" slot="end" (click)="copyToClipboard(referralCode)" style="cursor: pointer;"></ion-icon>
+            </ion-item>
 
       <ion-item lines="full">
+        <ion-avatar slot="start" style="position: relative; display: flex; align-items:center;justify-content: center" >
+          <ion-icon name="people" style="font-size: 22px; color: #ED1B25;" color="#ED1B25"></ion-icon> 
+        </ion-avatar>
         <ion-label>Referrals</ion-label>
       </ion-item>
   
       <ion-item lines="full">
+        <ion-avatar slot="start" style="position: relative; display: flex; align-items:center;justify-content: center" >
+          <ion-icon name="document-text" style="font-size: 22px; color: #ED1B25;" color="#ED1B25"></ion-icon> <!-- Icon for Privacy Policy -->
+        </ion-avatar>
         <ion-label>View Privacy policy</ion-label>
       </ion-item>
   
       <ion-item lines="full">
+        <ion-avatar slot="start" style="position: relative; display: flex; align-items:center;justify-content: center" >
+          <ion-icon name="briefcase" style="font-size: 22px; color: #ED1B25;" color="#ED1B25"></ion-icon>
+        </ion-avatar>
         <ion-label>Consult a legal pro</ion-label>
       </ion-item>
 
       <ion-item lines="full">
+        <ion-avatar slot="start" style="position: relative; display: flex; align-items:center;justify-content: center" >
+          <ion-icon name="log-out" style="font-size: 22px; color: #ED1B25;" color="#ED1B25"></ion-icon>
+        </ion-avatar>
         <ion-label (click)="logout()">Log out</ion-label>
       </ion-item>
 
   
-      <!-- <ion-item lines="full">
-        <ion-label *ngIf="role !== null && role === 'HOST'">Switch to Tenant</ion-label>
-        <ion-label *ngIf="role !== null && role === 'TENANT'">Switch to Host</ion-label>
-      </ion-item>
-    
-      <ion-item>
-        <ion-toggle [(ngModel)]="role" (ionChange)="toggleRole()"></ion-toggle>
-      </ion-item>   -->
-
       <ion-item lines="full">
+        <ion-avatar slot="start" style="position: relative; display: flex; align-items:center;justify-content: center" >
+          <ion-icon name="sync" style="font-size: 22px; color: #ED1B25;" color="#ED1B25"></ion-icon> 
+        </ion-avatar>
         <ion-toggle *ngIf="userDetails?.role !== null && userDetails?.role == 'HOST'" [(ngModel)]="hostToggle" (ionChange)="toggleRole('HOST')">Switch to Dancer</ion-toggle>
         <ion-toggle *ngIf="userDetails?.role !== null && userDetails?.role == 'TENANT'" [(ngModel)]="tenantToggle" (ionChange)="toggleRole('TENANT')">Switch to Host</ion-toggle><br /><br />
     </ion-item>
+
+    <ion-item lines="full">
+      <ion-avatar slot="start" style="position: relative; display: flex; align-items:center;justify-content: center" >
+        <ion-icon name="finger-print-outline" style="font-size: 22px; color: #ED1B25;" color="#ED1B25"></ion-icon> 
+      </ion-avatar>
+      <ion-toggle [(ngModel)]="biometrics" (ionChange)="toggleBiometrics()">Biometrics</ion-toggle>
+  </ion-item>
 
 
       </ion-list>

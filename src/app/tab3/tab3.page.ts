@@ -21,6 +21,7 @@ export class Tab3Page {
   profilePicture: any;
   fromTab3: boolean = false;
   referralCode: any;
+  biometrics: boolean = false;
 
 
   constructor(
@@ -41,6 +42,7 @@ export class Tab3Page {
     this.role = this.userDetails?.role;
     this.referralCode = this.userDetails?.referralCode;
     this.userId = this.userDetails?.userId;
+    this.biometrics = this.userDetails?.biometrics;
     this.hostToggle = false;
     this.tenantToggle = false;
    
@@ -174,5 +176,18 @@ export class Tab3Page {
             this.showToast('Unable to switch roles');             
           }
         );
+  }
+
+  async copyToClipboard(referralCode: string) {
+    try {
+      await navigator.clipboard.writeText(referralCode);
+      this.showToast('Referral code copied to clipboard!');
+    } catch (err) {
+      console.error('Failed to copy: ', err);
+    }
+  }
+
+  async toggleBiometrics() {
+    
   }
 }

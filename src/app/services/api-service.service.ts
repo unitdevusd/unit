@@ -1,7 +1,8 @@
-import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, catchError } from 'rxjs/operators';
-import { Observable, throwError } from 'rxjs';
+import { map, catchError, switchMap } from 'rxjs/operators';
+import { Observable, from, throwError } from 'rxjs';
+import { JwtService } from './jwt.service'; 
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ export class ApiService {
 
   jsonData: any;
   private baseUrl = 'https://unit-session.com/';
-  // private baseUrl = 'http://localhost:8088/';
+  // private baseUrl = 'https://localhost:8088/';
   private viewSpaces = this.baseUrl+'spaces/getSpaces';
   private addSpaces = this.baseUrl+'spaces/add-space';
   private spacesAround = this.baseUrl+'map/getnearestlocations';
@@ -41,9 +42,10 @@ export class ApiService {
   private trackChargesUrl = this.baseUrl+'crypto/track-charges';
   private getRatesUrl = this.baseUrl+'crypto/rates';
   private deleteBankUrl = this.baseUrl+'payment/deleteAccounts';
+  private refreshTokenUrl = this.baseUrl+'users/refreshToken';
 
 
-  constructor(public http: HttpClient) { }
+  constructor(public http: HttpClient, private jwtService: JwtService) { }
 
   private extractData(res: any) {
     const body = res;
@@ -95,13 +97,6 @@ export class ApiService {
         resolve(result);
       },
 
-      /*
-      console.log(params);
-      return this.http.post('https://unit-storage-default-rtdb.firebaseio.com/offered-places.json', {...newPlace, id: null}).subscribe((result: any) => {
-        console.log(result);
-        resolve(result);
-      },
-      */
         (error) => {
           console.log(error);
           resolve({ success: false, message: error });
@@ -109,32 +104,26 @@ export class ApiService {
     });
   }
 
-
   viewAllSpacesByUser(payload: any): Observable<any> {
-    return this.http.post(this.viewSpaces, payload);
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+
+        return this.http.post(this.viewSpaces, payload, { headers });
+      })
+    );
   }
 
-  // uploadSpace(payload: any): Observable<any> {
-  //   return this.http.post(this.addSpaces, payload);
+
+  // viewAllSpacesByUser(payload: any): Observable<any> {
+  //   return this.http.post(this.viewSpaces, payload);
   // }
-
-
-
-  // uploadSpace(payload: any): Observable<any> {
-  //   const formData = new FormData();
-  //   Object.keys(payload).forEach((key) => {
-  //     formData.append(key, payload[key]);
-  //   });
-
-  //   return this.http.post(this.addSpaces, formData);
-  // }
-
-
 
   uploadSpace(payload: any): Observable<any> {
     const formData = new FormData();
   
-    // Append non-file fields to formData
     for (const key of Object.keys(payload)) {
       if (key !== 'image') {
         formData.append(key, payload[key]);
@@ -149,44 +138,97 @@ export class ApiService {
     }
 
     formData.append('timeSlots', JSON.stringify(payload.timeSlot));
-    // if (payload.timeSlots && Array.isArray(payload.timeSlots)) {
-    //   for (let i = 0; i < payload.timeSlots.length; i++) {
-    //     const timeSlot = payload.timeSlots[i];
-    //     formData.append(`timeSlots[${i}].date`, timeSlot.date);
-    //     formData.append(`timeSlots[${i}].startTime`, timeSlot.startTime);
-    //     formData.append(`timeSlots[${i}].endTime`, timeSlot.endTime);
-    //   }
-    // }
-  
     // Make the POST request with formData
-    return this.http.post(this.addSpaces, formData);
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+
+        // Make the POST request with formData and headers
+        return this.http.post(this.addSpaces, formData, { headers });
+      })
+    );  
   }
 
 
 
   getSpacesAround(payload: any): Observable<any> {
-    return this.http.post(this.spacesAround, payload);
+    // return this.http.post(this.spacesAround, payload);
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+
+        // Make the POST request with formData and headers
+        return this.http.post(this.spacesAround, payload, { headers });
+      })
+    );
   }
 
   getSpaceBySpaceId(payload: any): Observable<any> {
-    return this.http.post(this.findSpace, payload);
+    // return this.http.post(this.findSpace, payload);
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+
+        // Make the POST request with formData and headers
+        return this.http.post(this.findSpace, payload, { headers });
+      })
+    );
+
+    
   }
 
   bookSpace(payload: any): Observable<any> {
-    return this.http.post(this.bookSpaceUrl, payload);
+    // return this.http.post(this.bookSpaceUrl, payload);
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+
+        // Make the POST request with formData and headers
+        return this.http.post(this.bookSpaceUrl, payload, { headers });
+      })
+    );
+
   }
 
   updateUserRole(payload: any): Observable<any> {
-    return this.http.post(this.updateRoleUrl, payload);
+    // return this.http.post(this.updateRoleUrl, payload);
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+
+        // Make the POST request with formData and headers
+        return this.http.post(this.updateRoleUrl, payload, { headers });
+      })
+    );
+
   }
 
   updateTimeSlot(payload: any): Observable<any> {
-    return this.http.post(this.updateTimeSlotUrl, payload);
+    // return this.http.post(this.updateTimeSlotUrl, payload);
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+
+        // Make the POST request with formData and headers
+        return this.http.post(this.updateTimeSlotUrl, payload, { headers });
+      })
+    );
+
   }
 
-  // updateProfilePicture(payload: any): Observable<any> {
-  //   return this.http.post(this.updateProfilePicUrl, payload);
-  // }
+ 
 
 
   updateProfilePicture(payload: any): Observable<any> {
@@ -198,7 +240,18 @@ export class ApiService {
     });
 
     // Send POST request with form data
-    return this.http.post(this.updateProfilePicUrl, formData);
+    // return this.http.post(this.updateProfilePicUrl, formData);
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+
+        // Make the POST request with formData and headers
+        return this.http.post(this.updateProfilePicUrl, payload, { headers });
+      })
+    );
+
   }
 
 
@@ -206,19 +259,63 @@ export class ApiService {
 
 
   fetchTenantSpaces(payload: any): Observable<any> {
-    return this.http.post(this.tenantSpacesUrl, payload);
+    // return this.http.post(this.tenantSpacesUrl, payload);
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+
+        // Make the POST request with formData and headers
+        return this.http.post(this.tenantSpacesUrl, payload, { headers });
+      })
+    );
+
   }
 
   fetchUsers(payload: any): Observable<any> {
-    return this.http.post(this.allUsersUrl, payload);
+    // return this.http.post(this.allUsersUrl, payload);
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+
+        // Make the POST request with formData and headers
+        return this.http.post(this.allUsersUrl, payload, { headers });
+      })
+    );
+
   }
 
   modifyUser(payload: any): Observable<any> {
-    return this.http.post(this.modifyUserUrl, payload);
+    // return this.http.post(this.modifyUserUrl, payload);
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+
+        // Make the POST request with formData and headers
+        return this.http.post(this.modifyUserUrl, payload, { headers });
+      })
+    );
+
   }
 
   retrieveSpaceImages(payload: any): Observable<any> {
-    return this.http.post(this.spaceImagesUrl, payload);
+    // return this.http.post(this.spaceImagesUrl, payload);
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+
+        // Make the POST request with formData and headers
+        return this.http.post(this.spaceImagesUrl, payload, { headers });
+      })
+    );
+
   }
 
   // filterSpaces(address: string): Observable<any> {
@@ -228,79 +325,307 @@ export class ApiService {
   // }
 
   filterSpaces(payload: any): Observable<any> {
-    console.log(payload);
-    return this.http.post(this.filterSpacesUrl, payload);
+    // return this.http.post(this.filterSpacesUrl, payload);
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+
+        // Make the POST request with formData and headers
+        return this.http.post(this.filterSpacesUrl, payload, { headers });
+      })
+    );
+
   }
 
   filterCloseSpaces(payload: any): Observable<any> {
-    console.log(payload);
-    return this.http.post(this.filterSpacesRadiusUrl, payload);
+    // return this.http.post(this.filterSpacesRadiusUrl, payload);
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+
+        // Make the POST request with formData and headers
+        return this.http.post(this.filterSpacesRadiusUrl, payload, { headers });
+      })
+    );
+
   }
 
   fetchAccountBalance(payload: any): Observable<any> {
-    return this.http.post(this.accountBalanceUrl, payload, { responseType: 'text' });
+    // return this.http.post(this.accountBalanceUrl, payload, { responseType: 'text' });
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+    
+        // Combine headers and response type into a single options object
+        const options = {
+          headers,
+          responseType: 'text' as const
+        };
+    
+        // Make the POST request with formData and headers
+        return this.http.post(this.accountBalanceUrl, payload, options);
+      })
+    );
   }
 
   deleteSpace(payload: any): Observable<any> {
-    return this.http.post(this.deleteSpaceUrl, payload, { responseType: 'text' });
+    // return this.http.post(this.deleteSpaceUrl, payload, { responseType: 'text' });
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+    
+        const options = {
+          headers,
+          responseType: 'text' as const
+        };
+    
+        // Make the POST request with formData and headers
+        return this.http.post(this.deleteSpaceUrl, payload, options);
+      })
+    );
+
   }
 
   removeSpace(payload: any): Observable<any> {
-    return this.http.post(this.removeSpaceUrl, payload, { responseType: 'text' });
+    // return this.http.post(this.removeSpaceUrl, payload, { responseType: 'text' });
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+    
+        // Combine headers and response type into a single options object
+        const options = {
+          headers,
+          responseType: 'text' as const
+        };
+    
+        // Make the POST request with formData and headers
+        return this.http.post(this.removeSpaceUrl, payload, options);
+      })
+    );
+
   }
 
   generateCharges(payload: any): Observable<any> {
-    return this.http.post(this.generateChargesUrl, payload, { responseType: 'text' });
+    // return this.http.post(this.generateChargesUrl, payload, { responseType: 'text' });
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+    
+        // Combine headers and response type into a single options object
+        const options = {
+          headers,
+          responseType: 'text' as const
+        };
+    
+        // Make the POST request with formData and headers
+        return this.http.post(this.generateChargesUrl, payload, options);
+      })
+    );
+
   }
 
   trackCharges(payload: any): Observable<any> {
-    return this.http.post(this.trackChargesUrl, payload, { responseType: 'text' });
+    // return this.http.post(this.trackChargesUrl, payload, { responseType: 'text' });
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+    
+        // Combine headers and response type into a single options object
+        const options = {
+          headers,
+          responseType: 'text' as const
+        };
+    
+        // Make the POST request with formData and headers
+        return this.http.post(this.trackChargesUrl, payload, options);
+      })
+    );
+
   }
 
   convertToBtc(): Observable<string> {
-    return this.http.get(this.getRatesUrl, { responseType: 'text' });
+    // return this.http.get(this.getRatesUrl, { responseType: 'text' });
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+    
+        // Combine headers and response type into a single options object
+        const options = {
+          headers,
+          responseType: 'text' as const
+        };
+    
+        // Make the POST request with formData and headers
+        return this.http.get(this.getRatesUrl, options);
+      })
+    );
+
   }
 
   deleteBankDetails(payload: any): Observable<string> {
-    return this.http.post(this.deleteBankUrl, payload, { responseType: 'text' });
+    // return this.http.post(this.deleteBankUrl, payload, { responseType: 'text' });
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+    
+        // Combine headers and response type into a single options object
+        const options = {
+          headers,
+          responseType: 'text' as const
+        };
+    
+        // Make the POST request with formData and headers
+        return this.http.post(this.deleteBankUrl, payload, options);
+      })
+    );
+
   }
  
   
 
   updateRules(payload: any): Observable<any> {
-    return this.http.post(this.updateRulesUrl, payload);
+    // return this.http.post(this.updateRulesUrl, payload);
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+
+        return this.http.post(this.updateRulesUrl, payload, { headers });
+      })
+    );
   }
 
   updateImages(payload: any): Observable<any> {
-    return this.http.post(this.updateImagesUrl, payload);
+    // return this.http.post(this.updateImagesUrl, payload);
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+
+        return this.http.post(this.updateImagesUrl, payload, { headers });
+      })
+    );
   }
 
   filterPreference(payload: any): Observable<any> {
-    return this.http.post(this.filterPreferenceUrl, payload);
+    // return this.http.post(this.filterPreferenceUrl, payload);
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+
+        return this.http.post(this.filterPreferenceUrl, payload, { headers });
+      })
+    );
   }
 
   updateLocation(payload: any): Observable<any> {
-    return this.http.post(this.updateLocationUrl, payload);
+    // return this.http.post(this.updateLocationUrl, payload);
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+
+        return this.http.post(this.updateLocationUrl, payload, { headers });
+      })
+    );
   }
 
   updateUrl(payload: any): Observable<any> {
-    return this.http.post(this.updateYoutubeUrl, payload);
+    // return this.http.post(this.updateYoutubeUrl, payload);
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+
+        return this.http.post(this.updateYoutubeUrl, payload, { headers });
+      })
+    );
   }
 
   fetchAllAccounts(payload: any): Observable<any> {
-    return this.http.post(this.fetchAccountsUrl, payload);
+    // return this.http.post(this.fetchAccountsUrl, payload);
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+
+        return this.http.post(this.fetchAccountsUrl, payload, { headers });
+      })
+    );
   }
 
   addAccount(payload: any): Observable<any> {
-    return this.http.post(this.addAccountUrl, payload);
+    // return this.http.post(this.addAccountUrl, payload);
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+
+        return this.http.post(this.addAccountUrl, payload, { headers });
+      })
+    );
   }
 
   makePayment(payload: any): Observable<any> {
-    return this.http.post(this.payoutUrl, payload, { responseType: 'text' });
+    // return this.http.post(this.payoutUrl, payload, { responseType: 'text' });
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+
+        return this.http.post(this.payoutUrl, payload, { headers });
+      })
+    );
   }
 
 
   findProfilePic(payload: any): Observable<any> {
-    return this.http.post(this.profilePicUrl, payload, { responseType: 'text' });
+    // return this.http.post(this.profilePicUrl, payload, { responseType: 'text' });
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+    
+        const options = {
+          headers,
+          responseType: 'text' as const 
+        };
+    
+        return this.http.post(this.profilePicUrl, payload, options);
+      })
+    );
+  }
+
+  sendRefreshToken(payload: any) : Observable<any> {
+    return this.http.post(this.refreshTokenUrl, payload);
+
   }
 }
