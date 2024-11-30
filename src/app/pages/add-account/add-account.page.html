@@ -24,13 +24,20 @@
 
     <ion-list mode="md">
       <ion-item mode="md">
-        <ion-label position="floating">BTC Address</ion-label>
-        <ion-input type="text" formControlName="payPayEmail" placeholder="BTC Wallet Address"></ion-input>
+        <ion-label position="floating">PayPal Email</ion-label>
+        <ion-input type="text" formControlName="payPayEmail" placeholder="Paypal Email"></ion-input>
+      </ion-item>
+    </ion-list>
+
+    <ion-list mode="md">
+      <ion-item mode="md">
+        <ion-label position="floating">PayPal Username</ion-label>
+        <ion-input type="text" formControlName="network" placeholder="Paypal Username"></ion-input>
       </ion-item>
     </ion-list>
 
 
-    <ion-list mode="md">
+    <!-- <ion-list mode="md">
       <ion-item mode="md">
         <ion-label position="floating" style="margin-bottom: 20px;">BTC Network</ion-label>
         <ion-select formControlName="network">
@@ -39,7 +46,7 @@
           <ion-select-option value="ln">Lightening(Fast and Less charges)</ion-select-option>
         </ion-select>
       </ion-item>
-    </ion-list>
+    </ion-list> -->
 
 </form>
 

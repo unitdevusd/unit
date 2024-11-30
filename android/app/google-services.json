@@ -3,7 +3,7 @@
     "project_number": "702532803931",
     "firebase_url": "https://unit-session-default-rtdb.firebaseio.com",
     "project_id": "unit-session",
-    "storage_bucket": "unit-session.appspot.com"
+    "storage_bucket": "unit-session.firebasestorage.app"
   },
   "client": [
     {
@@ -15,7 +15,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "702532803931-9cupbdo5pnhb3dhklk3ffvd6pslbgs8s.apps.googleusercontent.com",
+          "client_id": "702532803931-a9h653uno2r0srbm22c83olkglllooft.apps.googleusercontent.com",
           "client_type": 3
         }
       ],

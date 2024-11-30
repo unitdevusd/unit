@@ -18,3 +18,8 @@
     font-weight: 600;
 
   }
+
+  ion-content {
+    --overflow: auto; /* Enable scrolling when content overflows */
+    height: 100%; /* Ensure it takes up full available height */
+  }

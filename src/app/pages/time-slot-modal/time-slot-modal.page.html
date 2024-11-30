@@ -21,8 +21,8 @@
 <ion-content [fullscreen]="true">
 
   <ion-list>
-    <ion-accordion-group>
-      <ion-accordion value="start">
+    <ion-accordion-group #accordionGroup>
+      <ion-accordion #startAccordion value="start">
         <ion-item slot="header">
           <ion-label>Start Date</ion-label>
           <ion-text slot="end" id="datetimeValue">{{ startDate }}</ion-text>
@@ -48,8 +48,8 @@
     <ion-col size="6">
 
   <ion-list>
-    <ion-accordion-group>
-      <ion-accordion value="start">
+    <ion-accordion-group #accordionGroup2>
+      <ion-accordion #startAccordion2 value="start">
         <ion-item slot="header">
           <ion-label>Start Time</ion-label>
           <ion-note slot="end" id="datetimeValue">{{ startTime }}</ion-note>
@@ -75,8 +75,8 @@
 
 <ion-col size="6">
   <ion-list>
-    <ion-accordion-group>
-      <ion-accordion value="start">
+    <ion-accordion-group #accordionGroup3>
+      <ion-accordion #startAccordion3 value="start">
         <ion-item slot="header">
           <ion-label>End Time</ion-label>
           <ion-note slot="end" id="datetimeValue">{{ endTime }}</ion-note>

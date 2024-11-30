@@ -22,10 +22,12 @@
 
 <ion-content>
 
+
   <ion-card class="full-width-card" no-padding>
     <div class="image-container">
     <ion-img style="margin-top: 1px;" class="img-spacetype" *ngIf="place" [src]="place.spaceImage"></ion-img>
     <ion-button class="video-button" color="custom" style="--ion-color-base: #212121; right: 10px; --border-radius: 2px;"><a (click)="openExternalURL(place?.additionalDetails)" style="text-decoration: none; color: white;">Watch Video Tour </a></ion-button>
+
   </div>
 
 
@@ -229,6 +231,7 @@
 </ion-content> <br /> <br /> <br />
 
 <ion-button (click)="openPaymentModal()" class="button-h fixed-button" fill="solid" size="default" expand="block" color="custom" style="--ion-color-base: #e40e40; margin-top: 25px; --border-radius: 4px;">
-  Book Open Spot(${{ place.chargePerDay }}/hour)
+  Book Open Spot(${{ place.chargePerDay }} / {{ place.hourlyCharges ? 'hour' : 'day' }})
+
 </ion-button>
 

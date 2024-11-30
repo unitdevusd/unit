@@ -83,7 +83,8 @@ const routes: Routes = [
   {
     path: 'modify-location',
     loadChildren: () => import('./pages/modify-location/modify-location.module').then( m => m.ModifyLocationPageModule)
-  },  {
+  },
+  {
     path: 'image-modal',
     loadChildren: () => import('./pages/image-modal/image-modal.module').then( m => m.ImageModalPageModule)
   },
@@ -110,6 +111,10 @@ const routes: Routes = [
   {
     path: 'forgot-password',
     loadChildren: () => import('./pages/forgot-password/forgot-password.module').then( m => m.ForgotPasswordPageModule)
+  },
+  {
+    path: 'payment-page',
+    loadChildren: () => import('./pages/payment-page/payment-page.module').then( m => m.PaymentPagePageModule)
   },
 
 

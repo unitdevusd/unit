@@ -11,12 +11,12 @@ import { UserService } from './user.service';
 export class JwtService {
   private userDetailsKey = 'response';
   private refreshTokenUrl = 'https://unit-session.com/users/refreshToken';
-  // private refreshTokenUrl = 'https://localhost:8088/users/refreshToken';
+  // private refreshTokenUrl = 'http://localhost:8088/users/refreshToken';
 
   constructor(private http: HttpClient, private router: Router, private userService: UserService) {}
   async getJwt(): Promise<string | null> {
     try {
-      const userDetails = this.getUserDetails();
+      const userDetails = await this.getUserDetails();
       const token = userDetails?.token;
       const refreshToken = userDetails?.refreshToken;
 
@@ -39,7 +39,7 @@ export class JwtService {
 
   private async fetchNewToken(refreshToken: string): Promise<string | null> {
     try {
-      const payload = { refreshToken };
+      const payload = {"refreshToken" : refreshToken};
       const response: any = await this.http.post(this.refreshTokenUrl, payload).toPromise();
 
       if (response?.accessToken) {

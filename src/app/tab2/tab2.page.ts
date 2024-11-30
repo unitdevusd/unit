@@ -90,6 +90,7 @@ export class Tab2Page {
           },
           (error: any) => {
             console.error(error);
+            loading.dismiss();
             this.showToast('Unable to Fetch Spaces');             
           }
         );
@@ -110,6 +111,7 @@ export class Tab2Page {
           },
           (error: any) => {
             console.error(error);
+            loading.dismiss();
             this.showToast('Unable to Fetch Spaces');             
           }
         );

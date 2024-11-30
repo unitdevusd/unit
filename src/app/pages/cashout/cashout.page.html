@@ -15,8 +15,8 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <p style="text-align: center; color: red;"><b>Cashout Using BTC.</b></p>
-  <p style="text-align: center; color: red;"><b>Minimum Withdrawal of 140 USD</b></p>
+  <p style="text-align: center; color: red;"><b>Cashout Using PayPal.</b></p>
+  <p style="text-align: center; color: red;"><b>Minimum Withdrawal of 50 USD</b></p>
 
   <ion-card>
 
@@ -29,15 +29,15 @@
         <ion-item mode="md">
           <ion-label position="floating">Amount to Withdraw</ion-label>
           <div style="display: flex;">
-          <ion-input type="number" (ionChange) = "convert()" [(ngModel)]="withdrawalAmount" placeholder="Enter Amount to withdraw">
+          <ion-input type="number" [(ngModel)]="withdrawalAmount" placeholder="Enter Amount to withdraw">
             <ion-icon name="logo-usd" slot="start"></ion-icon>
           </ion-input>
         </div>
         </ion-item>
       </ion-list>
-      <ion-text *ngIf="140 > withdrawalAmount" color="danger">Minimum Withdrawal is $140</ion-text>
+      <ion-text *ngIf="50 > withdrawalAmount" color="danger">Minimum Withdrawal is $50</ion-text>
       <p><ion-text *ngIf="withdrawalAmount > balance" color="danger">Withdrawal amount exceeds available balance</ion-text></p>
-      <p><ion-text *ngIf="convertedAmount" color="success">BTC Equivalent: {{ convertedAmount }}</ion-text></p>
+      <!-- <p><ion-text *ngIf="convertedAmount" color="success">BTC Equivalent: {{ convertedAmount }}</ion-text></p> -->
 
 
       <ion-list mode="md">
@@ -48,7 +48,7 @@
           </ion-input>
         </ion-item>
       </ion-list>
-      <ion-text *ngIf="convertedAmount" color="success">You receive BTC {{ (convertedAmount - (convertedAmount * 0.1)).toFixed(7) }}</ion-text>
+      <!-- <ion-text *ngIf="convertedAmount" color="success">You receive BTC {{ (convertedAmount - (convertedAmount * 0.1)).toFixed(7) }}</ion-text> -->
 
 
 
@@ -63,7 +63,7 @@
       
       
         <div class="accounts" *ngIf="accounts && accounts?.length > 0; else noAccount">
-          <b>Registered BTC Addresses</b>
+          <b>Registered Paypal Account</b>
           <ion-list>
             <ion-radio-group [allowEmptySelection]="false" [(ngModel)]="accountDetail">
               <ion-item *ngFor="let account of accounts">
@@ -82,7 +82,7 @@
 
       </ion-card-content>
 
-      <p><ion-button [disabled]="withdrawalAmount > balance || !withdrawalAmount || !accountDetail || !convertedAmount" (click)="authenticate()">Cash Out</ion-button></p>
+      <p><ion-button [disabled]="withdrawalAmount > balance || !withdrawalAmount || !accountDetail" (click)="authenticate()">Cash Out</ion-button></p>
     </ion-card>
 
 

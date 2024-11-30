@@ -4,6 +4,13 @@ import { ApiService } from '../services/api-service.service';
 import { AlertController, LoadingController, ModalController, ToastController } from '@ionic/angular';
 import { NavigationExtras, Router } from '@angular/router';
 import { ImageModalPage } from '../pages/image-modal/image-modal.page';
+import { Capacitor } from '@capacitor/core';
+import { v4 as uuidv4 } from 'uuid';
+import { SecureStoragePlugin } from 'capacitor-secure-storage-plugin';
+import { AuthService } from '../services/auth.service';
+
+
+
 
 @Component({
   selector: 'app-tab3',
@@ -25,15 +32,16 @@ export class Tab3Page {
 
 
   constructor(
-    private userService : UserService,
-    private apiService : ApiService,
+    private userService: UserService,
+    private auth: AuthService,
+    private apiService: ApiService,
     private toastController: ToastController,
-    private alertController : AlertController,
+    private alertController: AlertController,
     private router: Router,
     private modalController: ModalController,
     private loadingController: LoadingController,
 
-  ) {}
+  ) { }
 
   ionViewWillEnter() {
     this.findProfilePic();
@@ -45,10 +53,10 @@ export class Tab3Page {
     this.biometrics = this.userDetails?.biometrics;
     this.hostToggle = false;
     this.tenantToggle = false;
-   
 
-    
-    
+
+
+
 
   }
 
@@ -58,9 +66,9 @@ export class Tab3Page {
 
   toggleRole(realRole: any) {
     this.role = realRole;
-    console.log('Before toggle role is '+this.role);
+    console.log('Before toggle role is ' + this.role);
     this.role = this.role === 'HOST' ? 'TENANT' : 'HOST';
-    console.log('New role is '+this.role);
+    console.log('New role is ' + this.role);
     this.updateRole();
   }
 
@@ -85,7 +93,7 @@ export class Tab3Page {
   async openImageModal(imageUrl: string) {
     const modal = await this.modalController.create({
       component: ImageModalPage,
-      breakpoints: [0,9],
+      breakpoints: [0, 9],
       initialBreakpoint: 0.6,
       handle: false,
       componentProps: {
@@ -93,16 +101,16 @@ export class Tab3Page {
         fromTab3: true
       }
     });
-  
+
     await modal.present();
 
     const { data } = await modal.onDidDismiss();
-    
+
     if (data && data.updatedUser) {
       this.userService.setUserDetails(data.updatedUser);
       this.userDetails = data.updatedUser;
       this.profilePicture = data.updatedUser.profilePicture;
-      this.showToast('Profile picture updated successfully');             
+      this.showToast('Profile picture updated successfully');
 
     }
 
@@ -114,68 +122,69 @@ export class Tab3Page {
     const loading = await this.loadingController.create();
     await loading.present();
 
-    const userData = {"userId" : this.userId};
-        this.apiService.findProfilePic(userData).subscribe(
-          (response: any) => {
-            loading.dismiss();
+    const userData = { "userId": this.userId };
+    this.apiService.findProfilePic(userData).subscribe(
+      (response: any) => {
+        loading.dismiss();
 
-            if(response !== null) {
-              this.profilePicture = response;
-            }
+        if (response !== null) {
+          this.profilePicture = response;
+        }
 
-            else {
-              this.showErrorAlert('Unable to load profile picture');
-            }
-             
-          },
-          (error: any) => {
-            loading.dismiss();
-            console.error(error);
-            this.showToast('Unable to load profile picture');             
-          }
-        );
+        else {
+          this.showErrorAlert('Unable to load profile picture');
+        }
+
+      },
+      (error: any) => {
+        loading.dismiss();
+        console.error(error);
+        this.showToast('Unable to load profile picture');
+      }
+    );
   }
 
   logout() {
     this.userService.clearUserDetails();
+    this.auth.logout();
     this.router.navigate(['/login']);
   }
 
 
   async updateRole() {
 
-    const userData = {"userId" : this.userId, "role" : this.role};
-        this.apiService.updateUserRole(userData).subscribe(
-          (response: any) => {
+    const userData = { "userId": this.userId, "role": this.role };
+    this.apiService.updateUserRole(userData).subscribe(
+      (response: any) => {
 
-            if(response !== null) {
-              this.userService.setUserDetails(response);
-              // this.showToast('You are now a '+this.role);
-              if (this.role === 'TENANT') {
-                this.showToast('You are now a Dancer');
-              } else {
-                this.showToast('You are now a Host');
-              }
-              // this.router.navigateByUrl('/tabs');               
-              let navigationExtras: NavigationExtras = {
-                state: {
-                  navigationData: true
-                }
-              };
-              this.router.navigateByUrl(`/tabs`, navigationExtras);
-
-            }
-
-            else {
-              this.showErrorAlert('Unable to change roles');
-            }
-             
-          },
-          (error: any) => {
-            console.error(error);
-            this.showToast('Unable to switch roles');             
+        if (response !== null) {
+          this.userService.setUserDetails(response);
+          // this.showToast('You are now a '+this.role);
+          if (this.role === 'TENANT') {
+            this.showToast('You are now a Dancer');
+          } else {
+            this.showToast('You are now a Host');
           }
-        );
+          // this.router.navigateByUrl('/tabs');               
+          let navigationExtras: NavigationExtras = {
+            state: {
+              navigationData: true
+            }
+          };
+          this.router.navigateByUrl(`/tabs`, navigationExtras);
+
+        }
+
+        else {
+          this.showErrorAlert('Unable to change roles');
+        }
+
+      },
+      (error: any) => {
+        console.error(error);
+        this.showToast('Unable to switch roles');
+      }
+    );
   }
 
   async copyToClipboard(referralCode: string) {
@@ -188,6 +197,41 @@ export class Tab3Page {
   }
 
   async toggleBiometrics() {
-    
+    if (Capacitor.isNativePlatform()) {
+      
+      let deviceUUID = localStorage.getItem('deviceUUID');
+
+      if (!deviceUUID) {
+        deviceUUID = uuidv4();
+        localStorage.setItem('deviceUUID', deviceUUID);
+        await SecureStoragePlugin.set({ key: 'deviceUUID', value: deviceUUID });
+      }
+
+      if (deviceUUID != null) {
+        const biometricData = { "userId": this.userId, "biometrics" : this.biometrics, "deviceId": deviceUUID };
+        const loading = await this.loadingController.create();
+        await loading.present();
+
+    this.apiService.toggleBiometrics(biometricData).subscribe(
+      (response: any) => {
+        loading.dismiss();
+
+        if (response.code == '00') {
+          this.showToast('Biometrics setting modified successfully');
+          this.userDetails.biometrics = this.biometrics;
+          this.userService.setUserDetails(this.userDetails);
+        }
+        else {
+          this.showToast('Failed to modify biometrics');
+        }
+      },
+      (error: any) => {
+        loading.dismiss();
+        console.error(error);
+        this.showToast('Unable to modify biometrics settings');
+      }
+    );
+      }
+    }
   }
 }

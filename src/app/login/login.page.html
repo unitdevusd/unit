@@ -80,6 +80,14 @@
             ></ion-icon>
           </div>
     
+          <!-- <div (click)="googleLogin()">
+            Signup with Google
+          </div> -->
+
+          <ion-button fill="outline" expand="full" shape="round" (click)="googleLogin()">
+            <img src="../../assets/icons/google-logo.png" alt="Google Logo" width="50" height="50" />
+              <b style="margin-left: 10px;">Login with Google </b>
+          </ion-button>
 
           <!-- <ion-button class="button-h custom-cursor" fill="solid" size="default" shape="round" expand="block" color="primary" [disabled]="!loginForm.valid" (click)="loginUser()">Login</ion-button> -->
           <p class="have">Don't have an account? <br><a style="color: #e40e40;" class="signup-text" (click)="registerpage()"> Sign up </a></p>

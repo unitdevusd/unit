@@ -25,7 +25,10 @@ import { AppVersion } from '@ionic-native/app-version/ngx';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { Tab1PageModule } from './tab1/tab1.module';
-import { Stripe } from '@ionic-native/stripe/ngx';
+import { PayPalHttpClient } from '@paypal/checkout-server-sdk/lib/core/paypal_http_client';
+import { PaypalServiceService } from './services/paypal-service.service';
+import { GooglePlus } from '@ionic-native/google-plus/ngx'
+// import { Stripe } from '@ionic-native/stripe/ngx';
 
 
 
@@ -41,7 +44,8 @@ import { Stripe } from '@ionic-native/stripe/ngx';
     AngularFireStorageModule,
     AngularFireDatabaseModule,   
     IonicStorageModule.forRoot(),
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    AngularFireModule.initializeApp(environment.firebaseConfig)
   ],
   providers: [
     StatusBar,
@@ -51,7 +55,8 @@ import { Stripe } from '@ionic-native/stripe/ngx';
     SocialSharing,
     AppVersion,
     Network,
-    Stripe,
+    PaypalServiceService,
+    GooglePlus,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent],

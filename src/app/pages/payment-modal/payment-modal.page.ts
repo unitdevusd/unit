@@ -15,6 +15,7 @@ interface TimeSlot {
   endTime: string; // format: 'HH:mm'
 }
 
+declare var paypal: any;
 
 @Component({
   selector: 'app-payment-modal',
@@ -23,6 +24,7 @@ interface TimeSlot {
 })
 export class PaymentModalPage implements OnInit {
 
+  
 
   place: any;
   dateExample: any;
@@ -39,6 +41,8 @@ export class PaymentModalPage implements OnInit {
   endTime: any;
   startDate: any;
   bookingButtonText: any;
+  isPayPalButtonRendered = false;
+
 
 
 
@@ -75,6 +79,7 @@ export class PaymentModalPage implements OnInit {
 
 
   ngOnInit() {
+    this.loadPayPalScript();
     this.place.timeSlots = this.place.timeSlots.map((slot: { date: string; }) => ({
       ...slot,
       date: this.formatDateToISO(slot.date),
@@ -84,9 +89,8 @@ export class PaymentModalPage implements OnInit {
     this.filteredTimeSlots = this.place.timeSlots.filter(
       (timeSlot: TimeSlot) => timeSlot.date === this.dateExample
     );
-    
-
   }
+
 
   ngOnDestroy() {
     this.place = null;
@@ -94,6 +98,15 @@ export class PaymentModalPage implements OnInit {
     if (this.intervalSubscription) {
       this.intervalSubscription.unsubscribe();
     }
+    }
+
+    loadPayPalScript() {
+        const script = document.createElement('script');
+        script.src = 'https://www.paypal.com/sdk/js?client-id=AYPddTXdQ61Y1FfQNVjjEVQrhfEN6ygOR7UG6KSj5_jMIPi9CWbjF5yZDJo4VNbAFTcpIWm5YW_qFuEv&components=buttons';
+        script.onload = () => {
+          console.log('PayPal SDK loaded');
+        };
+        document.body.appendChild(script);
     }
 
   formatDateToISO(dateString: string): string {
@@ -289,7 +302,7 @@ export class PaymentModalPage implements OnInit {
         (response: any) => {   
           if (response === 'paid') {
             this.intervalSubscription?.unsubscribe();
-            // this.bookSpace(id, response);
+            this.bookSpace(id, response);
             this.showToast("Transfer successful and space booked. Thank you for booking");
           }     
           console.log('Processed tracking response: ' + response);
@@ -310,11 +323,14 @@ export class PaymentModalPage implements OnInit {
 
 
   async bookSpace(id: any, status: any) {
-    const spaceData = {"spaceId" : this.place.spaceId, "bookingStatus" : "BOOKED", "duration" : this.hoursDifference, "userId" : this.userDetails?.userId, 
+    const spaceData = {"spaceId" : this.place.spaceId, 
+    "bookingStatus" : "BOOKED", "duration" : this.hoursDifference, 
+    "userId" : this.userDetails?.userId, 
     "startDateTime" : this.startTime,
     "endDateTime" : this.endTime,
     "startDate" : this.dateExample,
-    "chargeId" : id, "chargeIdStatus" : status};
+    "chargeId" : id, 
+    "chargeIdStatus" : status};
     this._apiService.bookSpace(spaceData).subscribe(
       (response: any) => {
         console.log(response.message);
@@ -336,6 +352,35 @@ export class PaymentModalPage implements OnInit {
     );
   }
   
+
+  initPayPalButton(amount: any) {
+    if (!this.isPayPalButtonRendered) {
+      paypal.Buttons({
+        createOrder: (_data: any, actions: any) => {
+          return actions.order.create({
+            purchase_units: [{
+              amount: {
+                value: amount
+              }
+            }]
+          });
+        },
+        onApprove: (data: any, actions: any) => {
+          return actions.order.capture().then((details: any) => {
+            this.showToast('Payment successful');
+            this.bookSpace(details.id, 'paid');
+          });
+        },
+        onError: (err: any) => {
+          this.showToast(err);
+          console.error('PayPal payment error:', err);
+        }
+      }).render('#paypal-button-container');
+      
+      this.isPayPalButtonRendered = true;
+    }
+  }
+
 
   async dismissModal() {
     await this.modalController.dismiss();

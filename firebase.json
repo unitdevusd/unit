@@ -11,6 +11,7 @@
         "source": "**",
         "destination": "/index.html"
       }
-    ]
+    ],
+    "google_analytics_adid_collection_enabled": false
   }
 }

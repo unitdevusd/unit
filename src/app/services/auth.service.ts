@@ -6,24 +6,26 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Observable } from 'rxjs/internal/Observable';
 
 
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   userdata: any;
   private baseUrl = 'https://unit-session.com/';
-  // private baseUrl = 'https://localhost:8088/';
+  // private baseUrl = 'http://localhost:8088/';
   private signUpUrl = this.baseUrl+'users/create';
   private loginUrl = this.baseUrl+'users/authenticate';
   private validateUserUrl = this.baseUrl+'users/validateUserEmail';
   private validateOtpUrl = this.baseUrl+'users/validateOtp';
   private resetPasswordUrl = this.baseUrl+'users/resetPassword';
   private biometricsUrl = this.baseUrl+'users/validate-biometrics'
-
+  private socialUrl = this.baseUrl+'users/social-login'
 
 
   constructor(
-     private http: HttpClient
+     private http: HttpClient,
+     private afAuth: AngularFireAuth
      ) { 
    
   }
@@ -63,6 +65,14 @@ export class AuthService {
 
   validateFingerPrint(payload: any): Observable<any> {
     return this.http.post(this.biometricsUrl, payload);
+  }
+
+  socialLoginAuthentication(payload: any): Observable<any> {
+    return this.http.post(this.socialUrl, payload);
+  }
+
+  logout(): Promise<void> {
+    return this.afAuth.signOut();
   }
 }
 

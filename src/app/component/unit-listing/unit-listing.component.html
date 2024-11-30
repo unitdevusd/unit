@@ -16,7 +16,8 @@
                 <div class="charges" style="width: 100%;">
                   <ion-card-title style="font-size: 13px;"> fits {{item?.size}}</ion-card-title>
 
-                <span>$</span><b>{{item?.chargePerDay}} per hour</b>
+                <span>$</span><b>{{item?.chargePerDay}} per {{ item?.hourlyCharges ? 'hour' : 'day' }}</b>
+
               </div>
                 <div class="floor-type">
                   <ion-img

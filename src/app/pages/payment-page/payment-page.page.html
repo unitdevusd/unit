@@ -1,15 +1,23 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Payments</ion-title>
+<ion-header>
 
-    <ion-buttons slot="end">
-      <ion-button (click)="dismissModal()">
-        <ion-icon name="close"></ion-icon>
-      </ion-button>
+
+  <ion-toolbar style="--background: #ed1c24">
+
+    <ion-buttons slot="start">
+      <ion-back-button class="blue-back-button" icon="chevron-back" defaultHref="/tabs"></ion-back-button>
     </ion-buttons>
+
+      <div class="title-and-logo">           
+          <div class="logo">
+            <img src="../../../../assets/imgs/logo.png" alt="Logo" />
+          </div>
+          <ion-title>Payment</ion-title>
+        </div>
 
   </ion-toolbar>
 </ion-header>
+
+
 
 <ion-content [fullscreen]="true">
 
@@ -69,15 +77,20 @@
 
     </ion-item>
 
+    <ion-item style="margin-top: 10px;">
+      <b style="text-align: center; align-items: center; justify-content: center;">Pay With</b>
+
+    </ion-item>
+
   </ion-list>
 
 
-<b style="text-align: center;">Pay With</b>
 
 <div style="display: flex; justify-content: center; align-items: center; gap: 10px;">
   <ion-button 
   (click)="initPayPalButton(totalFees)" 
   size="medium" 
+  [disabled]="totalFees == 0"
   color="primary" 
   style="margin-right: 10px;">
   <ion-icon slot="icon-only" name="logo-paypal"></ion-icon>
@@ -87,6 +100,7 @@
   (click)="sendCrypto(totalFees)" 
   size="medium" 
   color="custom"
+  [disabled]="totalFees == 0"
   fill="clear"  
   style="--ion-color-base: #e40e40;">
   <ion-icon slot="icon-only" name="logo-bitcoin"></ion-icon>
@@ -97,7 +111,6 @@
 <div id="paypal-button-container"></div>
 
 
-
+ 
   
 </ion-content>
-

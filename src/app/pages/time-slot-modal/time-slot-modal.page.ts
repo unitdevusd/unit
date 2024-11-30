@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IonDatetime, IonItem, ModalController, NavParams } from '@ionic/angular';
+import { IonAccordion, IonAccordionGroup, IonDatetime, IonItem, ModalController, NavParams } from '@ionic/angular';
 import * as moment from 'moment';
 
 
@@ -17,6 +17,12 @@ export class TimeSlotModalPage implements OnInit {
 
 
 
+  @ViewChild('accordionGroup') accordionGroup: IonAccordionGroup;
+  @ViewChild('startAccordion') startAccordion: IonAccordion; 
+  @ViewChild('accordionGroup2') accordionGroup2: IonAccordionGroup;
+  @ViewChild('startAccordion2') startAccordion2: IonAccordion; 
+  @ViewChild('accordionGroup3') accordionGroup3: IonAccordionGroup;
+  @ViewChild('startAccordion3') startAccordion3: IonAccordion; 
   startDate: any;
   startTime: any;
   endTime: any;
@@ -42,6 +48,7 @@ export class TimeSlotModalPage implements OnInit {
 
   }
 
+
   dismiss() {  
     this.modalController.dismiss({ startDate: this.startDate, startTime: this.startTime, endTime: this.endTime });
   }
@@ -54,6 +61,11 @@ export class TimeSlotModalPage implements OnInit {
     this.startDate = event.detail.value;
     const date1 = new Date(this.startDate);
     this.startDate= date1.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+    this.closeAccordion(this.accordionGroup);
+    }
+
+    closeAccordion(accordion: any) {
+        accordion.value = '';   
     }
 
   onStartTimeChange(event: any) {
@@ -63,6 +75,8 @@ export class TimeSlotModalPage implements OnInit {
     const date1 = new Date(this.startTime);
     this.startTime = date1.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
     }
+    this.closeAccordion(this.accordionGroup2);
+
 
     }
 
@@ -72,7 +86,8 @@ export class TimeSlotModalPage implements OnInit {
       const date1 = new Date(this.endTime);
       this.endTime = date1.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
       }
-      
+      this.closeAccordion(this.accordionGroup3);
+
       }
 
 }

@@ -48,6 +48,7 @@ export class SpacesPage implements OnInit {
   fileList: FileList;
   endTimeError: boolean = false;
   role: string;
+  isCostPerHour: boolean = false;
 
 
 
@@ -106,6 +107,7 @@ export class SpacesPage implements OnInit {
       spaceType: new FormControl("", Validators.required),
       spaceImage: new FormControl([], Validators.required),
       spaceRules: new FormControl(this.rules),
+      isChargePerHour: new FormControl(true),
       description: new FormControl("", Validators.required),
       chargePerDay: new FormControl("", Validators.required),
       size: new FormControl("", Validators.required),
@@ -133,6 +135,11 @@ export class SpacesPage implements OnInit {
     }
     this.fetchSvgFile(url);
 
+  }
+
+  onCheckboxChange(event: any) {
+    this.isCostPerHour = event.detail.checked;
+    console.log('Checkbox value changed:', this.isCostPerHour);
   }
 
   fetchSvgFile(svgPath: string) {
@@ -168,9 +175,9 @@ export class SpacesPage implements OnInit {
 
     const modal = await this.modalCtrl.create({
       component: TimeSlotModalPage,
-      breakpoints: [0, 11],
+      breakpoints: [0, 0.5, 1], 
       initialBreakpoint: 0.8,
-      handle: false,
+      handle: true,
       componentProps: {
         availableSlots: this.availableTimeSlots
       }
@@ -326,6 +333,7 @@ export class SpacesPage implements OnInit {
     this.checkFormValidity();
 
     if(this.spaceForm.valid) {
+      console.log(this.spaceForm)
 
     try {
       const loading = await this.loadingController.create();

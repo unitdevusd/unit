@@ -11,7 +11,7 @@ export class ApiService {
 
   jsonData: any;
   private baseUrl = 'https://unit-session.com/';
-  // private baseUrl = 'https://localhost:8088/';
+  // private baseUrl = 'http://localhost:8088/';
   private viewSpaces = this.baseUrl+'spaces/getSpaces';
   private addSpaces = this.baseUrl+'spaces/add-space';
   private spacesAround = this.baseUrl+'map/getnearestlocations';
@@ -43,6 +43,7 @@ export class ApiService {
   private getRatesUrl = this.baseUrl+'crypto/rates';
   private deleteBankUrl = this.baseUrl+'payment/deleteAccounts';
   private refreshTokenUrl = this.baseUrl+'users/refreshToken';
+  private biometricsUrl = this.baseUrl+'users/setBiometrics';
 
 
   constructor(public http: HttpClient, private jwtService: JwtService) { }
@@ -601,6 +602,18 @@ export class ApiService {
         });
 
         return this.http.post(this.payoutUrl, payload, { headers });
+      })
+    );
+  }
+
+  toggleBiometrics(payload: any): Observable<any> {
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+
+        return this.http.post(this.biometricsUrl, payload, { headers });
       })
     );
   }

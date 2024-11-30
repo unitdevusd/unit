@@ -20,7 +20,7 @@ import { PaymentModalPage } from '../payment-modal/payment-modal.page';
 
 
 
-declare var paypal: any;
+// declare var paypal: any;
 
 @Component({
   selector: 'app-space-detail',
@@ -165,17 +165,27 @@ export class SpaceDetailPage implements OnInit, OnDestroy {
 
 
   async openPaymentModal() {
-    const modal = await this.modalController.create({
-      component: PaymentModalPage,
-      breakpoints: [0,5],
-      initialBreakpoint: 0.5,
-      handle: false,
-      componentProps: {
-        place: this.place,
-      },
-    });
+    // const modal = await this.modalController.create({
+    //   component: PaymentModalPage,
+    //   breakpoints: [0,1],
+    //   initialBreakpoint: 1.0,
+    //   handle: false,
+    //   componentProps: {
+    //     place: this.place,
+    //   },
+    // });
   
-    await modal.present();
+    // await modal.present();
+
+    let navigationExtras: NavigationExtras = {
+      state: {
+        place: this.place, 
+      },
+    };
+
+    this.router.navigateByUrl('/payment-page', navigationExtras);
+
+  
   }
 
 
@@ -509,35 +519,6 @@ async openImageModal(imageUrl: string) {
 
 
 
-  // initPayPalButton(amount: any) {
-  //   if (!this.isPayPalButtonRendered) {
-  //     paypal.Buttons({
-  //       createOrder: (_data: any, actions: any) => {
-  //         return actions.order.create({
-  //           purchase_units: [{
-  //             amount: {
-  //               value: amount // Set the payment amount
-  //             }
-  //           }]
-  //         });
-  //       },
-  //       onApprove: (data: any, actions: any) => {
-  //         return actions.order.capture().then((details: any) => {
-  //           this.showSuccessAlert('Payment successful');
-  //           this.bookSpace();
-  //         });
-  //       },
-  //       onError: (err: any) => {
-  //         this.showErrorAlert(err);
-  //         console.error('PayPal payment error:', err);
-  //       }
-  //     }).render('#paypal-button-container'); // Render PayPal button in specified container
-      
-  //     this.isPayPalButtonRendered = true; // Set flag to true after rendering
-  //   }
-  // }
-
-
   async sendCrypto(amount: any) {
 
     const paymentData = {"amount" : amount, "currency" : "USD", "description" : "Payment from "+this.userDetails?.fullName,
@@ -651,4 +632,32 @@ async openImageModal(imageUrl: string) {
 
   }
 
+  // initPayPalButton() {
+  //   if (!this.isPayPalButtonRendered) {
+  //     paypal.Buttons({
+  //       createOrder: (_data: any, actions: any) => {
+  //         return actions.order.create({
+  //           purchase_units: [{
+  //             amount: {
+  //               value: 200
+  //             }
+  //           }]
+  //         });
+  //       },
+  //       onApprove: (data: any, actions: any) => {
+  //         return actions.order.capture().then((details: any) => {
+  //           this.showToast('Payment successful');
+  //           this.bookSpace(details.id, 'paid');
+  //         });
+  //       },
+  //       onError: (err: any) => {
+  //         this.showToast(err);
+  //         console.error('PayPal payment error:', err);
+  //       }
+  //     }).render('#paypal-button-container');
+      
+  //     this.isPayPalButtonRendered = true;
+  //   }
+
+  // }
 }

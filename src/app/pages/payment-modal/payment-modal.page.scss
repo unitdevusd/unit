@@ -28,3 +28,11 @@ ion-modal {
   .button-like:hover {
     background-color: #3171e0;
   }
+
+  #paypal-button-container {
+    min-height: 60px;
+    width: 100%;
+    display: block;
+    padding: 10px; 
+    z-index: 9999; 
+    }

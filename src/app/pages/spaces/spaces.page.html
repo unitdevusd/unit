@@ -91,9 +91,24 @@
 
           <ion-list mode="md">
             <ion-item mode="md">
+              <ion-label>Cost per Hour?</ion-label>
+              <ion-checkbox formControlName="isChargePerHour"></ion-checkbox>
+            </ion-item>
+
+
+          <ion-list mode="md" *ngIf="spaceForm.get('isChargePerHour')?.value">
+            <ion-item mode="md">
               <ion-label position="floating">Cost(per hour)</ion-label>
               <ion-input type="number" formControlName="chargePerDay" placeholder="Enter Charges($)"></ion-input>
             </ion-item>
+          </ion-list>
+
+          <ion-list mode="md" *ngIf="!spaceForm.get('isChargePerHour')?.value">
+            <ion-item mode="md">
+              <ion-label position="floating">Entry Fee</ion-label>
+              <ion-input type="number" formControlName="chargePerDay" placeholder="Enter Fee($)"></ion-input>
+            </ion-item>
+          </ion-list>
           </ion-list>
 
           <!-- <ion-list mode="md">

@@ -31,7 +31,6 @@ export class CashoutPage implements OnInit {
     private apiService: ApiService,
     private modalController: ModalController,
     private toastController: ToastController,
-    private stripe: Stripe,
     private router: Router,
     private alertController: AlertController,
     private payPal: PaypalServiceService,
@@ -130,22 +129,59 @@ export class CashoutPage implements OnInit {
       this.showToast('Successfully validated');
       console.log(this.accountDetail);
       console.log(this.withdrawalAmount);
-      this.processPayment(this.accountDetail, (this.convertedAmount - (this.convertedAmount * 0.1)).toFixed(7))
+      this.processPayment(this.accountDetail)
 
     }
   }
 
 
 
-  async processPayment(accounts: any, amount: any) {
+  // async processPayment(accounts: any, amount: any) {
+
+  //   const paymentData = {
+  //     "type": accounts.network,
+  //     "btcAmount": amount,
+  //     "address": accounts.payPalEmail,
+  //     "callback_url": "",
+  //     "userId" : this.userId,
+  //     "usdAmount" : this.withdrawalAmount
+  //   };
+  //   console.log(paymentData);
+  //   const loading = await this.loadingController.create();
+  //   await loading.present();
+
+  //   this.apiService.makePayment(paymentData).subscribe(
+  //     (response: any) => {
+  //       loading.dismiss();
+  //       console.log(response);
+
+  //       if (response === 'confirmed') {
+  //         this.showSuccessAlert("This request is currently being processed. Please expect an email");
+  //         this.router.navigateByUrl('/tabs');
+  //       }
+  //       else {
+  //         this.showErrorAlert(response);
+  //       }
+
+  //     },
+  //     (error: any) => {
+  //       console.error(error);
+  //       loading.dismiss();
+  //       this.showToast('Error transferring funds. Try again later');
+
+  //     }
+  //   );
+
+  // }
+
+
+  async processPayment(accounts: any) {
 
     const paymentData = {
-      "type": accounts.network,
-      "btcAmount": amount,
-      "address": accounts.payPalEmail,
-      "callback_url": "",
-      "userId" : this.userId,
-      "usdAmount" : this.withdrawalAmount
+      "paypalUsername": accounts.network,
+      "payPalEmail": accounts.payPalEmail,
+      "email" : this.userId,
+      "amount" : this.withdrawalAmount
     };
     console.log(paymentData);
     const loading = await this.loadingController.create();
@@ -156,24 +192,25 @@ export class CashoutPage implements OnInit {
         loading.dismiss();
         console.log(response);
 
-        if (response === 'confirmed') {
-          this.showSuccessAlert("This request is currently being processed. Please expect an email");
+        if (response.code === '00') {
+          this.showSuccessAlert("Your cashout request is currently being processed. Please expect an email");
           this.router.navigateByUrl('/tabs');
         }
         else {
-          this.showErrorAlert(response);
+          this.showErrorAlert(response.message);
         }
 
       },
       (error: any) => {
         console.error(error);
         loading.dismiss();
-        this.showToast('Error transferring funds. Try again later');
+        this.showToast('Unexpected error occurred. Try again later');
 
       }
     );
 
   }
+
 
   async showErrorAlert(message: any) {
     const alert = await this.alertController.create({
@@ -196,36 +233,36 @@ export class CashoutPage implements OnInit {
     await alert.present();
   }
 
-  async convert() {
+  // async convert() {
 
-    const loading = await this.loadingController.create();
-    await loading.present();
-    this.convertedAmount = 0;
+  //   const loading = await this.loadingController.create();
+  //   await loading.present();
+  //   this.convertedAmount = 0;
 
-    this.apiService.convertToBtc().subscribe(
-      (response: string) => {
-        loading.dismiss();
-        console.log(response);
-        console.log(this.withdrawalAmount);
+  //   this.apiService.convertToBtc().subscribe(
+  //     (response: string) => {
+  //       loading.dismiss();
+  //       console.log(response);
+  //       console.log(this.withdrawalAmount);
 
-        if (response != null) {
-          this.convertedAmount = this.withdrawalAmount * parseFloat(response);
-          console.log("BTC Amount:: " + this.convertedAmount);
-        }
-        else {
-          this.showToast("Conversion Failed. Try again later");
-        }
+  //       if (response != null) {
+  //         this.convertedAmount = this.withdrawalAmount * parseFloat(response);
+  //         console.log("BTC Amount:: " + this.convertedAmount);
+  //       }
+  //       else {
+  //         this.showToast("Conversion Failed. Try again later");
+  //       }
 
-      },
-      (error: any) => {
-        console.error(error);
-        loading.dismiss();
-        this.showToast('Error transferring funds. Try again later');
+  //     },
+  //     (error: any) => {
+  //       console.error(error);
+  //       loading.dismiss();
+  //       this.showToast('Error transferring funds. Try again later');
 
-      }
-    );
+  //     }
+  //   );
 
-  }
+  // }
 
 
   async deleteAccount(accountsId: any) {
