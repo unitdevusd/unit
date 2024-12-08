@@ -8,6 +8,7 @@ import { ImageModalPage } from '../pages/image-modal/image-modal.page';
 // import { RateSpaceModalComponent } from '../component/rate-space-modal/rate-space-modal.component';
 import { RateSpaceModalModule } from '../component/rate-space-modal/rate-space-modal.module';
 import { RateSpaceModalComponent } from '../component/rate-space-modal/rate-space-modal.component';
+import { SpaceReceiptComponent } from '../component/space-receipt/space-receipt.component';
 
 @Component({
   selector: 'app-tab2',
@@ -232,6 +233,18 @@ export class Tab2Page {
       position: 'bottom',
     });
     toast.present();
+  }
+
+  async viewReceipt(bookedSpace: any) {
+    const modal = await this.modalController.create({
+      component: SpaceReceiptComponent,
+      componentProps: {
+        booking: bookedSpace
+      }
+    });
+
+    await modal.present();
+
   }
 
   async confirmCancellation(bookingId: any) {

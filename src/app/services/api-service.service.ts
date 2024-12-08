@@ -10,8 +10,8 @@ import { JwtService } from './jwt.service';
 export class ApiService {
 
   jsonData: any;
-  // private baseUrl = 'https://unit-session.com/';
-  private baseUrl = 'http://localhost:8088/';
+  private baseUrl = 'https://unit-session.com/';
+  // private baseUrl = 'http://localhost:8088/';
   private viewSpaces = this.baseUrl+'spaces/getSpaces';
   private cancelBookingUrl = this.baseUrl+'spaces/cancel-booking'
   private bookedspacesforhosturl = this.baseUrl+'spaces/getbookedspacesforhost';

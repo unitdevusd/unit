@@ -48,8 +48,14 @@
       <ion-card-content class="no-padding">
         <div *ngIf="item.rating === 0 && isEndDateTimeAfterCurrent(item.endDateTime)">
          
-          <span (click)="openRateSpaceModal(item.bookedSpaceId, i)"> <ion-icon slot="start" name="star-outline" style="font-size: 15px; color: gold;"></ion-icon>Rate Space</span> 
+          <ion-button (click)="openRateSpaceModal(item.bookedSpaceId, i)"> <ion-icon slot="start" name="star-outline" style="font-size: 15px; color: gold;"></ion-icon>Rate Space
+          </ion-button> 
         </div>
+
+        <ion-button color="primary" (click)="viewReceipt(item)">
+          <ion-icon slot="start" name="receipt"></ion-icon>
+          Details
+        </ion-button>
       
         <div *ngIf="item.rating !== 0">
           <ion-icon *ngFor="let star of getStars(item.rating)" name="star"

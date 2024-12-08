@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>View Receipt</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="receipt-container">
+    <div class="receipt-content">
+
+      <h2>Transaction Receipt</h2>
+      <div class="receipt" 
+           style="display: grid; grid-template-columns: auto 1fr; gap: 10px; margin-top: 20px; padding: 20px; position: relative;">
+        
+        <div style="margin-top: 30px;">Name of Space:</div>
+        <div style="margin-top: 30px;">{{ booking.spaceId.spotName }}</div>
+
+        <div style="margin-top: 30px;">Name of Host:</div>
+        <div style="margin-top: 30px;">{{ booking.spaceOwner.firstName }}</div>
+
+        <div style="margin-top: 30px;">Location of Space:</div>
+        <div style="margin-top: 30px;">{{ booking.spaceId.spaceLocation }}</div>
+
+        <div style="margin-top: 30px;">Amount Paid:</div>
+        <div style="margin-top: 30px;">${{ booking.totalAmount }}</div>
+
+        <div style="margin-top: 30px;">Payment Date:</div>
+        <div style="margin-top: 30px;">{{ booking.bookedTime | date: 'medium' }}</div>
+
+        <div style="margin-top: 30px;">Session Start Time:</div>
+        <div style="margin-top: 30px;">{{ booking.startDateTime | date: 'medium' }}</div>
+        
+        <div style="margin-top: 30px;">Session End Time:</div>
+        <div style="margin-top: 30px;">{{ booking.endDateTime | date: 'medium' }}</div>
+        
+      </div>
+
+    </div>
+  </div>
+</ion-content>

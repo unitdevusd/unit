@@ -1,0 +1,46 @@
+.receipt-container {
+    // background-size: contain;
+    // background-repeat: no-repeat;
+    // background-position: center;
+    // background-color: rgba(255, 255, 255, 0.7); 
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    margin: 20px auto;
+  }
+
+
+  .receipt-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('../../../assets/imgs/unit-logo.png') center/contain no-repeat;
+    opacity: 0.3; 
+    z-index: -1;
+  }
+
+
+  .receipt-content {
+    color: #333;
+    font-family: Arial, sans-serif;
+  }
+  
+  .receipt-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  p {
+    font-size: 16px;
+    margin: 10px 0;
+    margin-bottom: 15px;
+  }
+  
+  strong {
+    font-weight: bold;
+  }

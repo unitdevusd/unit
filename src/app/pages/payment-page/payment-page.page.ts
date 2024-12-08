@@ -348,7 +348,7 @@ async bookSpace(id: any, status: any) {
   "startDate" : this.dateExample,
   "chargeId" : id, 
   "chargeIdStatus" : status,
-  "totalAmount" : this.totalFees,
+  "totalAmount" : this.rentCharges,
   "bonusPayment" : id == 'bonus-payment' ? true : false};
   this._apiService.bookSpace(spaceData).subscribe(
     (response: any) => {

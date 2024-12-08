@@ -28,6 +28,7 @@ import { Tab1PageModule } from './tab1/tab1.module';
 import { PayPalHttpClient } from '@paypal/checkout-server-sdk/lib/core/paypal_http_client';
 import { PaypalServiceService } from './services/paypal-service.service';
 import { GooglePlus } from '@ionic-native/google-plus/ngx'
+import { SpaceReceiptModule } from './component/space-receipt/space-receipt.module';
 // import { Stripe } from '@ionic-native/stripe/ngx';
 
 
@@ -45,7 +46,8 @@ import { GooglePlus } from '@ionic-native/google-plus/ngx'
     AngularFireDatabaseModule,   
     IonicStorageModule.forRoot(),
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
-    AngularFireModule.initializeApp(environment.firebaseConfig)
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    SpaceReceiptModule
   ],
   providers: [
     StatusBar,
