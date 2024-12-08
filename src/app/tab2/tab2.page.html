@@ -23,7 +23,7 @@
 
 <ion-list class="card-list" *ngIf="userDetails?.role === 'TENANT' && tenantSpaces && tenantSpaces.length > 0;">
   
-  <ion-item class="card-item" *ngFor="let item of tenantSpaces" 
+  <ion-item class="card-item" *ngFor="let item of tenantSpaces; let i = index" 
   >
         <ion-grid class="card-grid">
       <ion-card class="card_features ion-no-padding">    
@@ -35,9 +35,26 @@
 
       <ion-card-header>
         <ion-card-subtitle>{{ item.spaceId.spaceLocation }}</ion-card-subtitle>
-        <ion-card-title>Booked</ion-card-title>
+        <ion-card-subtitle> 
+          <span style="display: flex; font-size: 9px;">
+          {{ item.startDateTime | date:'short' }} - 
+          {{ item.endDateTime | date:'short' }}
+        </span>
+      </ion-card-subtitle>
+
+        <!-- <ion-card-title>Booked: {{ item.startDate }}</ion-card-title> -->
+        
       </ion-card-header>
       <ion-card-content class="no-padding">
+        <div *ngIf="item.rating === 0 && isEndDateTimeAfterCurrent(item.endDateTime)">
+         
+          <span (click)="openRateSpaceModal(item.bookedSpaceId, i)"> <ion-icon slot="start" name="star-outline" style="font-size: 15px; color: gold;"></ion-icon>Rate Space</span> 
+        </div>
+      
+        <div *ngIf="item.rating !== 0">
+          <ion-icon *ngFor="let star of getStars(item.rating)" name="star"
+          style="font-size: 15px; color: gold;"></ion-icon>
+        </div>
       </ion-card-content>
 
      
@@ -55,15 +72,22 @@
   >
         <ion-grid class="card-grid">
       <ion-card class="card_features ion-no-padding">    
-        <img class="img-spacetype" *ngIf="item?.spaceImage !== null; else noImage" 
-        [src]="item.spaceImage" />
+        <img class="img-spacetype" *ngIf="item?.spaceId.spaceImage !== null; else noImage" 
+        [src]="item.spaceId.spaceImage" />
         <ng-template #noImage>
           <img class="img-spacetype" src="../../../../assets/imgs/dummys.png" />
         </ng-template>
 
       <ion-card-header>
-        <ion-card-subtitle>{{ item.spaceLocation }}</ion-card-subtitle>
-        <ion-card-title style="font-family: Verdana, Geneva, Tahoma, sans-serif; font-size: small;">{{ item.bookingStatus === 'PENDING' ? 'No Bookings' : 'Booked' }}</ion-card-title>
+        <ion-card-subtitle>{{ item.spaceId.spaceLocation }}</ion-card-subtitle>
+        <ion-card-subtitle>
+        <ion-button color="danger" fill="clear" (click)="confirmCancellation(item.bookedSpaceId)">
+          <ion-icon slot="start" name="close-circle"></ion-icon>
+          Cancel this booking
+        </ion-button>
+      </ion-card-subtitle>
+
+        <ion-card-title style="font-family: Verdana, Geneva, Tahoma, sans-serif; font-size: small;">Booked</ion-card-title>
       </ion-card-header>
       <ion-card-content class="no-padding">
       </ion-card-content>

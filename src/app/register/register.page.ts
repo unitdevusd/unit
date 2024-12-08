@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, LoadingController } from '@ionic/angular';
 import { AuthService } from '../services/auth.service';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-register',
@@ -24,7 +25,8 @@ public signupForm!: FormGroup;
     private route: ActivatedRoute, 
     private formBuilder: FormBuilder,
     private loadingController: LoadingController,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private userSrv: UserService
   ) { 
     const roleParam = this.route.snapshot.paramMap.get('role');
     if(roleParam !== null) {
@@ -127,7 +129,7 @@ public signupForm!: FormGroup;
   }
 
 
-  onFileSelected(event: any) {
+  async onFileSelected(event: any) {
     const file = event.target.files[0];
 
     const reader = new FileReader();
@@ -137,8 +139,9 @@ public signupForm!: FormGroup;
     reader.readAsDataURL(file);
    
     if(file) {
+      const compressedFile = await this.userSrv.compressImage(file);
       this.signupForm.patchValue({
-        profilePicture: file,
+        profilePicture: compressedFile,
       });
     }
 

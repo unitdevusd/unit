@@ -83,6 +83,7 @@ export class Tab1Page implements OnInit {
   totalPages = 1;
   floorTypeUrl: string;
   isSpinning = false;
+  bonus = 0;
 
 
 
@@ -112,6 +113,7 @@ export class Tab1Page implements OnInit {
     this.lastName = this.userDetails?.lastName || 'Guest';
     this.role = this.userDetails?.role;
     this.userId = this.userDetails?.userId;
+    this.bonus = this.userDetails?.bonus;
 
     this.getCurrentLocation();
 
@@ -141,6 +143,7 @@ export class Tab1Page implements OnInit {
     this.firstName = this.userDetails?.firstName || 'Guest';
     this.role = this.userDetails?.role;
     this.userId = this.userDetails?.userId;
+    this.bonus = this.userDetails?.bonus;
 
     this.getCurrentLocation();
 
@@ -537,7 +540,7 @@ export class Tab1Page implements OnInit {
        
     
         if (this.userId) {
-          const spaceData = {"userId" : this.userId};
+          const spaceData = {"userId" : this.userId, "preference" : "all"};
           this._apiService.viewAllSpacesByUser(spaceData).subscribe(
             (response: any) => {
               loading.dismiss();

@@ -45,7 +45,7 @@ export class ImageModalPage implements OnInit {
   }
 
 
-  onFileSelected(event: any) {
+  async onFileSelected(event: any) {
     const file = event.target.files[0];
 
     const reader = new FileReader();
@@ -56,11 +56,11 @@ export class ImageModalPage implements OnInit {
 
 
     if (file) {
-      this.convertToBase64(file).then((base64) => {
-        // this.imageUrl = base64;
-        this.imageUrl = file;
-        this.modifyProfilePicture();
-      });
+      const compressedFile = await this.userService.compressImage(file);  
+      const base64 = await this.convertToBase64(compressedFile); 
+      this.imageUrl = base64;
+
+      await this.modifyProfilePicture(compressedFile);
     }
   }
 
@@ -81,8 +81,9 @@ export class ImageModalPage implements OnInit {
   }
 
 
-  async modifyProfilePicture() {
-    const userData = {"userId" : this.userId, "profilePicture" : this.imageUrl};
+  async modifyProfilePicture(image: any) {
+    const userData = {"userId" : this.userId, "profilePicture" : image};
+    console.log(userData)
     const loading = await this.loadingController.create();
     await loading.present();
 

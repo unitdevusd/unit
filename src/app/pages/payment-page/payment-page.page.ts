@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { Browser } from '@capacitor/browser';
 import { Capacitor } from '@capacitor/core';
-import { LoadingController, ModalController, NavController, NavParams, ToastController } from '@ionic/angular';
+import { IonModal, LoadingController, ModalController, NavController, NavParams, ToastController } from '@ionic/angular';
 import { Subject, Subscription, interval } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ApiService } from 'src/app/services/api-service.service';
@@ -25,6 +25,7 @@ declare var paypal: any;
 })
 export class PaymentPagePage implements OnInit {
 
+  @ViewChild(IonModal) modal: IonModal;
   place: any;
 
   dateExample: any;
@@ -69,12 +70,16 @@ export class PaymentPagePage implements OnInit {
       ...slot,
       date: this.formatDateToISO(slot.date),
     }));
-    this.dateExample = this.place.timeSlots[0]?.date;
+    this.dateExample = this.isDateEnabled(this.place.timeSlots[0]?.date) ? this.place.timeSlots[0]?.date : '';
 
     this.filteredTimeSlots = this.place.timeSlots.filter(
       (timeSlot: TimeSlot) => timeSlot.date === this.dateExample
     );
  
+  }
+
+  closeModal() {
+    this.modal.dismiss();
   }
 
   ngOnDestroy() {
@@ -124,6 +129,11 @@ onDateChange() {
 }
 
 isDateEnabled(date: string): boolean {
+  const today = new Date().toISOString().split('T')[0];
+
+  if (date < today) {
+    return false;
+  }
   return this.place.timeSlots.some((timeSlot: { date: string; }) => timeSlot.date === date);
 }
 
@@ -143,9 +153,9 @@ calculateHours(slots: any) {
     }
 
 
-    else if(this.hoursDifference > 1) {
-      this.endTime = endTime;
-      this.startTime = startTime;
+    else if(this.hoursDifference > 0) {
+      this.endTime = endTime.getTime();
+      this.startTime = startTime.getTime();
 
       if(this.place?.hourlyCharges) {
       this.rentCharges = this.place?.chargePerDay * this.hoursDifference || 0;
@@ -310,22 +320,48 @@ async trackId(id: string) {
 
 }
 
+async payWithBonus(amount: number) {
+  const totalBonus = this.userDetails?.bonus;
+  console.log(totalBonus);
+
+  if(totalBonus < amount) {
+    this.showToast('Insufficient bonus to book space');
+    return;
+  }
+  await this.bookSpace('bonus-payment', 'PAID');
+}
+
 
 async bookSpace(id: any, status: any) {
+  const loading = await this.loadingController.create();
+  await loading.present();
+  const newStart = new Date(this.startTime);
+  const newEnd = new Date(this.endTime);
+  let startDateTime = new Date(this.dateExample);
+
+
   const spaceData = {"spaceId" : this.place.spaceId, 
   "bookingStatus" : "BOOKED", "duration" : this.hoursDifference, 
   "userId" : this.userDetails?.userId, 
-  "startDateTime" : this.startTime,
-  "endDateTime" : this.endTime,
+  "startDateTime" : startDateTime.setHours(newStart.getHours(), newStart.getMinutes(), 0, 0),
+  "endDateTime" : startDateTime.setHours(newEnd.getHours(), newEnd.getMinutes(), 0, 0),
   "startDate" : this.dateExample,
   "chargeId" : id, 
-  "chargeIdStatus" : status};
+  "chargeIdStatus" : status,
+  "totalAmount" : this.totalFees,
+  "bonusPayment" : id == 'bonus-payment' ? true : false};
   this._apiService.bookSpace(spaceData).subscribe(
     (response: any) => {
-      console.log(response.message);
-      this.bookingButtonText = 'Successfully booked';
+      loading.dismiss();
+      if(response.code == '00') {
+        this.showToast(response.message)
+        if(id == 'bonus-payment') {
+          this.userDetails.bonus = this.userDetails.bonus - this.totalFees;
+          this.userService.setUserDetails(this.userDetails);
+        }
+        this.userDetails.bonus = 
+      this.bookingButtonText = 'Successfully booked';   
       setTimeout(() => {
-
         let navigationExtras: NavigationExtras = {
           state: {
             navigationData: true
@@ -333,8 +369,13 @@ async bookSpace(id: any, status: any) {
         };
         this.router.navigateByUrl(`/tabs`, navigationExtras);
       }, 2000);
+    }
+    else {
+      this.showToast(response.message)
+    }
     },
     (error: any) => {
+      loading.dismiss();
       console.error(error);
       this.showToast('Unable to book space');             
     }

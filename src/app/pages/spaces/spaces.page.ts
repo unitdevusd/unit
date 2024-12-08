@@ -11,12 +11,13 @@ import {
 import { AlertController, LoadingController, ModalController, NavController, ToastController } from '@ionic/angular';
 import { NavigationExtras, Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api-service.service';
-import { fromEventPattern } from 'rxjs';
 import { TimeSlotModalPage } from '../time-slot-modal/time-slot-modal.page';
 import { HttpClient } from '@angular/common/http';
 import { TimeSlots } from 'src/app/shared/time-slots';
 
+
 declare var google: any;
+
 
 
 @Component({
@@ -50,6 +51,8 @@ export class SpacesPage implements OnInit {
   role: string;
   isCostPerHour: boolean = false;
 
+  compressedImage: string = '';
+  compressedImages: string[] = [];
 
 
   // availableTimeSlots: any[] = [];
@@ -69,25 +72,15 @@ export class SpacesPage implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private userService : UserService,
-    private camera: Camera,
     private geolocation : Geolocation,
-    private nativeGeocoder: NativeGeocoder,
     public zone: NgZone,
     private loadingController: LoadingController,
     private router: Router,
     private apiService: ApiService,
     private alertController: AlertController,
     private toastController: ToastController,
-    private navCtrl: NavController,
     private modalCtrl: ModalController,
     private http: HttpClient,
-
-
-
-
-
-
-
   ) {
 
     this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
@@ -105,7 +98,8 @@ export class SpacesPage implements OnInit {
       spotName: new FormControl("", Validators.required),
       userId: this.userId,
       spaceType: new FormControl("", Validators.required),
-      spaceImage: new FormControl([], Validators.required),
+      spaceImage: new FormControl<File[]>([], Validators.required),
+      // spaceImage: new FormControl([], Validators.required),
       spaceRules: new FormControl(this.rules),
       isChargePerHour: new FormControl(true),
       description: new FormControl("", Validators.required),
@@ -414,6 +408,7 @@ export class SpacesPage implements OnInit {
 
   onFileChange(event: any) {
     const files = event.target.files;
+    this.imageThumbnails = [];
   
     this.totalSize = 0;
     this.largestFileSize = 0;
@@ -436,23 +431,20 @@ export class SpacesPage implements OnInit {
         }
   
         if (file) {
-          const url = URL.createObjectURL(file);
-          this.imageThumbnails.push(url);
           const filePromise = new Promise<File>((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = (event: ProgressEvent<FileReader>) => {
-              // Resolve the promise with the loaded file
-              resolve(new File([event.target!.result as ArrayBuffer], file.name, { type: file.type }));
-            };
-            reader.onerror = (error) => {
-              // Reject the promise if there's an error reading the file
-              reject(error);
-            };
-            // Read the file as ArrayBuffer
-            reader.readAsArrayBuffer(file);
+            this.userService.compressImage(file).then((compressedFile) => {
+              const url = URL.createObjectURL(compressedFile);
+              this.imageThumbnails.push(url);
+    
+              resolve(compressedFile);
+            }).catch((error) => {
+              reject(error); 
+            });
           });
+    
           promises.push(filePromise);
         }
+        
         
       }
   
@@ -482,6 +474,10 @@ export class SpacesPage implements OnInit {
         });
     }
   }
+
+  
+  
+
   
 // convertToBase64(file: File): Promise<string> {
 //   return new Promise<string>((resolve, reject) => {

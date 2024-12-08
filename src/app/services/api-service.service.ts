@@ -10,9 +10,11 @@ import { JwtService } from './jwt.service';
 export class ApiService {
 
   jsonData: any;
-  private baseUrl = 'https://unit-session.com/';
-  // private baseUrl = 'http://localhost:8088/';
+  // private baseUrl = 'https://unit-session.com/';
+  private baseUrl = 'http://localhost:8088/';
   private viewSpaces = this.baseUrl+'spaces/getSpaces';
+  private cancelBookingUrl = this.baseUrl+'spaces/cancel-booking'
+  private bookedspacesforhosturl = this.baseUrl+'spaces/getbookedspacesforhost';
   private addSpaces = this.baseUrl+'spaces/add-space';
   private spacesAround = this.baseUrl+'map/getnearestlocations';
   private findSpace = this.baseUrl+'spaces/findById';
@@ -44,6 +46,7 @@ export class ApiService {
   private deleteBankUrl = this.baseUrl+'payment/deleteAccounts';
   private refreshTokenUrl = this.baseUrl+'users/refreshToken';
   private biometricsUrl = this.baseUrl+'users/setBiometrics';
+  private rateSpaceUrl = this.baseUrl+'spaces/rate-space';
 
 
   constructor(public http: HttpClient, private jwtService: JwtService) { }
@@ -117,6 +120,29 @@ export class ApiService {
     );
   }
 
+  viewbookedspacesforhost(payload: any): Observable<any> {
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+
+        return this.http.post(this.bookedspacesforhosturl, payload, { headers });
+      })
+    );
+  }
+
+  cancelBooking(payload: any): Observable<any> {
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+
+        return this.http.post(this.cancelBookingUrl, payload, { headers });
+      })
+    );
+  }
 
   // viewAllSpacesByUser(payload: any): Observable<any> {
   //   return this.http.post(this.viewSpaces, payload);
@@ -229,8 +255,6 @@ export class ApiService {
 
   }
 
- 
-
 
   updateProfilePicture(payload: any): Observable<any> {
     // Create FormData object
@@ -240,16 +264,13 @@ export class ApiService {
       formData.append(key, payload[key]);
     });
 
-    // Send POST request with form data
-    // return this.http.post(this.updateProfilePicUrl, formData);
     return from(this.jwtService.getJwt()).pipe(
       switchMap(token => {
         const headers = new HttpHeaders({
           'Authorization': `Bearer ${token}`
         });
 
-        // Make the POST request with formData and headers
-        return this.http.post(this.updateProfilePicUrl, payload, { headers });
+        return this.http.post(this.updateProfilePicUrl, formData, { headers });
       })
     );
 
@@ -639,6 +660,18 @@ export class ApiService {
 
   sendRefreshToken(payload: any) : Observable<any> {
     return this.http.post(this.refreshTokenUrl, payload);
-
   }
+
+  rateSpace(payload: any): Observable<any> {
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+
+        return this.http.post(this.rateSpaceUrl, payload, { headers });
+      })
+    );
+  }
+
 }

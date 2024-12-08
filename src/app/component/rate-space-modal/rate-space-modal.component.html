@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Rate Space</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form (submit)="submitRating()">
+    <ion-item>
+      <ion-label position="floating">Rating</ion-label>
+      <p style="margin-top: 50px;"><app-app-star-rating [rating]="rating" (ratingChange)="onRatingChange($event)"></app-app-star-rating></p>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Comments</ion-label>
+      <ion-textarea [(ngModel)]="comments" name="comments" placeholder="Leave a comment" rows="4"></ion-textarea>
+    </ion-item>
+
+    <ion-button expand="full" type="submit">Submit</ion-button>
+  </form>
+</ion-content>
+
+

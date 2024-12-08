@@ -1,18 +1,36 @@
 <ion-content [fullscreen]="true">
 
-  <div class="title-and-logo" style="display: flex; justify-content: left;">
+  <!-- <div class="title-and-logo" style="display: flex; justify-content: left;">
     <img src="../../../../assets/imgs/unit-logo.png" alt="Logo" style="width: 50px; height: auto;margin-left: 30px;" />
     <div #svgContainer style="width: 100px; height: 30px; margin-top: 10px; margin-left: 30px; margin-top: 1%;"></div>    
 
     <b style="height: 50px; margin-left: 30px; margin-top: 7%; color: #212121; flex-grow: 0;">{{ firstName }}   </b>
 
+</div> -->
+
+<div class="title-and-logo" style="display: flex; justify-content: left; align-items: center; padding: 10px;">
+  <img src="../../../../assets/imgs/unit-logo.png" alt="Logo" style="width: 50px; height: auto; margin-right: 20px;" />
+  
+  <div #svgContainer style="width: 100px; height: 30px;"></div>
+
+  <b style="color: #212121; margin-left: 20px; font-size: 16px;">{{ firstName }}</b>
 </div>
 
 
 <div *ngIf="role === 'TENANT'">
 
-
-  <div class="desktop-container" style="display: flex;">
+  <ion-card style="background: linear-gradient(135deg, #E40E40, #E40E40); color: white;">
+    <ion-card-header>
+      <ion-card-title>Bonus</ion-card-title>
+    </ion-card-header>
+  
+    <ion-card-content>
+      <div style="display: flex; justify-content: center; align-items: center;">
+        <b style="margin-right: 5px; font-size: 20px;">$</b>
+        <b style="font-size: 30px;">{{ bonus || 0 }}</b>
+      </div>
+    </ion-card-content>
+  </ion-card>  <div class="desktop-container" style="display: flex;">
 
         <ion-searchbar class="searchbar-input search-bar"  color="black" [(ngModel)]="autocomplete.input" #searchbar placeholder="Search for a spot" searchIcon=" "
           (ionInput)="searchLocation()" clearIcon=" " (ionFocus)="checkFocus()" (ionClear)="clearAutocomplete()">

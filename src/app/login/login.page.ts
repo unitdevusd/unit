@@ -147,7 +147,6 @@ export class LoginPage implements OnInit {
         await this.authService.authenticateUser(loginData).subscribe(
           (response: any) => {
             loading.dismiss();
-            // console.log('Response is '+response.email);
   
             if (response.email) {
               this.userService.setUserDetails(response);
@@ -160,7 +159,6 @@ export class LoginPage implements OnInit {
               };
               this.router.navigateByUrl(`/tabs`, navigationExtras);
           
-              // this.router.navigateByUrl('/tabs');   
 
             } else {
               this.showToast(response.message);

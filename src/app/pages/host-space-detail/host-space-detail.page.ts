@@ -293,7 +293,7 @@ export class HostSpaceDetailPage implements OnInit {
   }
 
 
-  onFileChange(event: any) {
+  async onFileChange(event: any) {
     const files: FileList = event.target.files;
   
     this.totalSize = 0;
@@ -312,7 +312,8 @@ export class HostSpaceDetailPage implements OnInit {
         }
   
         if (file && !(this.largestFileSize > 2 * 1024 * 1024) && !(this.totalSize > 10 * 1024 * 1024)) {
-          promises.push(this.convertToBase64(file));
+          const compressedFile = await this.userService.compressImage(file);
+          promises.push(this.convertToBase64(compressedFile));
         }
       }
   

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-app-star-rating',
@@ -8,6 +8,7 @@ import { Component, Input, OnChanges, OnInit } from '@angular/core';
 export class AppStarRatingComponent  implements OnChanges {
 
   @Input() rating: number = 0;
+  @Output() ratingChange = new EventEmitter<number>();
   stars: string[] = [];
 
   ngOnChanges() {
@@ -22,6 +23,12 @@ export class AppStarRatingComponent  implements OnChanges {
     if (this.rating % 1 !== 0) {
       this.stars[Math.floor(this.rating)] = 'star-half';
     }
+  }
+
+  onStarClick(index: number) {
+    this.rating = index + 1; 
+    this.setStars();
+    this.ratingChange.emit(this.rating);
   }
 
 }

@@ -5,6 +5,9 @@ import { AlertController, LoadingController, ModalController, NavController, Toa
 import { LoaderService } from '../services/loader-service.service';
 import { NavigationExtras, Router } from '@angular/router';
 import { ImageModalPage } from '../pages/image-modal/image-modal.page';
+// import { RateSpaceModalComponent } from '../component/rate-space-modal/rate-space-modal.component';
+import { RateSpaceModalModule } from '../component/rate-space-modal/rate-space-modal.module';
+import { RateSpaceModalComponent } from '../component/rate-space-modal/rate-space-modal.component';
 
 @Component({
   selector: 'app-tab2',
@@ -102,7 +105,7 @@ export class Tab2Page {
     const loading = await this.loadingController.create();
     await loading.present();
     const userData = {"userId" : this.userDetails?.userId};
-        this.apiService.viewAllSpacesByUser(userData).subscribe(
+        this.apiService.viewbookedspacesforhost(userData).subscribe(
           (response: any) => {
             loading.dismiss();
             if(response !== null) {
@@ -231,6 +234,48 @@ export class Tab2Page {
     toast.present();
   }
 
+  async confirmCancellation(bookingId: any) {
+    const alert = await this.alertController.create({
+      header: 'Confirm cancellation',
+      message: 'Are you sure you want to cancel this booking?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: 'Proceed',
+          handler: () => {
+            this.cancelBooking(bookingId);
+          }
+        }
+      ]
+    });
+  
+    await alert.present();
+  
+  }
+
+  async cancelBooking(bookingId: any) {
+    const loading = await this.loadingController.create();
+    await loading.present();
+    const bookingData = {"bookingId" : bookingId};
+        this.apiService.cancelBooking(bookingData).subscribe(
+          (response: any) => {
+            loading.dismiss();
+            this.showToast(response.message);
+            if(response.code == '00') {
+              this.hostSpaces = this.hostSpaces.filter((space: any) => space.bookedSpaceId !== bookingId);
+            }             
+          },
+          (error: any) => {
+            console.error(error);
+            loading.dismiss();
+            this.showToast('Unable to cancel booking');             
+          }
+        );
+
+  }
 
   place(tenantSpaces: any) {
     console.log('Place is '+tenantSpaces.spaceLocation);
@@ -243,6 +288,36 @@ export class Tab2Page {
     this.router.navigateByUrl(`/space-detail/${tenantSpaces.spaceId}`, navigationExtras);
     // this.router.navigate(['/space-detail', tenantSpaces.spaceId], navigationExtras);
 
+  }
+
+  getStars(rating: number): number[] {
+    return new Array(rating); // Creates an array of `rating` length, e.g. [1, 1, 1] for 3 stars
+  }
+
+  isEndDateTimeAfterCurrent(endDateTime: string): boolean {
+    const currentDateTime = new Date(); 
+    const endDate = new Date(endDateTime);
+
+    return endDate > currentDateTime;
+  }
+
+  async openRateSpaceModal(bookingId: any, index: number) {
+    console.log(index)
+    const modal = await this.modalController.create({
+      component: RateSpaceModalComponent,
+      componentProps: {
+        bookingId: bookingId
+      }
+    });
+
+    await modal.present();
+ 
+    const { data } = await modal.onDidDismiss(); 
+    if (data) {
+      this.tenantSpaces[index].rating = data;
+      console.log('Updated tenantSpaces:', this.tenantSpaces);
+    }
+  
   }
 
 }
