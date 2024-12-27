@@ -72,6 +72,28 @@
               </ion-item>
             </ion-list>
           </div>
+
+
+          <ion-list mode="md">
+            <!-- Location Description -->
+            <ion-item mode="md">
+              <ion-label position="floating" style="white-space: normal; margin-bottom: 30px;">Location Guide Description</ion-label>
+              <ion-textarea
+              formControlName="locationDescription" placeholder="Provide a description of how to locate the spot"></ion-textarea>
+            </ion-item>
+          </ion-list>
+
+          <ion-list>
+          
+            <ion-item mode="md">
+              <ion-label position="floating" style="white-space: normal; margin-bottom: 30px;">Upload Space guide images</ion-label>
+              <input multiple="multiple" id="fileInput" name="locationGuideImage" type="file" accept="image/*" (change)="fileChangeAction($event)">
+            </ion-item>
+            <ion-label>
+              <span id="max-total-upload-guide" style="display: none; color: red;" class="message"><b>max total upload of 10MB</b></span>
+              <span id="max-upload-per-file-guide" style="display: none; color: red;" class="message"><b>max upload per file of 5MB</b></span>
+            </ion-label>
+          </ion-list>
         
           
           <ion-list mode="md">
@@ -111,12 +133,6 @@
           </ion-list>
           </ion-list>
 
-          <!-- <ion-list mode="md">
-            <ion-item mode="md">
-              <ion-label position="floating">How big is your spot?</ion-label>
-              <ion-input formControlName="size" placeholder="Enter size of unit"></ion-input>
-            </ion-item>
-          </ion-list> -->
 
 
           <ion-list mode="md">
@@ -170,7 +186,7 @@
           <ion-list mode="md">
             <ion-item mode="md">
               <ion-label position="floating">Upload photos of your spot</ion-label>
-              <input id="spaceImage" multiple="multiple" type="file" accept="image/*" (change)="onFileChange($event)"
+              <input id="spaceImage" name = "spaceImage" multiple="multiple" type="file" accept="image/*" (change)="onFileChange($event)"
               style="display: none;">
             <!-- Custom label for file input -->
             <label for="spaceImage" class="custom-file-input">Choose Files</label>
@@ -268,7 +284,7 @@
         </ion-button> -->
 
         <ion-button class="button-h" fill="solid" size="default" expand="block" color="custom" style="--ion-color-base: #e40e40;"
-        [disabled]="totalSize > 10 * 1024 * 1024 || largestFileSize > 5 * 1024 * 1024 || endTimeError" (click)="uploadSpace()">
+        [disabled]="totalSize > 10 * 1024 * 1024 || largestFileSize > 5 * 1024 * 1024 || imageGuideError || endTimeError" (click)="uploadSpace()">
          Finish Adding Spot
         </ion-button>
       </ion-col>

@@ -195,14 +195,26 @@
         <ion-col size="3">
 
           <ion-avatar style="width: 56px; height: 56px; cursor: pointer;">
-            <ion-img (click)="openImageModal(place?.spaceOwner?.profilePicture)" class="img-spacetype" [src]="place?.spaceOwner?.profilePicture ? place?.spaceOwner?.profilePicture : '../../../../assets/imgs/user.png'"></ion-img>
+            <!-- <ion-img (click)="openImageModal(place?.spaceOwner?.profilePicture)" class="img-spacetype" [src]="place?.spaceOwner?.profilePicture ? place?.spaceOwner?.profilePicture : '../../../../assets/imgs/user.png'"></ion-img> -->
+            <ion-img (click)="openImageModal(place?.ownerImage)" class="img-spacetype" [src]="place?.ownerImage ? place?.ownerImage : '../../../../assets/imgs/user.png'"></ion-img>
+
             </ion-avatar>
           </ion-col>
 
         <ion-col size="9">
-          <ion-label *ngIf="place && place.spaceOwner && place.spaceOwner.firstName">
-            <span style="font-size: 19px; color: #101010;">Hosted By {{ place.spaceOwner.firstName }} </span><br />
-            <span style="font-size: 11px; color: #9f9f9f;">Joined in {{ place.spaceOwner.createdTime}} </span> <br />
+          <!-- <ion-label *ngIf="place && place.spaceOwner && place.spaceOwner.firstName"> -->
+          <ion-label *ngIf="place && place.spaceOwnerName">
+
+            <!-- <span style="font-size: 19px; color: #101010;">Hosted By {{ place.spaceOwner.firstName }} </span><br /> -->
+            <span style="font-size: 19px; color: #101010;">Hosted By {{ place.spaceOwnerName }} </span><br />
+            <button
+            style="background-color: black; color: white; width: auto; height: 30px; border-radius: 7px;">
+            {{ place.spaceOwnerCrew != null ?  place.spaceOwnerCrew: 'Crew name not set' }}
+          </button> <br />
+
+            <!-- <span style="font-size: 11px; color: #9f9f9f;">Joined in {{ place.spaceOwner.createdTime}} </span> <br /> -->
+            <span style="font-size: 11px; color: #9f9f9f;">Joined in {{ place.ownerJoinTime}} </span> <br />
+
             <ion-icon style="color: #e40e40;" name="checkmark-circle-outline"></ion-icon><span style="font-size: 11px; color: #9f9f9f;">Verified User </span>
 
           </ion-label>

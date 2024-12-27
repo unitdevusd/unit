@@ -1,0 +1,17 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Enter Crew Name</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Cancel</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>
+    <ion-label position="floating">Crew Name</ion-label>
+    <ion-input [(ngModel)]="crewName" placeholder="Enter your crew name" type="text"></ion-input>
+  </ion-item>
+
+  <ion-button expand="full" (click)="save()">Save</ion-button>
+</ion-content>

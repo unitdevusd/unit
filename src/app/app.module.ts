@@ -29,6 +29,7 @@ import { PayPalHttpClient } from '@paypal/checkout-server-sdk/lib/core/paypal_ht
 import { PaypalServiceService } from './services/paypal-service.service';
 import { GooglePlus } from '@ionic-native/google-plus/ngx'
 import { SpaceReceiptModule } from './component/space-receipt/space-receipt.module';
+import { CrewNameModalModule } from './component/crew-name-modal/crew-name-modal.module';
 // import { Stripe } from '@ionic-native/stripe/ngx';
 
 
@@ -47,7 +48,8 @@ import { SpaceReceiptModule } from './component/space-receipt/space-receipt.modu
     IonicStorageModule.forRoot(),
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     AngularFireModule.initializeApp(environment.firebaseConfig),
-    SpaceReceiptModule
+    SpaceReceiptModule,
+    CrewNameModalModule
   ],
   providers: [
     StatusBar,

@@ -64,7 +64,7 @@ export class SpacesPage implements OnInit {
   endDateExpanded: any;
   imageCount: number = 0;
   imageThumbnails: string[] = [];
-
+  imageGuideError: boolean = false;
   
 
 
@@ -87,6 +87,7 @@ export class SpacesPage implements OnInit {
     this.autocomplete = { input: '' };
     this.autocompleteItems = [];
     this.newRule = { input: '' };
+    this.imageThumbnails = [];
 
     this.userDetails = this.userService.getUserDetails();
     this.userId = this.userDetails?.userId;
@@ -96,6 +97,8 @@ export class SpacesPage implements OnInit {
     this.spaceForm = this.formBuilder.group({
       spaceLocation: new FormControl("", Validators.required),
       spotName: new FormControl("", Validators.required),
+      locationDescription: new FormControl("", Validators.required),
+      locationGuideImage: new FormControl<File[]>([], Validators.required),
       userId: this.userId,
       spaceType: new FormControl("", Validators.required),
       spaceImage: new FormControl<File[]>([], Validators.required),
@@ -251,6 +254,8 @@ export class SpacesPage implements OnInit {
       practice: 'Practice Option',
       musicDetails: 'Music Details',
       additionalDetails: 'Video URL',
+      locationDescription: 'Location Description',
+      locationGuideImage: 'Guide images'
     };
 
     const invalidControls: any = [];
@@ -406,8 +411,11 @@ export class SpacesPage implements OnInit {
 
 
 
-  onFileChange(event: any) {
-    const files = event.target.files;
+  onFileChange(event: Event) {
+
+    const target = event.target as HTMLInputElement;
+    const files = target.files;
+    const spaceFormName = target.name;
     this.imageThumbnails = [];
   
     this.totalSize = 0;
@@ -466,7 +474,92 @@ export class SpacesPage implements OnInit {
       Promise.all(promises)
         .then((file) => {
           this.spaceForm.patchValue({
-            spaceImage: file,
+            [spaceFormName]: file,
+          });
+        })
+        .catch((error) => {
+          console.error('Error setting files:', error);
+        });
+    }
+  }
+
+
+  fileChangeAction(event: Event) {
+
+    const target = event.target as HTMLInputElement;
+    const files = target.files;
+    const spaceFormName = target.name;
+
+    this.totalSize = 0;
+    this.largestFileSize = 0;
+    
+   
+
+    if(files && files.length > 6) {
+      console.log('Image has errors')
+      this.imageGuideError = true;
+      alert('You can upload a maximum of 6 images.');
+      const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+      if(fileInput) {
+        fileInput.value = ''
+      }
+      return;
+    }
+  
+    if (files && files.length > 0) {
+  
+      // this.imageCount = files.length;
+      let totalSize = 0;
+      let largestFileSize = 0;
+      const promises: Promise<File>[] = [];
+  
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        totalSize += file.size;
+  
+        if (file.size > this.largestFileSize) {
+          largestFileSize = file.size;
+        }
+  
+        if (file) {
+          const filePromise = new Promise<File>((resolve, reject) => {
+            this.userService.compressImage(file).then((compressedFile) => {
+              resolve(compressedFile);
+            }).catch((error) => {
+              reject(error); 
+            });
+          });
+          promises.push(filePromise);
+        }
+        
+        
+      }
+
+      if(totalSize > 10 * 1024 * 1024 || largestFileSize > 5 * 1024 * 1024) {
+        console.log('Image has errors')
+        this.imageGuideError = true;
+      }
+      else{
+        this.imageGuideError = false
+      }
+
+  
+      const maxTotalUploadMessage = document.getElementById('max-total-upload-guide');
+      const maxUploadPerFileMessage = document.getElementById('max-upload-per-file-guide');
+  
+      if (maxTotalUploadMessage) {
+        maxTotalUploadMessage.style.display = totalSize > 10 * 1024 * 1024 ? 'block' : 'none';
+      }
+  
+      if (maxUploadPerFileMessage) {
+        maxUploadPerFileMessage.style.display = largestFileSize > 5 * 1024 * 1024 ? 'block' : 'none';
+      }
+  
+  
+      Promise.all(promises)
+        .then((file) => {
+          this.spaceForm.patchValue({
+            [spaceFormName]: file,
           });
         })
         .catch((error) => {

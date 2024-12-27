@@ -8,6 +8,7 @@ import { Capacitor } from '@capacitor/core';
 import { v4 as uuidv4 } from 'uuid';
 import { SecureStoragePlugin } from 'capacitor-secure-storage-plugin';
 import { AuthService } from '../services/auth.service';
+import { CrewNameModalComponent } from '../component/crew-name-modal/crew-name-modal.component';
 
 
 
@@ -150,6 +151,46 @@ export class Tab3Page {
     this.router.navigate(['/login']);
   }
 
+
+
+  async openCrewNameModal() {
+    const modal = await this.modalController.create({
+      component: CrewNameModalComponent,
+      breakpoints: [0,0.5,1],
+      initialBreakpoint: 0.6,
+      handle: true,
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result.data) {
+        this.setCrewName(result.data.crewName)
+      }
+    });
+
+    return await modal.present();
+  }
+
+  async setCrewName(name: string) {
+    const loading = await this.loadingController.create();
+    await loading.present();
+    const crewData = {"crewName" : name, "userId": this.userId};
+        this.apiService.setCrewName(crewData).subscribe(
+          (response: any) => {
+            loading.dismiss();
+            if(response.code == '00') {
+              this.userDetails.crewName = name;
+              this.userService.setUserDetails(this.userDetails);
+            }
+            this.showToast(response.message);
+          },
+          (error: any) => {
+            console.error(error);
+            loading.dismiss();
+            this.showToast('Unable to set crew name');             
+          }
+        );
+
+  }
 
   async updateRole() {
 

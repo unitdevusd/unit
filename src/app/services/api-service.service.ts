@@ -47,6 +47,7 @@ export class ApiService {
   private refreshTokenUrl = this.baseUrl+'users/refreshToken';
   private biometricsUrl = this.baseUrl+'users/setBiometrics';
   private rateSpaceUrl = this.baseUrl+'spaces/rate-space';
+  private crewNameUrl = this.baseUrl+'users/create-crew';
 
 
   constructor(public http: HttpClient, private jwtService: JwtService) { }
@@ -161,6 +162,12 @@ export class ApiService {
     if (payload.spaceImage && Array.isArray(payload.spaceImage)) {
       for (let i = 0; i < payload.spaceImage.length; i++) {
         formData.append('spaceImage', payload.spaceImage[i]);
+      }
+    }
+
+    if (payload.locationGuideImage && Array.isArray(payload.locationGuideImage)) {
+      for (let i = 0; i < payload.locationGuideImage.length; i++) {
+        formData.append('locationGuideImage', payload.locationGuideImage[i]);
       }
     }
 
@@ -670,6 +677,18 @@ export class ApiService {
         });
 
         return this.http.post(this.rateSpaceUrl, payload, { headers });
+      })
+    );
+  }
+
+  setCrewName(payload: any): Observable<any> {
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+
+        return this.http.post(this.crewNameUrl, payload, { headers });
       })
     );
   }
