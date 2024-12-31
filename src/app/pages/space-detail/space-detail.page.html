@@ -206,14 +206,14 @@
           <ion-label *ngIf="place && place.spaceOwnerName">
 
             <!-- <span style="font-size: 19px; color: #101010;">Hosted By {{ place.spaceOwner.firstName }} </span><br /> -->
-            <span style="font-size: 19px; color: #101010;">Hosted By {{ place.spaceOwnerName }} </span><br />
+            <span style="font-size: 19px; color: #101010;"><b>Hosted By {{ place.spaceOwnerName }} </b></span><br />
             <button
-            style="background-color: black; color: white; width: auto; height: 30px; border-radius: 7px;">
-            {{ place.spaceOwnerCrew != null ?  place.spaceOwnerCrew: 'Crew name not set' }}
+            style="background-color: black; color: white; width: auto; height: 30px; border-radius: 16px;">
+            <span style="padding: 10px;">{{ place.spaceOwnerCrew != null ?  place.spaceOwnerCrew: 'Crew name not set' }}</span>
           </button> <br />
 
             <!-- <span style="font-size: 11px; color: #9f9f9f;">Joined in {{ place.spaceOwner.createdTime}} </span> <br /> -->
-            <span style="font-size: 11px; color: #9f9f9f;">Joined in {{ place.ownerJoinTime}} </span> <br />
+            <span style="font-size: 11px; color: #9f9f9f;">Joined in {{ place.ownerJoinTime | date:'mediumDate' }} </span> <br />
 
             <ion-icon style="color: #e40e40;" name="checkmark-circle-outline"></ion-icon><span style="font-size: 11px; color: #9f9f9f;">Verified User </span>
 

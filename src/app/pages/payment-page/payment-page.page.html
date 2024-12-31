@@ -26,13 +26,6 @@
   <ion-list>
 
 
-    <!-- <ion-item id="open-modal" class="button-like">
-      <ion-label>Select Preferred Date <ion-icon name="calendar" slot="end"></ion-icon> </ion-label>
-      <ion-note slot="end" *ngIf="selectedTimeSlots.length > 0">
-        {{ selectedTimeSlots[0].date }} {{ selectedTimeSlots[0].startTime }} - {{ selectedTimeSlots[0].endTime }}
-      </ion-note>
-        </ion-item> -->
-
         <ion-item id="open-modal" class="button-like" style="color: #212121;">
           <ion-label>Select Preferred Date</ion-label>
           <ion-icon name="calendar" slot="end"></ion-icon>
@@ -41,19 +34,24 @@
           </ion-note>
         </ion-item>
 
-    <ion-modal trigger="open-modal" [cssClass]="'center'">
+    <ion-modal trigger="open-modal" [cssClass]="'center'" [backdropDismiss]="true">
+
+      
+    
       <ng-template style="justify-content: center;">
 
         <ion-button 
-        slot="end" 
+        class="icon-close"
         fill="clear" 
         color="dark" 
+        slot="end"
         (click)="closeModal()">
-        <ion-icon name="close"></ion-icon>
-      </ion-button>
-
+        <ion-icon color="danger" name="close" slot="end"></ion-icon>
+      </ion-button>   
+  
 
         <ion-datetime
+        style="margin-top: 20px;"
           presentation="date"
           (ionChange)="onDateChange()"
           [(ngModel)]="dateExample"
@@ -73,7 +71,9 @@
               ></ion-checkbox>
             </ion-item>
           </ion-list>
-        </div>        
+        
+        </div>    
+      
       </ng-template>
     </ion-modal>
 
