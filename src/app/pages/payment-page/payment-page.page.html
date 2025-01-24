@@ -59,20 +59,22 @@
           size="cover"
         ></ion-datetime>
 
-        <div *ngIf="isDateEnabled.bind(this) && filteredTimeSlots.length">
+        <div *ngIf="isDateEnabled.bind(this) && filteredTimeSlots.length" class="time-slot-container">
           <ion-list>
-            <ion-item *ngFor="let timeSlot of filteredTimeSlots">
-              <ion-label>
-                {{ timeSlot.startTime }} - {{ timeSlot.endTime }}
-              </ion-label>
+            <ion-item *ngFor="let timeSlot of filteredTimeSlots" class="time-slot-item">
               <ion-checkbox
+              *ngIf="timeSlot.active"
                 slot="start"
                 (ionChange)="selectTimeSlot($event, timeSlot)"
               ></ion-checkbox>
+        
+              <ion-label>
+                <h3>{{ timeSlot.startTime }} - {{ timeSlot.endTime }}</h3>
+                <p *ngIf="!timeSlot.active" class="booked-message">This time slot has been sold out.</p>
+              </ion-label>
             </ion-item>
           </ion-list>
-        
-        </div>    
+        </div>   
       
       </ng-template>
     </ion-modal>

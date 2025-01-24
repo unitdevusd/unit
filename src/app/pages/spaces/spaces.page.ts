@@ -57,7 +57,7 @@ export class SpacesPage implements OnInit {
 
   // availableTimeSlots: any[] = [];
   availableTimeSlots: TimeSlots[] = [];
-  date: string = ''; // Selected date
+  date: string = ''; 
   startTime: string = ''; // Start time
   endTime: string = ''; // End time
   startDateExpanded: any;
@@ -66,7 +66,6 @@ export class SpacesPage implements OnInit {
   imageThumbnails: string[] = [];
   imageGuideError: boolean = false;
   
-
 
 
   constructor(
@@ -108,6 +107,8 @@ export class SpacesPage implements OnInit {
       description: new FormControl("", Validators.required),
       chargePerDay: new FormControl("", Validators.required),
       size: new FormControl("", Validators.required),
+      customSize: new FormControl(""),
+      allSize: new FormControl(""),
       timeSlot: new FormControl(this.availableTimeSlots),
       practice: ['yes'],
       musicDetails: new FormControl("", Validators.required),
@@ -159,13 +160,30 @@ export class SpacesPage implements OnInit {
     const svgElement = svgDoc.querySelector('svg');
     if (svgElement) {
       const svgContainer = this.svgContainer.nativeElement;
-      svgContainer.innerHTML = ''; // Clear any previous content
+      svgContainer.innerHTML = ''; 
       svgContainer.appendChild(svgElement);
 
     }
   }
 
+  handleCustomSize(): void {
 
+    const realValue = this.spaceForm.get('allSize')?.value;
+
+    if (realValue !== 'custom') {
+      this.spaceForm.get('customSize')?.setValue('');
+      this.spaceForm.patchValue({ size: realValue });
+    }
+  }
+
+  setCustomSize(): void {
+    const customValue = this.spaceForm.get('customSize')?.value;
+    if (customValue) {
+      this.spaceForm.patchValue({ size: customValue });
+    }
+  }
+
+  
 
 
   async openTimeModal() {
@@ -184,21 +202,17 @@ export class SpacesPage implements OnInit {
 
     const { data } = await modal.onDidDismiss();
 
-    if (data && data.startDate && data.startTime && data.endTime) {
-
-      
-      this.addTimeSlot(data.startDate, data.startTime, data.endTime);
-
+    if (data && data.startDate && data.startTime && data.endTime) { 
+      this.addTimeSlot(data.startDate, data.startTime, data.endTime, data.repeat, data.repeatOption);
     }
   }
 
 
 
-  addTimeSlot(startDate: any, startTime: any, endTime: any) {
+  addTimeSlot(startDate: any, startTime: any, endTime: any, repeat: boolean, repeatOption: string) {
     const day = this.getDayOfWeek(new Date(this.date));
-    const newTimeSlot = new TimeSlots(startDate, startTime, endTime);
+    const newTimeSlot = new TimeSlots(startDate, startTime, endTime, repeat, repeatOption);
     this.availableTimeSlots.push(newTimeSlot);
-
     console.log(this.availableTimeSlots);
   }
 

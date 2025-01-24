@@ -350,6 +350,8 @@ async bookSpace(id: any, status: any) {
   "chargeIdStatus" : status,
   "totalAmount" : this.rentCharges,
   "bonusPayment" : id == 'bonus-payment' ? true : false};
+
+  console.log(spaceData)
   this._apiService.bookSpace(spaceData).subscribe(
     (response: any) => {
       loading.dismiss();

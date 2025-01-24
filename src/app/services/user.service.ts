@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NgxImageCompressService } from 'ngx-image-compress';
+import * as CryptoJS from 'crypto-js';
 
 
 @Injectable({
@@ -91,6 +92,34 @@ export class UserService {
     return new Blob([ab], { type: mimeString });
   }
 
+
+encrypt(data: string): string {
+    const key = CryptoJS.enc.Utf8.parse('8966354631572579');
+    const iv = CryptoJS.enc.Utf8.parse('8966354631572579');
+
+    const encrypted = CryptoJS.AES.encrypt(data, key, {
+        iv: iv,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7
+    }).toString();
+
+    return encrypted;
+}
+
+decrypt(encryptedData: string): string {
+    const key = CryptoJS.enc.Utf8.parse('8966354631572579');
+    const iv = CryptoJS.enc.Utf8.parse('8966354631572579');
+
+    const decrypted = CryptoJS.AES.decrypt(encryptedData, key, {
+        iv: iv,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7
+    });
+
+    const decryptedText = decrypted.toString(CryptoJS.enc.Utf8);
+
+    return decryptedText;
+}
 }
 
   

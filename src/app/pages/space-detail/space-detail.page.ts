@@ -150,7 +150,7 @@ export class SpaceDetailPage implements OnInit, OnDestroy {
     this.fromTab2 ? this.bookingButtonText = 'Book Again' : this.bookingButtonText = 'Click to book space';
 
 
-    if(this.place == null) {
+    if(this.place?.spaceRules == null) {
       this.getSpaceById();
     }
     

@@ -144,7 +144,8 @@ export class LoginPage implements OnInit {
   
       if (this.loginForm.value) {
         const loginData = this.loginForm.value;
-        await this.authService.authenticateUser(loginData).subscribe(
+        const payload = {"email" : this.userService.encrypt(loginData.email), "password" : this.userService.encrypt(loginData.password)}
+        await this.authService.authenticateUser(payload).subscribe(
           (response: any) => {
             loading.dismiss();
   

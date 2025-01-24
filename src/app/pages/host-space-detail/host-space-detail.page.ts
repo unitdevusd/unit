@@ -422,12 +422,12 @@ async openTimeModal() {
   const { data } = await modal.onDidDismiss();
 
   if (data && data.startDate && data.startTime && data.endTime) {   
-    this.addTimeSlot(data.startDate, data.startTime, data.endTime);
+    this.addTimeSlot(data.startDate, data.startTime, data.endTime, data.repeat, data.repeatOption);
   }
 }
 
-addTimeSlot(startDate: any, startTime: any, endTime: any) {
-  const newTimeSlot = new TimeSlots(startDate, startTime, endTime);
+addTimeSlot(startDate: any, startTime: any, endTime: any, repeat: boolean, repeatOption: string) {
+  const newTimeSlot = new TimeSlots(startDate, startTime, endTime, repeat,repeatOption);
   this.availableTimeSlots.push(newTimeSlot);
   this.updateTimeSlot(newTimeSlot, 'update');
   this.place.timeSlots.push(newTimeSlot);

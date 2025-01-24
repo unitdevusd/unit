@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IonAccordion, IonAccordionGroup, IonDatetime, IonItem, ModalController, NavParams } from '@ionic/angular';
+import { IonAccordion, IonAccordionGroup, IonDatetime, IonItem, ModalController, NavParams, ToastController } from '@ionic/angular';
 import * as moment from 'moment';
 
 
@@ -10,6 +10,8 @@ import * as moment from 'moment';
 })
 export class TimeSlotModalPage implements OnInit {
 
+  isRecurring: boolean = false;
+  recurringOptions: string | null = null;
   isDateDisabled = (dateString: string): boolean => {
     const formattedDate = this.formatDate(dateString);
     return !this.availableSlots.some(slot => slot.date === formattedDate);
@@ -39,6 +41,7 @@ export class TimeSlotModalPage implements OnInit {
 
   constructor(
     private modalController: ModalController,
+    private toastController: ToastController,
     private navParams: NavParams) {
       this.availableSlots = this.navParams.get('availableSlots');
 
@@ -50,11 +53,33 @@ export class TimeSlotModalPage implements OnInit {
 
 
   dismiss() {  
-    this.modalController.dismiss({ startDate: this.startDate, startTime: this.startTime, endTime: this.endTime });
+    this.modalController.dismiss({ startDate: this.startDate, startTime: this.startTime, endTime: this.endTime,
+    repeat: this.isRecurring, repeatOption: this.recurringOptions });
   }
 
-  addSlot() {
+  async addSlot() {
+    console.log(this.recurringOptions)
+    if(this.isRecurring && this.recurringOptions == null) {
+      this.displayToast('Please add your preferred recurring period')
+      return; 
+    }
+
+    if(this.startDate == null || this.startTime == null || this.endTime == null ||
+      this.startDate == '' || this.startTime == '' || this.endTime == '') {
+      this.displayToast('Please select date and time')
+      return; 
+    }
     this.dismiss();
+  }
+
+  async displayToast(message: any) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000,
+      position: 'bottom'
+    });
+    toast.present();  
+
   }
   
   onStartDateChange(event: any) {

@@ -232,8 +232,22 @@
   </ion-card>
 </ion-content> <br /> <br /> <br />
 
-<ion-button (click)="openPaymentModal()" class="button-h fixed-button" fill="solid" size="default" expand="block" color="custom" style="--ion-color-base: #e40e40; margin-top: 25px; --border-radius: 4px;">
-  Book Open Spot(${{ place.chargePerDay }} / {{ place.hourlyCharges ? 'hour' : 'day' }})
-
+<ion-button 
+  [disabled]="place.bookingStatus !== 'OPEN'" 
+  (click)="openPaymentModal()" 
+  class="button-h fixed-button" 
+  fill="solid" 
+  size="default" 
+  expand="block" 
+  color="custom" 
+  style="--ion-color-base: #e40e40; margin-top: 25px; --border-radius: 4px;">
+  
+  <ng-container *ngIf="place.bookingStatus === 'OPEN'; else soldOut">
+    Book Open Spot (${{ place.chargePerDay }} / {{ place.hourlyCharges ? 'hour' : 'day' }})
+  </ng-container>
+  
+  <ng-template #soldOut>
+    Space Sold Out
+  </ng-template>
 </ion-button>
 
