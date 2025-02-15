@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, NgZone, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, NgZone, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { IonContent, IonicSlides, IonInfiniteScroll, IonSearchbar, LoadingController, ModalController, NavParams, ToastController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api-service.service';
@@ -36,6 +36,7 @@ export class Tab1Page implements OnInit {
   
   @ViewChild(IonContent, { static: false }) content: IonContent;
   @ViewChild('svgContainer', { static: false }) svgContainer: ElementRef;
+  @ViewChild(IonInfiniteScroll, { static: false }) infiniteScroll: IonInfiniteScroll;
 
   @ViewChild(IonicSlides) slides: any;
   @ViewChild('swiper') swiperRef: ElementRef;
@@ -79,7 +80,7 @@ export class Tab1Page implements OnInit {
   showBalance: boolean = true;
   svgText: string;
   current_page = 0;
-  page_size = 4;
+  page_size = 5;
   isLoading = false;
   totalPages = 1;
   floorTypeUrl: string;
@@ -100,6 +101,7 @@ export class Tab1Page implements OnInit {
     private userService : UserService,
     private loadingController : LoadingController,
     private http: HttpClient,
+    private cdr: ChangeDetectorRef,
     
     ) {
     this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
@@ -131,32 +133,21 @@ export class Tab1Page implements OnInit {
   }
 
   ionViewDidEnter() {
-    const content = document.querySelector('ion-content');
-    if (content) {
-        this.current_page = 0;
-        content.scrollToTop(0);
-        this.placesAround = []; 
-    }
-    const infiniteScroll = document.querySelector('ion-infinite-scroll');
-    if (infiniteScroll) {
-      (infiniteScroll as HTMLIonInfiniteScrollElement).disabled = false;
+    this.resetData();
+    // const content = document.querySelector('ion-content');
+    // if (content) {
+    //     this.current_page = 0;
+    //     content.scrollToTop(0);
+    //     this.placesAround = []; 
+    // }
+
   }
-    console.log('Tab1: ionViewDidEnter - Re-fetching data');
-  }
+
+ 
 
   ionViewWillEnter() {
-    const content = document.querySelector('ion-content');
-    if (content) {
-        this.current_page = 0;
-        content.scrollToTop(0);
-        this.placesAround = []; 
-    }
 
-    const infiniteScroll = document.querySelector('ion-infinite-scroll');
-    if (infiniteScroll) {
-      (infiniteScroll as HTMLIonInfiniteScrollElement).disabled = false;
-  }
- 
+    this.resetData();
   let url = "";
     this.hasFilter = false;
     this.userDetails = this.userService.getUserDetails();
@@ -172,7 +163,7 @@ export class Tab1Page implements OnInit {
     }
     if(this.role === 'TENANT' || this.role === 'ADMIN') {
       url = 'assets/imgs/Dancer-Tag.svg';
-      this.getSpacesAround(0, this.page_size);
+      this.getSpacesAround(this.current_page, this.page_size);
     }
     this.fetchSvgFile(url);
   }
@@ -187,6 +178,27 @@ export class Tab1Page implements OnInit {
     }
     this.fetchSvgFile(url);
 
+  }
+
+
+  // ngAfterViewInit() {
+  //   this.resetData();
+  //   var url;
+  //   if(this.role == 'HOST') {
+  //     url = 'assets/imgs/Host-Tag.svg';
+  //   }
+  //   else {
+  //     url = 'assets/imgs/Dancer-Tag.svg';
+  //   }
+  //   this.fetchSvgFile(url);
+
+  // }
+
+  resetData() {
+    this.current_page = 0;
+    this.placesAround = [];
+    this.infiniteScroll.disabled = false;
+    console.log(this.infiniteScroll.disabled)
   }
 
   fetchSvgFile(svgPath: string) {
@@ -646,47 +658,48 @@ export class Tab1Page implements OnInit {
 
 
     async getSpacesAround(page: number, size: number) {
-
       if (this.isLoading) {
         return;
       }
 
+      this.isLoading = true;
+      const loading = await this.loadingController.create();
+      await loading.present();
+  
       try {
-        this.isSpinning = true;
-        const loading = await this.loadingController.create();
-        await loading.present();
-    
         if (this.userId) {
-          const spaceData = {"latitude" : this.lat, "longitude" : this.long, "page": page, "size" : size};
+          const spaceData = { latitude: this.lat, longitude: this.long, page: page, size: size };
           this._apiService.getSpacesAround(spaceData).subscribe(
             (response: any) => {
               loading.dismiss();
               this.isLoading = false;
-              // this.totalPages = response.totalPages;
-              if (page === 0) {
+  
+              if (page === 0) { 
                 this.placesAround = response;
               } else {
                 this.placesAround = [...this.placesAround, ...response];
+              }
+  
+              if (response.length < size) {
+                if (this.infiniteScroll) {
+                  this.infiniteScroll.disabled = true;
+                }
               }
             },
             (error: any) => {
               console.error(error);
               loading.dismiss();
               this.isLoading = false;
-              this.showToast('Unable to fetch spaces');             
-              // this.showErrorAlert('Unexpected error occurred');
+              this.showToast('Unable to fetch spaces');
             }
           );
         }
       } catch (error) {
         this.isLoading = false;
         console.error(error);
+      } finally {
+          this.isSpinning = false;
       }
-      finally {
-        this.isSpinning = false;
-      }
-  
-  
     }
 
     doRefresh(event: any) {
@@ -698,13 +711,13 @@ export class Tab1Page implements OnInit {
       }, 2000);
     }
 
+
     ionInfiniteScroll(event: InfiniteScrollCustomEvent) {
-      console.log('Got here::::: ');
-      setTimeout(() => {
-        this.getSpaces(this.page_size); 
-        event.target.complete();  
-      }, 200);  
+      console.log('Fetching scroll')
+      this.current_page++;
+      this.getSpacesAround(this.current_page, this.page_size).then(() => event.target.complete());
     }
+    
 
 
     async getSpaces(size: number) {
@@ -720,19 +733,13 @@ export class Tab1Page implements OnInit {
           this._apiService.getSpacesAround(spaceData).subscribe(
             (response: any) => {
               this.isLoading = false;
-              // this.totalPages = response.totalPages;
               this.placesAround = [...this.placesAround, ...response];
-              if(response.length == 0) {
-                const infiniteScroll = document.querySelector('ion-infinite-scroll');
-                  if (infiniteScroll) {
-                    (infiniteScroll as HTMLIonInfiniteScrollElement).disabled = true;
+              if (response.length === 0 && this.placesAround.length > 0) {
+                if (this.infiniteScroll) {
+                  this.infiniteScroll.disabled = true;
                 }
-              }
-              else {
-                const infiniteScroll = document.querySelector('ion-infinite-scroll');
-                  if (infiniteScroll) {
-                    (infiniteScroll as HTMLIonInfiniteScrollElement).disabled = false;
-                }
+              } else if (this.infiniteScroll && this.infiniteScroll.disabled) {
+                this.infiniteScroll.disabled = false;
               }
             },
             (error: any) => {

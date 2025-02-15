@@ -26,7 +26,7 @@
         <b style="font-size: 30px;">{{ bonus || 0 }}</b>
       </div>
 
-      <span style="font-size: 15px;">Refer and earn bonuses for every referral </span>
+      <!-- <span style="font-size: 15px;">Refer and earn bonuses for every referral </span> -->
     </ion-card-content>
   </ion-card>  <div class="desktop-container" style="display: flex;">
 
@@ -83,11 +83,12 @@
     <div *ngIf="hasFilter">
       <app-unit-listing [units]="placesFiltered" (unitClicked)='place($event)'></app-unit-listing>
     </div>
-    <ion-infinite-scroll threshold="100px" (ionInfinite)="ionInfiniteScroll($event)">
+    <ion-infinite-scroll threshold="0" (ionInfinite)="ionInfiniteScroll($event)">
       <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Fetching more spots...">
       </ion-infinite-scroll-content>
     </ion-infinite-scroll>  
   </div>
+ 
 </div>
 
 
@@ -244,7 +245,7 @@
     <div *ngIf="hasFilter">
       <app-unit-listing [units]="placesFiltered" (unitClicked)='place($event)'></app-unit-listing>
     </div>
-    <ion-infinite-scroll threshold="0" (ionInfinite)="ionInfiniteScroll($event)">
+    <ion-infinite-scroll threshold="100px" (ionInfinite)="ionInfiniteScroll($event)">
       <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Fetching more spots...">
       </ion-infinite-scroll-content>
     </ion-infinite-scroll>  

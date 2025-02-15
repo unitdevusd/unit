@@ -1,4 +1,4 @@
-<ion-list class="card-list" *ngIf="units && units.length > 0; else noUnits">
+<ion-list class="card-list" *ngIf="units && units?.length > 0; else noUnits">
     <ion-item class="card-item"  *ngFor="let item of units" (click)="place(item)" 
     >
 

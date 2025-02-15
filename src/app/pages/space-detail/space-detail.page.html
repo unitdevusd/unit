@@ -233,7 +233,7 @@
 </ion-content> <br /> <br /> <br />
 
 <ion-button 
-  [disabled]="place.bookingStatus !== 'OPEN'" 
+  [disabled]="place.bookingStatus !== 'PENDING'" 
   (click)="openPaymentModal()" 
   class="button-h fixed-button" 
   fill="solid" 
@@ -242,7 +242,7 @@
   color="custom" 
   style="--ion-color-base: #e40e40; margin-top: 25px; --border-radius: 4px;">
   
-  <ng-container *ngIf="place.bookingStatus === 'OPEN'; else soldOut">
+  <ng-container *ngIf="place.bookingStatus === 'PENDING'; else soldOut">
     Book Open Spot (${{ place.chargePerDay }} / {{ place.hourlyCharges ? 'hour' : 'day' }})
   </ng-container>
   
