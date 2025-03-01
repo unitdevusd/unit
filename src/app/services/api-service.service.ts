@@ -48,6 +48,7 @@ export class ApiService {
   private biometricsUrl = this.baseUrl+'users/setBiometrics';
   private rateSpaceUrl = this.baseUrl+'spaces/rate-space';
   private crewNameUrl = this.baseUrl+'users/create-crew';
+  private searchSpacesUrl = this.baseUrl+'spaces/search';
 
 
   constructor(public http: HttpClient, private jwtService: JwtService) { }
@@ -369,19 +370,46 @@ export class ApiService {
   }
 
   filterCloseSpaces(payload: any): Observable<any> {
-    // return this.http.post(this.filterSpacesRadiusUrl, payload);
     return from(this.jwtService.getJwt()).pipe(
       switchMap(token => {
         const headers = new HttpHeaders({
           'Authorization': `Bearer ${token}`
         });
 
-        // Make the POST request with formData and headers
         return this.http.post(this.filterSpacesRadiusUrl, payload, { headers });
       })
     );
-
   }
+
+
+  searchSpaces(payload: any): Observable<any> {
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+  
+        const params = this.convertPayloadToParams(payload);
+  
+        return this.http.get(this.searchSpacesUrl, { headers, params });
+      }),
+      catchError(error => {
+        console.error('Error fetching spaces:', error);
+        throw error; 
+      })
+    );
+  }
+  
+  private convertPayloadToParams(payload: any): { [key: string]: string } {
+    const params: { [key: string]: string } = {};
+    for (const key in payload) {
+      if (payload.hasOwnProperty(key)) {
+        params[key] = payload[key].toString();
+      }
+    }
+    return params;
+  }
+  
 
   fetchAccountBalance(payload: any): Observable<any> {
     // return this.http.post(this.accountBalanceUrl, payload, { responseType: 'text' });

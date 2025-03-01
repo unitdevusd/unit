@@ -81,11 +81,13 @@ export class Tab1Page implements OnInit {
   svgText: string;
   current_page = 0;
   page_size = 5;
+  search_page = 0;
   isLoading = false;
   totalPages = 1;
   floorTypeUrl: string;
   isSpinning = false;
   bonus = 0;
+  searchKeyword: string;
 
 
 
@@ -146,14 +148,13 @@ export class Tab1Page implements OnInit {
  
 
   ionViewWillEnter() {
-
     this.resetData();
   let url = "";
     this.hasFilter = false;
     this.userDetails = this.userService.getUserDetails();
     this.firstName = this.userDetails?.firstName || 'Guest';
-    this.role = this.userDetails?.role;
     this.userId = this.userDetails?.userId;
+    this.role = this.userDetails?.role;
     this.bonus = this.userDetails?.bonus;
     this.getCurrentLocation();
     if(this.role === 'HOST') {
@@ -196,9 +197,11 @@ export class Tab1Page implements OnInit {
 
   resetData() {
     this.current_page = 0;
+    this.search_page = 0;
     this.placesAround = [];
-    this.infiniteScroll.disabled = false;
-    console.log(this.infiniteScroll.disabled)
+    if(this.infiniteScroll) {
+      this.infiniteScroll.disabled = false;
+    }
   }
 
   fetchSvgFile(svgPath: string) {
@@ -281,6 +284,8 @@ export class Tab1Page implements OnInit {
   }
 
 
+
+
   // searchLocation() {
   //   if (this.autocomplete.input == '') {
   //     this.autocompleteItems = [];
@@ -296,23 +301,6 @@ export class Tab1Page implements OnInit {
   //       });
   //     });
   // }
-
-
-  searchLocation() {
-    if (this.autocomplete.input == '') {
-      this.autocompleteItems = [];
-      return;
-    }
-    this.GoogleAutocomplete.getPlacePredictions({ input: this.autocomplete.input },
-      (predictions: any, status: any) => {
-        this.autocompleteItems = [];
-        this.zone.run(() => {
-          predictions.forEach((prediction: any) => {
-            this.autocompleteItems.push(prediction);
-          });
-        });
-      });
-  }
 
   getExactLocation(item: any): Promise<string> {
     const apiKey = 'AIzaSyCZme7cYLG7jnK4Cn8ZFnQJDUKPNwIsfqI';
@@ -364,7 +352,6 @@ export class Tab1Page implements OnInit {
               console.error(error);
               this.showToast('Unable to fetch spaces');    
               loading.dismiss();    
-              // this.showErrorAlert('Unexpected error occurred');
             }
           );
         }
@@ -373,15 +360,45 @@ export class Tab1Page implements OnInit {
         console.error(error);
         this.showToast('Unable to fetch spaces');    
         loading.dismiss();    
-        // this.showErrorAlert('Unexpected error occurred');
+      }
+    );
+  }
+
+
+  async searchSpaces() {
+    const payload = { "param" : this.searchKeyword, "page": this.search_page, "size" : this.page_size };
+    const loading = await this.loadingController.create();
+    await loading.present();
+    this._apiService.searchSpaces(payload).subscribe(
+      (response: any) => {
+        if (response.length > 0) {
+        this.searchResults = '';
+        console.log('Response is '+response[0].spaceLocation);
+        this.hasFilter = true;
+        this.placesFiltered = response;
+        loading.dismiss();
+        }
+        else {
+          console.log('No spaces around but these are available spaces');
+          this.searchResults = 'No spots match your keyword.';
+          loading.dismiss();
+      }
+    },
+      (error: any) => {
+        console.error(error);
+        this.showToast('Unable to fetch spaces');    
+        loading.dismiss();    
       }
     );
     
-
-
-
-
   }
+
+  ionInfiniteScrollFilter(event: InfiniteScrollCustomEvent) {
+    console.log('Fetching filter scroll')
+    this.search_page++;
+    this.searchSpaces().then(() => event.target.complete());
+  }
+
 
 
 
@@ -704,6 +721,7 @@ export class Tab1Page implements OnInit {
 
     doRefresh(event: any) {
       console.log('Refreshing data...');
+      this.clearFilters()
       this.getSpacesAround(0, this.page_size);
   
       setTimeout(() => {

@@ -23,17 +23,27 @@
     <ion-card-content>
       <div style="display: flex; justify-content: center; align-items: center;">
         <b style="margin-right: 5px; font-size: 20px;">$</b>
-        <b style="font-size: 30px;">{{ bonus || 0 }}</b>
+        <b style="font-size: 30px;">{{ bonus || 0 | number:'1.2-2' }}</b>
+
       </div>
 
       <!-- <span style="font-size: 15px;">Refer and earn bonuses for every referral </span> -->
     </ion-card-content>
   </ion-card>  <div class="desktop-container" style="display: flex;">
 
-        <ion-searchbar class="searchbar-input search-bar"  color="black" [(ngModel)]="autocomplete.input" #searchbar placeholder="Search for a spot" searchIcon=" "
+        <!-- <ion-searchbar class="searchbar-input search-bar"  color="black" [(ngModel)]="autocomplete.input" #searchbar placeholder="Search for a spot" searchIcon=" "
           (ionInput)="searchLocation()" clearIcon=" " (ionFocus)="checkFocus()" (ionClear)="clearAutocomplete()">
           <ion-icon slot="start" name="search" class="custom-search-icon"></ion-icon>
-        </ion-searchbar>
+        </ion-searchbar> -->
+
+        <ion-searchbar class="searchbar-input search-bar"  color="black" [(ngModel)]="searchKeyword" #searchbar placeholder="Search for a spot" searchIcon=" "
+         clearIcon=" " (ionFocus)="checkFocus()" (ionClear)="clearAutocomplete()">
+        <ion-icon slot="start" name="search"  class="custom-search-icon"></ion-icon>
+      </ion-searchbar>
+      <ion-button (click)="searchSpaces()">Search</ion-button>
+
+      
+
 
 
 
@@ -42,7 +52,7 @@
         <img src="../../../../assets/imgs/Filter_icon_off.png" *ngIf="!hasFilter" name="filter" (click)="openFilter()" style="width: 48px; height: 48px; margin-top: 3px;" />
 
 </div>
-  <div [hidden]="autocompleteItems.length == 0" class="search_list">
+  <!-- <div [hidden]="autocompleteItems.length == 0" class="search_list">
     <ion-list [hidden]="autocompleteItems.length == 0" lines="none">
 
       <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
@@ -53,7 +63,7 @@
         </ion-label>
       </ion-item>
     </ion-list>
-  </div>
+  </div> -->
 
 
   <div class="content">
@@ -81,7 +91,7 @@
     </div>
 
     <div *ngIf="hasFilter">
-      <app-unit-listing [units]="placesFiltered" (unitClicked)='place($event)'></app-unit-listing>
+      <app-unit-listing [units]="placesFiltered" (unitClicked)='place($event)' (loadMoreUnits)="ionInfiniteScrollFilter($event)"></app-unit-listing>
     </div>
     <ion-infinite-scroll threshold="0" (ionInfinite)="ionInfiniteScroll($event)">
       <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Fetching more spots...">
