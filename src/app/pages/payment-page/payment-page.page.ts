@@ -202,6 +202,11 @@ async showToast(message: any) {
 
 async sendCrypto(amount: any) {
 
+  if(this.totalFees == 0) {
+    this.showToast('Invalid Payment Amount');
+    return;
+  }
+
   const paymentData = {"amount" : amount, "currency" : "USD", "description" : "Payment from "+this.userDetails?.fullName,
   "customer_name" : this.userDetails?.fullName, "customer_email" : this.userDetails?.email,
   "order_id" : "", "callback_url" : "", "success_url" : ""};
@@ -321,6 +326,11 @@ async trackId(id: string) {
 }
 
 async payWithBonus(amount: number) {
+  if(this.totalFees == 0) {
+    this.showToast('Invalid Payment Amount');
+    return;
+  }
+
   const totalBonus = this.userDetails?.bonus;
   console.log(totalBonus);
 
@@ -386,6 +396,12 @@ async bookSpace(id: any, status: any) {
 
 
 initPayPalButton(amount: any) {
+
+  if(this.totalFees == 0) {
+    this.showToast('Invalid Payment Amount');
+    return;
+  }
+
   if (!this.isPayPalButtonRendered) {
     paypal.Buttons({
       createOrder: (_data: any, actions: any) => {

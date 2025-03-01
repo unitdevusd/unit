@@ -63,13 +63,30 @@ export class TimeSlotModalPage implements OnInit {
       this.displayToast('Please add your preferred recurring period')
       return; 
     }
-
     if(this.startDate == null || this.startTime == null || this.endTime == null ||
       this.startDate == '' || this.startTime == '' || this.endTime == '') {
       this.displayToast('Please select date and time')
       return; 
     }
+
+    const hoursDifference = this.calculateTime(this.startTime, this.endTime);    
+     console.log(hoursDifference); 
+      if(hoursDifference <= 0) {
+        this.displayToast('End time should be ahead of the start time');
+        return;
+      }
+
     this.dismiss();
+  }
+
+  calculateTime(startTimeString: any, endTimeString:any) {
+    const today = new Date();
+    const startTime = new Date(today.setHours(parseInt(startTimeString.split(":")[0]), parseInt(startTimeString.split(":")[1]), 0, 0));
+    const endTime = new Date(today.setHours(parseInt(endTimeString.split(":")[0]), parseInt(endTimeString.split(":")[1]), 0, 0));
+    const timeDifferenceInMillis = endTime.getTime() - startTime.getTime();
+  
+    const hoursDifference = timeDifferenceInMillis / (1000 * 60 * 60);
+    return hoursDifference;
   }
 
   async displayToast(message: any) {
