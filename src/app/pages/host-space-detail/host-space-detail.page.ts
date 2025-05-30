@@ -68,7 +68,7 @@ export class HostSpaceDetailPage implements OnInit {
 
   ) {
     this.spaceId = this.route.snapshot.paramMap.get('spaceId');
-    console.log('Space ID is '+this.spaceId);
+    console.log('Spot ID is '+this.spaceId);
     this.userDetails = this.userService.getUserDetails();
     this.userId = this.userDetails?.userId;
     this.firstName = this.userDetails?.firstName || 'Guest';
@@ -86,10 +86,10 @@ export class HostSpaceDetailPage implements OnInit {
   async getSpaceById() {
 
     try {
-      console.log('Retrieving list of spaces with Id '+this.spaceId);
+      console.log('Retrieving list of spots with Id '+this.spaceId);
       const loading = await this.loadingController.create();
       await loading.present();
-  
+
       if (this.spaceId) {
         const spaceData = {"spaceId" : this.spaceId};
         this._apiService.getSpaceBySpaceId(spaceData).subscribe(
@@ -104,7 +104,7 @@ export class HostSpaceDetailPage implements OnInit {
           (error: any) => {
             console.error(error);
             loading.dismiss();
-            this.showToast('Unable to fetch spaces');             
+            this.showToast('Unable to fetch any spots');
             // this.showErrorAlert('Unexpected error occurred');
           }
         );
@@ -119,7 +119,7 @@ export class HostSpaceDetailPage implements OnInit {
   async confirmDelete() {
     const alert = await this.alertController.create({
       header: 'Confirm Deletion',
-      message: 'Are you sure you want to delete this space?',
+      message: 'Are you sure you want to delete this spot?',
       buttons: [
         {
           text: 'Cancel',
@@ -133,9 +133,9 @@ export class HostSpaceDetailPage implements OnInit {
         }
       ]
     });
-  
+
     await alert.present();
-  
+
   }
 
 
@@ -148,29 +148,29 @@ export class HostSpaceDetailPage implements OnInit {
     this._apiService.deleteSpace(spaceData).subscribe(
       (response: any) => {
         if(response == 'Deleted') {
-        loading.dismiss(); 
-        
-        
+        loading.dismiss();
+
+
         let navigationExtras: NavigationExtras = {
           state: {
             navigationData: true
           }
         };
         this.router.navigateByUrl(`/tabs`, navigationExtras);
-  // this.router.navigateByUrl('/tabs', { replaceUrl: true }); 
-        this.showToast('Space deleted successfully');   
+  // this.router.navigateByUrl('/tabs', { replaceUrl: true });
+        this.showToast('Spot deleted successfully');
       }
       else {
-        loading.dismiss(); 
-        this.showToast('Unable to delete space. Try again later');             
+        loading.dismiss();
+        this.showToast('Unable to delete spot. Try again later');
 
-      }                
+      }
 
       },
       (error: any) => {
         console.error(error);
         loading.dismiss();
-        this.showToast('Unable to delete space');             
+        this.showToast('Unable to delete spot');
         // this.showErrorAlert('Unexpected error occurred');
       }
     );
@@ -193,18 +193,18 @@ export class HostSpaceDetailPage implements OnInit {
     await modal.present();
 
     const { data } = await modal.onDidDismiss();
-    
+
     if (data && data.updatedSpace) {
       this.place = data.updatedSpace;
       const url = `https://maps.google.com/maps?q=${data.updatedSpace.lat},${data.updatedSpace.lng}&z=10&output=embed`;
       this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-      this.showToast('Location updated successfully');             
+      this.showToast('Location updated successfully');
 
     }
 
   }
 
-  
+
   async modifyRules() {
     const modal = await this.modalController.create({
       component: ModifyRulesModalPage,
@@ -220,7 +220,7 @@ export class HostSpaceDetailPage implements OnInit {
     await modal.present();
 
     const { data } = await modal.onDidDismiss();
-    
+
     if (data && data.updatedRules) {
       // Update rules with the updated rules from the modal
       this.place.spaceRules = data.updatedRules;
@@ -238,7 +238,7 @@ export class HostSpaceDetailPage implements OnInit {
         cssClass: 'centered-toast',
       });
       toast.present();
-  
+
 
   }
 
@@ -259,7 +259,7 @@ export class HostSpaceDetailPage implements OnInit {
         (inputElement as HTMLInputElement).value = '';
       }
     }
-    
+
   }
 
 
@@ -295,43 +295,43 @@ export class HostSpaceDetailPage implements OnInit {
 
   async onFileChange(event: any) {
     const files: FileList = event.target.files;
-  
+
     this.totalSize = 0;
     this.largestFileSize = 0;
-  
+
     if (files && files.length > 0) {
-  
+
       const promises: Promise<string>[] = [];
-  
+
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         this.totalSize += file.size;
-  
+
         if (file.size > this.largestFileSize) {
           this.largestFileSize = file.size;
         }
-  
+
         if (file && !(this.largestFileSize > 2 * 1024 * 1024) && !(this.totalSize > 10 * 1024 * 1024)) {
           const compressedFile = await this.userService.compressImage(file);
           promises.push(this.convertToBase64(compressedFile));
         }
       }
-  
+
       console.log(this.totalSize);
       console.log(this.largestFileSize);
-  
+
       // Update message display based on total size and largest file size
       const maxTotalUploadMessage = document.getElementById('max-total-upload-message');
       const maxUploadPerFileMessage = document.getElementById('max-upload-per-file-message');
-  
+
       if (maxTotalUploadMessage) {
         maxTotalUploadMessage.style.display = this.totalSize > 10 * 1024 * 1024 ? 'block' : 'none';
       }
-  
+
       if (maxUploadPerFileMessage) {
         maxUploadPerFileMessage.style.display = this.largestFileSize > 2 * 1024 * 1024 ? 'block' : 'none';
       }
-  
+
       Promise.all(promises)
         .then((base64Array) => {
           this.place.spaceImage = base64Array[0];
@@ -343,7 +343,7 @@ export class HostSpaceDetailPage implements OnInit {
         });
     }
   }
-  
+
 convertToBase64(file: File): Promise<string> {
   return new Promise<string>((resolve, reject) => {
     const reader = new FileReader();
@@ -371,19 +371,19 @@ async updateSpaceImages() {
   this._apiService.updateImages(spaceData).subscribe(
     (response: any) => {
       if(response.code == '00') {
-      loading.dismiss();           
-      this.showToast('Space image updated successfully');   
+      loading.dismiss();
+      this.showToast('Spot image updated successfully');
     }
     else {
-      loading.dismiss(); 
-      this.showToast('Unable to update images. Try again later');             
-    }                
+      loading.dismiss();
+      this.showToast('Unable to update images. Try again later');
+    }
 
     },
     (error: any) => {
       console.error(error);
       loading.dismiss();
-      this.showToast('Unable to update images. Try again later');             
+      this.showToast('Unable to update images. Try again later');
       // this.showErrorAlert('Unexpected error occurred');
     }
   );
@@ -421,7 +421,7 @@ async openTimeModal() {
 
   const { data } = await modal.onDidDismiss();
 
-  if (data && data.startDate && data.startTime && data.endTime) {   
+  if (data && data.startDate && data.startTime && data.endTime) {
     this.addTimeSlot(data.startDate, data.startTime, data.endTime, data.repeat, data.repeatOption);
   }
 }
@@ -454,19 +454,19 @@ async updateTimeSlot(timeSlot: TimeSlots, operation: any) {
   this._apiService.updateTimeSlot(spaceData).subscribe(
     (response: any) => {
       if(response.code == '00') {
-      loading.dismiss();           
-      this.showToast('Time Slots updated successfully');   
+      loading.dismiss();
+      this.showToast('Time Slots updated successfully');
     }
     else {
-      loading.dismiss(); 
-      this.showToast('Unable to update time slots. Try again later');             
-    }                
+      loading.dismiss();
+      this.showToast('Unable to update time slots. Try again later');
+    }
 
     },
     (error: any) => {
       console.error(error);
       loading.dismiss();
-      this.showToast('Unable to update time slots. Try again later');             
+      this.showToast('Unable to update time slots. Try again later');
     }
   );
 

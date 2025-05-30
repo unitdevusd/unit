@@ -68,12 +68,12 @@ export class Tab2Page {
             loading.dismiss();
             if(response !== null) {
               this.allUsers = response;
-            }             
+            }
           },
           (error: any) => {
             loading.dismiss();
             console.error(error);
-            this.showToast('Unable to Fetch Users');             
+            this.showToast('Unable to Fetch Users');
           }
         );
 
@@ -90,12 +90,12 @@ export class Tab2Page {
             loading.dismiss();
             if(response !== null) {
               this.tenantSpaces = response;
-            }             
+            }
           },
           (error: any) => {
             console.error(error);
             loading.dismiss();
-            this.showToast('Unable to Fetch Spaces');             
+            this.showToast('Unable to Fetch Any Spots');
           }
         );
 
@@ -111,12 +111,12 @@ export class Tab2Page {
             loading.dismiss();
             if(response !== null) {
               this.hostSpaces = response;
-            }             
+            }
           },
           (error: any) => {
             console.error(error);
             loading.dismiss();
-            this.showToast('Unable to Fetch Spaces');             
+            this.showToast('Unable to Fetch Any Spots');
           }
         );
 
@@ -137,13 +137,13 @@ export class Tab2Page {
             if(response !== null) {
               this.allUsers = response;
               this.showToast(text+' done successfully');
-            
-            }       
+
+            }
           },
           (error: any) => {
             loading.dismiss();
             console.error(error);
-            this.showToast('Unable to Modify User');             
+            this.showToast('Unable to Modify User');
           }
         );
   }
@@ -170,7 +170,7 @@ export class Tab2Page {
       this.autocompleteItems = [];
       return;
     }
- 
+
   }
 
   async openImageModal(imageUrl: string) {
@@ -183,7 +183,7 @@ export class Tab2Page {
         imageUrl: imageUrl
       }
     });
-  
+
     await modal.present();
   }
 
@@ -219,9 +219,9 @@ export class Tab2Page {
         }
       ]
     });
-  
+
     await alert.present();
-  
+
   }
 
 
@@ -264,9 +264,9 @@ export class Tab2Page {
         }
       ]
     });
-  
+
     await alert.present();
-  
+
   }
 
   async cancelBooking(bookingId: any) {
@@ -279,12 +279,12 @@ export class Tab2Page {
             this.showToast(response.message);
             if(response.code == '00') {
               this.hostSpaces = this.hostSpaces.filter((space: any) => space.bookedSpaceId !== bookingId);
-            }             
+            }
           },
           (error: any) => {
             console.error(error);
             loading.dismiss();
-            this.showToast('Unable to cancel booking');             
+            this.showToast('Unable to cancel booking');
           }
         );
 
@@ -308,7 +308,7 @@ export class Tab2Page {
   }
 
   isEndDateTimeAfterCurrent(endDateTime: string): boolean {
-    const currentDateTime = new Date(); 
+    const currentDateTime = new Date();
     const endDate = new Date(endDateTime);
 
     return endDate > currentDateTime;
@@ -324,13 +324,13 @@ export class Tab2Page {
     });
 
     await modal.present();
- 
-    const { data } = await modal.onDidDismiss(); 
+
+    const { data } = await modal.onDidDismiss();
     if (data) {
       this.tenantSpaces[index].rating = data;
       console.log('Updated tenantSpaces:', this.tenantSpaces);
     }
-  
+
   }
 
 }

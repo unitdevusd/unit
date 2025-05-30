@@ -1,5 +1,5 @@
 <ion-list class="card-list" *ngIf="units && units?.length > 0; else noUnits">
-    <ion-item class="card-item"  *ngFor="let item of units" (click)="place(item)" 
+    <ion-item class="card-item"  *ngFor="let item of units" (click)="place(item)"
     >
 
     <ion-grid class="card-grid" style="width: 312px !important; height: auto !important;">
@@ -24,7 +24,7 @@
                   style="width: 48px; height: 48px;"
                   [src]="'../../../../assets/floors/' + item?.spaceType + '.png'"
                   alt="Logo">
-                </ion-img> 
+                </ion-img>
                                <!-- <ion-icon style="right: 0;" slot="end" size="large" name="layers-outline" color="dark" style="font-size: 20px;" class="mr-l"></ion-icon> -->
               </div>
 
@@ -44,7 +44,7 @@
   </div>
 
   <div class="no-item-unit">
-    <p style="text-align: center;"><b><h5>No Spaces around you</h5></b></p>
+    <p style="text-align: center;"><b><h5>No Spots around you</h5></b></p>
   </div>
 </ng-template>
 

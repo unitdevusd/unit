@@ -59,7 +59,7 @@ export class PaymentPagePage implements OnInit {
    }
 
   ngOnInit() {
-    const navigationState = history.state;  
+    const navigationState = history.state;
 
     if (navigationState && navigationState.place) {
       this.place = navigationState.place;
@@ -75,7 +75,7 @@ export class PaymentPagePage implements OnInit {
     this.filteredTimeSlots = this.place.timeSlots.filter(
       (timeSlot: TimeSlot) => timeSlot.date === this.dateExample
     );
- 
+
   }
 
   closeModal() {
@@ -142,12 +142,12 @@ calculateHours(slots: any) {
   this.hoursDifference = 0;
   const startTime = new Date(`1970-01-01T${slots.startTime}`);
   const endTime = new Date(`1970-01-01T${slots.endTime}`);
-  
+
   const timeDifference = endTime.getTime() - startTime.getTime();
 
-      
+
   this.hoursDifference = Math.ceil(timeDifference / (1000 * 60 * 60));
-    
+
     if(this.hoursDifference <= 0) {
       this.showToast('Please enter a valid duration');
     }
@@ -161,13 +161,13 @@ calculateHours(slots: any) {
       this.rentCharges = this.place?.chargePerDay * this.hoursDifference || 0;
       }
       else {
-        this.rentCharges = this.place?.chargePerDay|| 0;  
+        this.rentCharges = this.place?.chargePerDay|| 0;
       }
 
       this.serviceCharges = this.rentCharges * 0.1;
       this.totalFees = this.rentCharges + this.serviceCharges;
       this.bookingButtonText = 'Process Payment($'+this.totalFees+')';
-      this.showToast('Space will be booked for '+this.hoursDifference+' hours');
+      this.showToast('Spot will be booked for '+this.hoursDifference+' hours');
     }
     else {
 
@@ -175,7 +175,7 @@ calculateHours(slots: any) {
       this.serviceCharges = this.rentCharges * 0.1;
       this.totalFees = this.rentCharges + this.serviceCharges;
       this.bookingButtonText = 'Process Payment($'+this.totalFees+')';
-      this.showToast('Space will be booked for '+this.hoursDifference+' hour');
+      this.showToast('Spot will be booked for '+this.hoursDifference+' hour');
     }
 
 
@@ -218,29 +218,29 @@ async sendCrypto(amount: any) {
   this._apiService.generateCharges(paymentData).subscribe(
     (response: any) => {
       if(response != null) {
-      loading.dismiss();  
-      this.showToast('Checkout page to be opened'); 
-      const checkoutUrl = 'https://checkout.opennode.com/' + response;      
+      loading.dismiss();
+      this.showToast('Checkout page to be opened');
+      const checkoutUrl = 'https://checkout.opennode.com/' + response;
       this.openExternalURL(checkoutUrl);
 
       // this.trackIdInterval = setInterval(() => {
       //   this.trackId(response);
-      // }, 7000);  
+      // }, 7000);
       this.startIntervalOperation(10000, response);
 
 
 
     }
     else {
-      loading.dismiss(); 
-      this.showToast('Unable to generate checkout ID. Try again later');             
-    }                
+      loading.dismiss();
+      this.showToast('Unable to generate checkout ID. Try again later');
+    }
 
     },
     (error: any) => {
       console.error(error);
       loading.dismiss();
-      this.showToast('Unable to generate checkout ID. Try again later');             
+      this.showToast('Unable to generate checkout ID. Try again later');
     }
   );
 }
@@ -270,14 +270,14 @@ startIntervalOperation(intervalTime: number, id: any) {
     this.trackId(id);
 
     if (intervalsCompleted >= 20) {
-      completionSubject.next(); 
+      completionSubject.next();
       completionSubject.complete();
     }
   });
 
   completionSubject.subscribe(() => {
     this.showToast('We did not receive any payment from you. Please try again');
-    // this.bookingButtonText = 'Click to book space';
+    // this.bookingButtonText = 'Click to book spot';
     console.log('All operations completed');
     if (this.intervalSubscription) {
       this.intervalSubscription.unsubscribe();
@@ -289,7 +289,7 @@ startIntervalOperation(intervalTime: number, id: any) {
 
 async trackId(id: string) {
   console.log('In here again');
-  
+
 
   try{
 
@@ -303,12 +303,12 @@ async trackId(id: string) {
 
     const paymentData = {"id" : id};
     this._apiService.trackCharges(paymentData).subscribe(
-      (response: any) => {   
+      (response: any) => {
         if (response === 'paid') {
           this.intervalSubscription?.unsubscribe();
           this.bookSpace(id, response);
-          this.showToast("Transfer successful and space booked. Thank you for booking");
-        }     
+          this.showToast("Transfer successful and spot booked. Thank you for booking");
+        }
         console.log('Processed tracking response: ' + response);
         loading.dismiss();
         // this.bookingButtonText = response;
@@ -335,7 +335,7 @@ async payWithBonus(amount: number) {
   console.log(totalBonus);
 
   if(totalBonus < amount) {
-    this.showToast('Insufficient bonus to book space');
+    this.showToast('Insufficient bonus to book spot');
     return;
   }
   await this.bookSpace('bonus-payment', 'PAID');
@@ -350,13 +350,13 @@ async bookSpace(id: any, status: any) {
   let startDateTime = new Date(this.dateExample);
 
 
-  const spaceData = {"spaceId" : this.place.spaceId, 
-  "bookingStatus" : "BOOKED", "duration" : this.hoursDifference, 
-  "userId" : this.userDetails?.userId, 
+  const spaceData = {"spaceId" : this.place.spaceId,
+  "bookingStatus" : "BOOKED", "duration" : this.hoursDifference,
+  "userId" : this.userDetails?.userId,
   "startDateTime" : startDateTime.setHours(newStart.getHours(), newStart.getMinutes(), 0, 0),
   "endDateTime" : startDateTime.setHours(newEnd.getHours(), newEnd.getMinutes(), 0, 0),
   "startDate" : this.dateExample,
-  "chargeId" : id, 
+  "chargeId" : id,
   "chargeIdStatus" : status,
   "totalAmount" : this.rentCharges,
   "bonusPayment" : id == 'bonus-payment' ? true : false};
@@ -371,8 +371,8 @@ async bookSpace(id: any, status: any) {
           this.userDetails.bonus = this.userDetails.bonus - this.totalFees;
           this.userService.setUserDetails(this.userDetails);
         }
-        this.userDetails.bonus = 
-      this.bookingButtonText = 'Successfully booked';   
+        this.userDetails.bonus =
+      this.bookingButtonText = 'Successfully booked';
       setTimeout(() => {
         let navigationExtras: NavigationExtras = {
           state: {
@@ -389,7 +389,7 @@ async bookSpace(id: any, status: any) {
     (error: any) => {
       loading.dismiss();
       console.error(error);
-      this.showToast('Unable to book space');             
+      this.showToast('Unable to book spot');
     }
   );
 }
@@ -424,7 +424,7 @@ initPayPalButton(amount: any) {
         console.error('PayPal payment error:', err);
       }
     }).render('#paypal-button-container');
-    
+
     this.isPayPalButtonRendered = true;
   }
 }
@@ -433,6 +433,6 @@ initPayPalButton(amount: any) {
 async dismissModal() {
   await this.modalController.dismiss();
 }
-  
+
 
 }

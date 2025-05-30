@@ -6,7 +6,7 @@
       <div class="logo">
         <img src="../../../../assets/imgs/unit-logo.png" alt="Logo" style="width: 50px; height: auto;" />
       </div>
-      <ion-title>Modify Space Location</ion-title>
+      <ion-title>Modify Spot Location</ion-title>
 
     </div>
 
@@ -16,7 +16,7 @@
         <ion-icon name="close"></ion-icon>
       </ion-button>
     </ion-buttons>
-  
+
   </ion-toolbar>
 
 </ion-header>
@@ -24,16 +24,16 @@
 <ion-content [fullscreen]="true">
   <!-- <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Modify Space Location</ion-title>
+      <ion-title size="large">Modify Spot Location</ion-title>
     </ion-toolbar>
   </ion-header> -->
 
 
   <ion-list mode="md">
-    <ion-label position="floating" style="white-space: normal; margin-left: 15px; margin-bottom: 30px;">New Location of Space</ion-label>
+    <ion-label position="floating" style="white-space: normal; margin-left: 15px; margin-bottom: 30px;">New Location of Spot</ion-label>
 
     <ion-item mode="md">
-      <ion-input [(ngModel)]="autocomplete.input" #autocompleteInput 
+      <ion-input [(ngModel)]="autocomplete.input" #autocompleteInput
       (ionInput)="searchLocation()" placeholder="Street name and city">
       </ion-input>
     </ion-item>

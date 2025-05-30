@@ -24,7 +24,7 @@ declare var paypal: any;
 })
 export class PaymentModalPage implements OnInit {
 
-  
+
 
   place: any;
   dateExample: any;
@@ -57,7 +57,7 @@ export class PaymentModalPage implements OnInit {
 
 
 
-  ) { 
+  ) {
     this.place = this.navParams.get('place');
     this.userDetails = this.userService.getUserDetails();
     this.bookingButtonText = 'Process Payment($'+this.totalFees+')';
@@ -147,13 +147,13 @@ export class PaymentModalPage implements OnInit {
     this.hoursDifference = 0;
     const startTime = new Date(`1970-01-01T${slots.startTime}`);
     const endTime = new Date(`1970-01-01T${slots.endTime}`);
-    
+
     // Calculate the time difference in milliseconds
     const timeDifference = endTime.getTime() - startTime.getTime();
 
-        
+
     this.hoursDifference = Math.ceil(timeDifference / (1000 * 60 * 60));
-      
+
       if(this.hoursDifference <= 0) {
         this.showToast('Please enter a valid duration');
       }
@@ -167,8 +167,8 @@ export class PaymentModalPage implements OnInit {
         this.serviceCharges = this.rentCharges * 0.1;
         this.totalFees = this.rentCharges + this.serviceCharges;
         this.bookingButtonText = 'Process Payment($'+this.totalFees+')';
-  
-        this.showToast('Space will be booked for '+this.hoursDifference+' hours');
+
+        this.showToast('Spot will be booked for '+this.hoursDifference+' hours');
       }
       else {
 
@@ -176,7 +176,7 @@ export class PaymentModalPage implements OnInit {
         this.serviceCharges = this.rentCharges * 0.1;
         this.totalFees = this.rentCharges + this.serviceCharges;
         this.bookingButtonText = 'Process Payment($'+this.totalFees+')';
-        this.showToast('Space will be booked for '+this.hoursDifference+' hour');
+        this.showToast('Spot will be booked for '+this.hoursDifference+' hour');
       }
 
 
@@ -193,7 +193,7 @@ export class PaymentModalPage implements OnInit {
         cssClass: 'centered-toast',
       });
       toast.present();
-  
+
     }, 3000);
 
   }
@@ -214,29 +214,29 @@ export class PaymentModalPage implements OnInit {
     this._apiService.generateCharges(paymentData).subscribe(
       (response: any) => {
         if(response != null) {
-        loading.dismiss();  
-        this.showToast('Checkout page to be opened'); 
-        const checkoutUrl = 'https://checkout.opennode.com/' + response;      
+        loading.dismiss();
+        this.showToast('Checkout page to be opened');
+        const checkoutUrl = 'https://checkout.opennode.com/' + response;
         this.openExternalURL(checkoutUrl);
 
         // this.trackIdInterval = setInterval(() => {
         //   this.trackId(response);
-        // }, 7000);  
+        // }, 7000);
         this.startIntervalOperation(10000, response);
 
 
 
       }
       else {
-        loading.dismiss(); 
-        this.showToast('Unable to generate checkout ID. Try again later');             
-      }                
+        loading.dismiss();
+        this.showToast('Unable to generate checkout ID. Try again later');
+      }
 
       },
       (error: any) => {
         console.error(error);
         loading.dismiss();
-        this.showToast('Unable to generate checkout ID. Try again later');             
+        this.showToast('Unable to generate checkout ID. Try again later');
       }
     );
   }
@@ -255,25 +255,25 @@ export class PaymentModalPage implements OnInit {
     if (this.intervalSubscription) {
       this.intervalSubscription.unsubscribe();
     }
-  
+
     const completionSubject = new Subject<void>();
     let intervalsCompleted = 0;
-  
+
     this.intervalSubscription = interval(intervalTime).pipe(
       takeUntil(completionSubject),
     ).subscribe(() => {
       intervalsCompleted++;
       this.trackId(id);
-  
+
       if (intervalsCompleted >= 20) {
-        completionSubject.next(); 
+        completionSubject.next();
         completionSubject.complete();
       }
     });
-  
+
     completionSubject.subscribe(() => {
       this.showToast('We did not receive any payment from you. Please try again');
-      // this.bookingButtonText = 'Click to book space';
+      // this.bookingButtonText = 'Click to book spot';
       console.log('All operations completed');
       if (this.intervalSubscription) {
         this.intervalSubscription.unsubscribe();
@@ -285,7 +285,7 @@ export class PaymentModalPage implements OnInit {
 
   async trackId(id: string) {
     console.log('In here again');
-    
+
 
     try{
 
@@ -299,12 +299,12 @@ export class PaymentModalPage implements OnInit {
 
       const paymentData = {"id" : id};
       this._apiService.trackCharges(paymentData).subscribe(
-        (response: any) => {   
+        (response: any) => {
           if (response === 'paid') {
             this.intervalSubscription?.unsubscribe();
             this.bookSpace(id, response);
-            this.showToast("Transfer successful and space booked. Thank you for booking");
-          }     
+            this.showToast("Transfer successful and spot booked. Thank you for booking");
+          }
           console.log('Processed tracking response: ' + response);
           loading.dismiss();
           // this.bookingButtonText = response;
@@ -323,20 +323,20 @@ export class PaymentModalPage implements OnInit {
 
 
   async bookSpace(id: any, status: any) {
-    const spaceData = {"spaceId" : this.place.spaceId, 
-    "bookingStatus" : "BOOKED", "duration" : this.hoursDifference, 
-    "userId" : this.userDetails?.userId, 
+    const spaceData = {"spaceId" : this.place.spaceId,
+    "bookingStatus" : "BOOKED", "duration" : this.hoursDifference,
+    "userId" : this.userDetails?.userId,
     "startDateTime" : this.startTime,
     "endDateTime" : this.endTime,
     "startDate" : this.dateExample,
-    "chargeId" : id, 
+    "chargeId" : id,
     "chargeIdStatus" : status};
     this._apiService.bookSpace(spaceData).subscribe(
       (response: any) => {
         console.log(response.message);
         this.bookingButtonText = 'Successfully booked';
         setTimeout(() => {
-  
+
           let navigationExtras: NavigationExtras = {
             state: {
               navigationData: true
@@ -347,11 +347,11 @@ export class PaymentModalPage implements OnInit {
       },
       (error: any) => {
         console.error(error);
-        this.showToast('Unable to book space');             
+        this.showToast('Unable to book spot');
       }
     );
   }
-  
+
 
   initPayPalButton(amount: any) {
     if (!this.isPayPalButtonRendered) {
@@ -376,7 +376,7 @@ export class PaymentModalPage implements OnInit {
           console.error('PayPal payment error:', err);
         }
       }).render('#paypal-button-container');
-      
+
       this.isPayPalButtonRendered = true;
     }
   }

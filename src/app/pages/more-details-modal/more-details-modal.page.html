@@ -30,17 +30,17 @@
 
 
       <ion-item *ngIf="isEditing && role === 'HOST'" >
-      <ion-input 
-        *ngIf="isEditing && role === 'HOST'" 
-        [(ngModel)]="editedChargePerDay" 
-        class="custom-input" 
+      <ion-input
+        *ngIf="isEditing && role === 'HOST'"
+        [(ngModel)]="editedChargePerDay"
+        class="custom-input"
         type="number"
         placeholder="Enter charge per day">
       </ion-input>
     </ion-item>
 
     </ion-item>
-  
+
     <ion-item *ngIf="place.additionalDetails">
       <ion-label>Video URL:</ion-label>
       <ion-label *ngIf="!isEditing">
@@ -50,20 +50,20 @@
       </ion-label>
       <ion-input *ngIf="isEditing" [(ngModel)]="editedAdditionalDetails" class="custom-input"></ion-input>
     </ion-item>
-  
-  
+
+
     <ion-item *ngIf="place.description">
-      <ion-label>Space Description:</ion-label>
-      <ion-input 
-        *ngIf="isEditing && role === 'HOST'" 
-        [(ngModel)]="editedDescription" 
-        class="custom-input" 
+      <ion-label>Spot Description:</ion-label>
+      <ion-input
+        *ngIf="isEditing && role === 'HOST'"
+        [(ngModel)]="editedDescription"
+        class="custom-input"
         type="text"
-        placeholder="Describe your space">
+        placeholder="Describe your spot">
       </ion-input>
       <ion-label *ngIf="!isEditing">{{ place.description }}</ion-label>
     </ion-item>
-  
+
     <!-- <ion-item *ngIf="place.practice">
       <ion-label>Practice with tenant:</ion-label>
       <ion-label *ngIf="!isEditing">{{ place.practice }}</ion-label>
@@ -71,24 +71,24 @@
       <ion-select *ngIf="isEditing" [(ngModel)]="editedPractice" placeholder="Select option">
         <ion-select-option value="yes">Yes, Dancers will have privacy</ion-select-option>
         <ion-select-option value="no">No, I will be at each session</ion-select-option>
-      </ion-select> 
+      </ion-select>
 
 
     </ion-item> -->
-  
+
     <ion-item *ngIf="place.musicDetails">
       <ion-label>Music Availability:</ion-label>
-      <ion-input 
-        *ngIf="isEditing && role === 'HOST'" 
-        [(ngModel)]="editedMusicDetails" 
-        class="custom-input" 
+      <ion-input
+        *ngIf="isEditing && role === 'HOST'"
+        [(ngModel)]="editedMusicDetails"
+        class="custom-input"
         type="text"
         placeholder="Should tenant come with their music?">
       </ion-input>
       <ion-label *ngIf="!isEditing">{{ place.musicDetails }}</ion-label>
     </ion-item>
   </ion-list>
-  
+
 
     <!-- <ion-button fill="solid" expand="full">
       <ion-icon slot="start" name="paper-plane"></ion-icon>

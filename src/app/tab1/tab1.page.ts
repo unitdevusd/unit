@@ -33,7 +33,7 @@ declare var google: any;
   styleUrls: ['tab1.page.scss']
 })
 export class Tab1Page implements OnInit {
-  
+
   @ViewChild(IonContent, { static: false }) content: IonContent;
   @ViewChild('svgContainer', { static: false }) svgContainer: ElementRef;
   @ViewChild(IonInfiniteScroll, { static: false }) infiniteScroll: IonInfiniteScroll;
@@ -44,7 +44,7 @@ export class Tab1Page implements OnInit {
 
   @Input() balance: number = 0;
   @Input() withdrawnBalance: number = 0;
-  
+
   spaceType: any[];
   spaces: any[];
   placesList: any = [];
@@ -65,7 +65,7 @@ export class Tab1Page implements OnInit {
   hasFilter: boolean = false;
   displayName: boolean;
   size: number = 10;
-  sizeFilter : number = 2; 
+  sizeFilter : number = 2;
   token: any;
   orgId: any;
   isEnd : boolean = true;
@@ -104,7 +104,7 @@ export class Tab1Page implements OnInit {
     private loadingController : LoadingController,
     private http: HttpClient,
     private cdr: ChangeDetectorRef,
-    
+
     ) {
     this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
     this.autocomplete = { input: '' };
@@ -140,12 +140,12 @@ export class Tab1Page implements OnInit {
     // if (content) {
     //     this.current_page = 0;
     //     content.scrollToTop(0);
-    //     this.placesAround = []; 
+    //     this.placesAround = [];
     // }
 
   }
 
- 
+
 
   ionViewWillEnter() {
     this.resetData();
@@ -310,7 +310,7 @@ export class Tab1Page implements OnInit {
       .then((response) => response.json())
       .then((data) => {
         if (data.results && data.results.length > 0) {
-         
+
           this.autocomplete.input = data.results[0].formatted_address;
           return data.results[0].formatted_address;
         } else {
@@ -336,7 +336,7 @@ export class Tab1Page implements OnInit {
         loading.dismiss();
         }
         else {
-          console.log('No spaces around but these are available spaces');
+          console.log('No spots around here but check these ones out instead');
           this.searchResults = 'No results in that area. Here are some close by to check out.';
 
           this._apiService.filterSpaces(payload).subscribe(
@@ -350,16 +350,16 @@ export class Tab1Page implements OnInit {
             },
             (error: any) => {
               console.error(error);
-              this.showToast('Unable to fetch spaces');    
-              loading.dismiss();    
+              this.showToast('Unable to fetch spots');
+              loading.dismiss();
             }
           );
         }
       },
       (error: any) => {
         console.error(error);
-        this.showToast('Unable to fetch spaces');    
-        loading.dismiss();    
+        this.showToast('Unable to fetch spots');
+        loading.dismiss();
       }
     );
   }
@@ -379,18 +379,18 @@ export class Tab1Page implements OnInit {
         loading.dismiss();
         }
         else {
-          console.log('No spaces around but these are available spaces');
+          console.log('No spots around here but check these ones out instead');
           this.searchResults = 'No spots match your keyword.';
           loading.dismiss();
       }
     },
       (error: any) => {
         console.error(error);
-        this.showToast('Unable to fetch spaces');    
-        loading.dismiss();    
+        this.showToast('Unable to fetch any spots');
+        loading.dismiss();
       }
     );
-    
+
   }
 
   ionInfiniteScrollFilter(event: InfiniteScrollCustomEvent) {
@@ -407,7 +407,7 @@ export class Tab1Page implements OnInit {
       useLocale: true,
       maxResults: 5,
     };
-  
+
     return this.nativeGeocoder
       .forwardGeocode(address, options)
       .then((result: NativeGeocoderResult[]) => {
@@ -435,12 +435,12 @@ export class Tab1Page implements OnInit {
   //   return new Promise((resolve, reject) =>
   //   {
   //      this.nativeGeocoder.forwardGeocode(addressString)
-  //      .then((result: NativeGeocoderResult[]) => 
+  //      .then((result: NativeGeocoderResult[]) =>
   //      {
   //         console.log(result);
   //         resolve(result);
   //      })
-  //      .catch((error: any) => 
+  //      .catch((error: any) =>
   //      {
   //         reject(error);
   //      });
@@ -456,7 +456,7 @@ export class Tab1Page implements OnInit {
   }
 
   checkFocus() {}
-  
+
   async openFilter() {
     const modal = await this.modalCtrl.create({
       component: FiltersPage,
@@ -478,7 +478,7 @@ export class Tab1Page implements OnInit {
   });
 
 
-  
+
 
     return await modal.present();
   }
@@ -521,7 +521,7 @@ export class Tab1Page implements OnInit {
   slideNext() {
     this.slides.slideNext().then((X: any)=>{
       console.log('X');
-    })  
+    })
   }
 
 
@@ -549,12 +549,12 @@ export class Tab1Page implements OnInit {
         this.router.navigate(['/spaces']);
         break;
       case 2:
-        this.showToast('Try to star new space!');
+        this.showToast('Try to star new spot!');
         break;
       default:
         break;
     }
- 
+
   }
 
     async showToast(message: any) {
@@ -565,7 +565,7 @@ export class Tab1Page implements OnInit {
       });
       toast.present();
     }
-  
+
     getAllSpaces() {
       const payload = { id: this.userId };
       this._apiService.viewAllSpacesByUser(payload);
@@ -577,26 +577,26 @@ export class Tab1Page implements OnInit {
       const loading = await this.loadingController.create();
       await loading.present();
       try {
-       
-    
+
+
         if (this.userId) {
           const spaceData = {"userId" : this.userId, "preference" : "all"};
           this._apiService.viewAllSpacesByUser(spaceData).subscribe(
             (response: any) => {
               loading.dismiss();
               if(response == null) {
-                this.showToast('You do not have any spaces');
+                this.showToast('You do not have any spots');
               }
               else {
                 this.spaces = response;
               }
-              
+
             },
             (error: any) => {
               console.error(error);
               loading.dismiss();
-              this.showToast('Unable to fetch spaces');
-              
+              this.showToast('Unable to fetch any spots');
+
               // this.showErrorAlert('Unexpected error occurred');
             }
           );
@@ -605,8 +605,8 @@ export class Tab1Page implements OnInit {
         loading.dismiss();
         console.error(error);
       }
-  
-  
+
+
     }
 
 
@@ -617,7 +617,7 @@ export class Tab1Page implements OnInit {
       try {
         const loading = await this.loadingController.create();
         await loading.present();
-    
+
         if (this.userId) {
           const userData = {"userId" : this.userId};
           this._apiService.fetchAccountBalance(userData).subscribe(
@@ -629,22 +629,22 @@ export class Tab1Page implements OnInit {
                 this.withdrawnBalance = 0;
               } else {
                 const [balance, withdrawnBalance] = response.split('~~').map(Number);
-                this.balance = isNaN(balance) ? 0 : balance;              
+                this.balance = isNaN(balance) ? 0 : balance;
                 this.withdrawnBalance = isNaN(withdrawnBalance) ? 0 : withdrawnBalance;
                 this.userService.setBalance(this.balance);
               }
             },
             (error: any) => {
               console.error(error);
-              loading.dismiss();              
+              loading.dismiss();
             }
           );
         }
       } catch (error) {
         console.error(error);
       }
-  
-  
+
+
     }
 
 
@@ -663,14 +663,14 @@ export class Tab1Page implements OnInit {
               loading.dismiss();
               if(response !== null) {
                 this.spacesList = response;
-              }             
+              }
             },
             (error: any) => {
               console.error(error);
-              this.showToast('Unable to Fetch Spaces');             
+              this.showToast('Unable to Fetch Any Spots');
             }
           );
-  
+
     }
 
 
@@ -682,7 +682,7 @@ export class Tab1Page implements OnInit {
       this.isLoading = true;
       const loading = await this.loadingController.create();
       await loading.present();
-  
+
       try {
         if (this.userId) {
           const spaceData = { latitude: this.lat, longitude: this.long, page: page, size: size };
@@ -690,13 +690,13 @@ export class Tab1Page implements OnInit {
             (response: any) => {
               loading.dismiss();
               this.isLoading = false;
-  
-              if (page === 0) { 
+
+              if (page === 0) {
                 this.placesAround = response;
               } else {
                 this.placesAround = [...this.placesAround, ...response];
               }
-  
+
               if (response.length < size) {
                 if (this.infiniteScroll) {
                   this.infiniteScroll.disabled = true;
@@ -707,7 +707,7 @@ export class Tab1Page implements OnInit {
               console.error(error);
               loading.dismiss();
               this.isLoading = false;
-              this.showToast('Unable to fetch spaces');
+              this.showToast('Unable to fetch any spots');
             }
           );
         }
@@ -723,9 +723,9 @@ export class Tab1Page implements OnInit {
       console.log('Refreshing data...');
       this.clearFilters()
       this.getSpacesAround(0, this.page_size);
-  
+
       setTimeout(() => {
-        event.target.complete(); 
+        event.target.complete();
       }, 2000);
     }
 
@@ -735,7 +735,7 @@ export class Tab1Page implements OnInit {
       this.current_page++;
       this.getSpacesAround(this.current_page, this.page_size).then(() => event.target.complete());
     }
-    
+
 
 
     async getSpaces(size: number) {
@@ -744,7 +744,7 @@ export class Tab1Page implements OnInit {
         return;
       }
 
-      try {    
+      try {
         this.isLoading = true;
         this.current_page++;
           const spaceData = {"latitude" : this.lat, "longitude" : this.long, "page": this.current_page, "size" : size};
@@ -763,15 +763,15 @@ export class Tab1Page implements OnInit {
             (error: any) => {
               console.error(error);
               this.isLoading = false;
-              this.showToast('Unable to fetch spaces');             
+              this.showToast('Unable to fetch any spots');
             }
           );
       } catch (error) {
         console.error(error);
       }
-        
+
     }
 
-  
+
 }
 

@@ -10,7 +10,7 @@
       </div>
       <ion-title>
         {{ role === 'ADMIN' ? 'Manage your users' : 'View your spots' }}
-      </ion-title>   
+      </ion-title>
      </div>
 
   </ion-toolbar>
@@ -22,12 +22,12 @@
   <div *ngIf="(tenantSpaces && tenantSpaces.length > 0) || (hostSpaces && hostSpaces.length > 0) || (allUsers && allUsers.length > 0); else noSpacesTemplate">
 
 <ion-list class="card-list" *ngIf="userDetails?.role === 'TENANT' && tenantSpaces && tenantSpaces.length > 0;">
-  
-  <ion-item class="card-item" *ngFor="let item of tenantSpaces; let i = index" 
+
+  <ion-item class="card-item" *ngFor="let item of tenantSpaces; let i = index"
   >
         <ion-grid class="card-grid">
-      <ion-card class="card_features ion-no-padding">    
-        <img class="img-spacetype" *ngIf="item?.spaceId.spaceImage !== null; else noImage" 
+      <ion-card class="card_features ion-no-padding">
+        <img class="img-spacetype" *ngIf="item?.spaceId.spaceImage !== null; else noImage"
         [src]="item.spaceId.spaceImage" (click) = "place(item.spaceId)" />
         <ng-template #noImage>
           <img class="img-spacetype" src="../../../../assets/imgs/dummys.png" />
@@ -35,35 +35,35 @@
 
       <ion-card-header>
         <ion-card-subtitle>{{ item.spaceId.spaceLocation }}</ion-card-subtitle>
-        <ion-card-subtitle> 
+        <ion-card-subtitle>
           <span style="display: flex; font-size: 9px;">
-          {{ item.startDateTime | date:'short' }} - 
+          {{ item.startDateTime | date:'short' }} -
           {{ item.endDateTime | date:'short' }}
         </span>
       </ion-card-subtitle>
 
         <!-- <ion-card-title>Booked: {{ item.startDate }}</ion-card-title> -->
-        
+
       </ion-card-header>
       <ion-card-content class="no-padding">
         <div *ngIf="item.rating === 0 && isEndDateTimeAfterCurrent(item.endDateTime)">
-         
-          <ion-button (click)="openRateSpaceModal(item.bookedSpaceId, i)"> <ion-icon slot="start" name="star-outline" style="font-size: 15px; color: gold;"></ion-icon>Rate Space
-          </ion-button> 
+
+          <ion-button (click)="openRateSpaceModal(item.bookedSpaceId, i)"> <ion-icon slot="start" name="star-outline" style="font-size: 15px; color: gold;"></ion-icon>Rate Spot
+          </ion-button>
         </div>
 
         <ion-button color="primary" (click)="viewReceipt(item)">
           <ion-icon slot="start" name="receipt"></ion-icon>
           Details
         </ion-button>
-      
+
         <div *ngIf="item.rating !== 0">
           <ion-icon *ngFor="let star of getStars(item.rating)" name="star"
           style="font-size: 15px; color: gold;"></ion-icon>
         </div>
       </ion-card-content>
 
-     
+
     </ion-card>
 </ion-grid>
 </ion-item>
@@ -73,12 +73,12 @@
 
 
 <ion-list class="card-list" *ngIf="userDetails?.role === 'HOST' && hostSpaces && hostSpaces.length > 0;">
-  
-  <ion-item class="card-item" *ngFor="let item of hostSpaces" 
+
+  <ion-item class="card-item" *ngFor="let item of hostSpaces"
   >
         <ion-grid class="card-grid">
-      <ion-card class="card_features ion-no-padding">    
-        <img class="img-spacetype" *ngIf="item?.spaceId.spaceImage !== null; else noImage" 
+      <ion-card class="card_features ion-no-padding">
+        <img class="img-spacetype" *ngIf="item?.spaceId.spaceImage !== null; else noImage"
         [src]="item.spaceId.spaceImage" />
         <ng-template #noImage>
           <img class="img-spacetype" src="../../../../assets/imgs/dummys.png" />
@@ -98,7 +98,7 @@
       <ion-card-content class="no-padding">
       </ion-card-content>
 
-     
+
     </ion-card>
 </ion-grid>
 </ion-item>
@@ -106,7 +106,7 @@
 
 
 <ion-list class="card-list" *ngIf="userDetails?.role === 'ADMIN' && allUsers && allUsers.length > 0;">
-  
+
   <ion-searchbar style="height: 66px; margin-top: 10px;" color="black" #searchbar placeholder="Search for Users" searchIcon=" "
   (ionInput)="searchUsers($event)" clearIcon=" " (ionClear)="clearAutocomplete()">
   <img src="../../../../assets/imgs/feather-search.png" />
@@ -117,9 +117,9 @@
 <ion-item class="card-item" *ngFor="let item of filteredUsers">
 
   <ion-grid class="card-grid">
-    <ion-card class="card_features ion-no-padding">    
+    <ion-card class="card_features ion-no-padding">
       <img style="height: 50%;" class="img-spacetype" src="../../../../assets/imgs/user.png" />
-    
+
     <ion-card-header>
       <ion-card-subtitle>{{ item.firstName + ' ' + item.lastName }}</ion-card-subtitle>
       <ion-card-title style="font-family: Verdana, Geneva, Tahoma, sans-serif; font-size: small;">
@@ -130,7 +130,7 @@
     <ion-card-content class="no-padding">
     </ion-card-content>
 
-   
+
   </ion-card>
 </ion-grid>
 
@@ -142,9 +142,9 @@
   <ion-item class="card-item" *ngFor="let item of allUsers">
 
         <ion-grid class="card-grid">
-      <ion-card class="card_features ion-no-padding">    
+      <ion-card class="card_features ion-no-padding">
         <img style="height: 50%;" class="img-spacetype" src="../../../../assets/imgs/user.png" />
-      
+
       <ion-card-header>
         <ion-card-subtitle>{{ item.firstName + ' ' + item.lastName }}</ion-card-subtitle>
         <ion-card-title style="font-family: Verdana, Geneva, Tahoma, sans-serif; font-size: small;">
@@ -155,14 +155,14 @@
       <ion-card-content class="no-padding">
       </ion-card-content>
 
-     
+
     </ion-card>
 </ion-grid>
 </ion-item>
 </ng-template>
 </ion-list>
 
-  
+
 </div>
 
 <ng-template #noSpacesTemplate>
@@ -172,7 +172,7 @@
   <img class="img-spacetype-unit" src="../../../../assets/imgs/emptyList.png" />
   </div>
   <div class="no-item-unit">
-    <ion-button (click)="bookSpace()">{{ userDetails?.role === 'HOST' ? 'No Space added yet' : 'No bookings yet' }}</ion-button>
+    <ion-button (click)="bookSpace()">{{ userDetails?.role === 'HOST' ? 'No Spot added yet' : 'No bookings yet' }}</ion-button>
   </div>
 </ng-template>
 </ion-content>
