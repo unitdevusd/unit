@@ -63,7 +63,7 @@
     "cordova-plugin-fingerprint-aio": "^6.0.0",
     "cordova-plugin-googleplus": "^8.5.2",
     "crypto-js": "^4.2.0",
-    "firebase": "^9.16.0",
+    "firebase": "^9.23.0",
     "image-compressor": "^2.0.3",
     "ion2-calendar": "^3.5.0",
     "ionicons": "^7.0.0",

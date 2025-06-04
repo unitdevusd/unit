@@ -12,7 +12,7 @@
       <ion-title>Details</ion-title>
     </div>
 
-    <ion-icon slot="end" name="trash" style="color: black;" size="large" (click)="confirmDelete()"></ion-icon>    
+    <ion-icon slot="end" name="trash" style="color: black;" size="large" (click)="confirmDelete()"></ion-icon>
 
   </ion-toolbar>
 </ion-header>
@@ -38,7 +38,7 @@
     </div>
 
     <ion-card-content *ngIf="place?.dateAdded !== null && place?.dateAdded;">
-      Space added on {{ place?.dateAdded | date: 'medium' }}
+      Spot added on {{ place?.dateAdded | date: 'medium' }}
     </ion-card-content>
 
     <ion-label>
@@ -69,7 +69,7 @@
 
     <ion-card class="full-width-card" no-padding>
       <ion-card-header>
-        <ion-card-title>Space Availability</ion-card-title>
+        <ion-card-title>Spot Availability</ion-card-title>
       </ion-card-header>
       <ion-card-content>
 
@@ -78,8 +78,8 @@
             <span style="color: red;">
               {{ slot.date }} from {{ slot.startTime }} to {{ slot.endTime }}
             </span>
-            <ion-icon (click)="deleteTime(slot)" size="small" style="font-size: 10px;" name="trash" slot="end"></ion-icon>       
-          </ion-item>       
+            <ion-icon (click)="deleteTime(slot)" size="small" style="font-size: 10px;" name="trash" slot="end"></ion-icon>
+          </ion-item>
         </ion-list>
       </ion-card-content>
       <ion-item class="rules" lines="none">
@@ -87,7 +87,7 @@
         <ion-label (click)="openTimeModal()">Add Time</ion-label>
       </ion-item>
     </ion-card>
-    
+
 
     <ion-card no-padding *ngIf="place?.spaceRules !== null && place?.spaceRules">
       <ion-card-header>
@@ -108,7 +108,7 @@
       </ion-item>
     </ion-card>
 
-    
+
     <ion-card>
       <ion-card-header>
         <ion-card-title>Location</ion-card-title>
@@ -122,11 +122,11 @@
         frameborder="0"
         style="border:0"
         [src]="sanitizedUrl"
-      ></iframe>    
+      ></iframe>
     </ion-card-content>
     </ion-card>
 
-    
+
     <ion-card>
       <ion-card-header>
         <ion-card-title>Owner Details</ion-card-title>
@@ -135,7 +135,7 @@
         <div class="img-container">
         <ion-img class="img-spacetype" img src="../../../../assets/imgs/user.png"></ion-img>
       </div>
-  
+
         <ion-row>
           <ion-col size="5">
             <ion-label *ngIf="place && place.spaceOwner && place.spaceOwner.firstName">
@@ -148,6 +148,6 @@
         </ion-row>
       </ion-card-content>
     </ion-card>
-  
+
   </div>
 </ion-content>

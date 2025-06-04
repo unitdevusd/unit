@@ -7,7 +7,7 @@
       <ion-back-button class="blue-back-button" icon="chevron-back" defaultHref="/tabs"></ion-back-button>
     </ion-buttons>
 
-      <div class="title-and-logo">           
+      <div class="title-and-logo">
           <div class="logo">
             <img src="../../../../assets/imgs/logo.png" alt="Logo" />
           </div>
@@ -36,19 +36,19 @@
 
     <ion-modal trigger="open-modal" [cssClass]="'center'" [backdropDismiss]="true">
 
-      
-    
+
+
       <ng-template style="justify-content: center;">
 
-        <ion-button 
+        <ion-button
         class="icon-close"
-        fill="clear" 
-        color="dark" 
+        fill="clear"
+        color="dark"
         slot="end"
         (click)="closeModal()">
         <ion-icon color="danger" name="close" slot="end"></ion-icon>
-      </ion-button>   
-  
+      </ion-button>
+
 
         <ion-datetime
         style="margin-top: 20px;"
@@ -67,15 +67,15 @@
                 slot="start"
                 (ionChange)="selectTimeSlot($event, timeSlot)"
               ></ion-checkbox>
-        
+
               <ion-label>
                 <h3>{{ timeSlot.startTime }} - {{ timeSlot.endTime }}</h3>
                 <p *ngIf="!timeSlot.active" class="booked-message">This time slot has been sold out.</p>
               </ion-label>
             </ion-item>
           </ion-list>
-        </div>   
-      
+        </div>
+
       </ng-template>
     </ion-modal>
 
@@ -102,47 +102,47 @@
 
 
   <div style="display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap;">
-    <ion-button 
-      (click)="initPayPalButton(totalFees)" 
-      size="medium" 
+    <ion-button
+      (click)="initPayPalButton(totalFees)"
+      size="medium"
       [disabled]="totalFees == 0"
-      color="primary" 
+      color="primary"
       style="margin-right: 10px;"
       title="Pay securely using PayPal">
       <ion-icon slot="icon-only" name="logo-paypal"></ion-icon>
       <span style="margin-left: 5px;">Pay with PayPal</span>
     </ion-button>
-    
+
     <!-- Bitcoin Payment Button -->
-    <ion-button 
-      (click)="sendCrypto(totalFees)" 
-      size="medium" 
+    <ion-button
+      (click)="sendCrypto(totalFees)"
+      size="medium"
       color="custom"
       [disabled]="totalFees == 0"
-      fill="clear"  
+      fill="clear"
       style="--ion-color-base: #e40e40;"
       title="Pay with Bitcoin">
       <ion-icon slot="icon-only" name="logo-bitcoin"></ion-icon>
       <span style="margin-left: 5px;">Pay with Bitcoin</span>
     </ion-button>
-  
-    <ion-button 
-      (click)="payWithBonus(totalFees)" 
-      size="medium" 
+
+    <ion-button
+      (click)="payWithBonus(totalFees)"
+      size="medium"
       color="custom"
       [disabled]="totalFees == 0"
       style="--ion-color-base: #e40e40;"
-      title="Pay with Bonus">
+      title="Pay with Unit Balance">
       <ion-icon slot="icon-only" name="wallet"></ion-icon>
-      <span style="margin-left: 5px;">Pay with Bonus</span>
+      <span style="margin-left: 5px;">Pay with Unit Balance</span>
     </ion-button>
   </div>
-  
-  
+
+
 
 <div id="paypal-button-container"></div>
 
 
- 
-  
+
+
 </ion-content>

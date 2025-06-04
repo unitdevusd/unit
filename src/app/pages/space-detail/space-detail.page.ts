@@ -38,13 +38,13 @@ export class SpaceDetailPage implements OnInit, OnDestroy {
   //     if (date.getTime() >= currentDate.getTime() && (allowedDays.includes(utcDay) || allowedDays.includes(7))) {
   //     return true;
   //   }
-  
+
   //   return false;
   // };
 
   isDay = (dateString: string) => {
     const date = new Date(dateString).toDateString();
-  
+
     return this.place.timeSlots.some((slot: { date: string | number | Date; }) => new Date(slot.date).toDateString() === date);
   };
 
@@ -103,7 +103,7 @@ export class SpaceDetailPage implements OnInit, OnDestroy {
     private alertController: AlertController,
     private navCtrl: NavController,
     private platform: Platform,
-  ) { 
+  ) {
     this.hoursForm = this.formBuilder.group({
       // hoursValue: ['', [Validators.required, Validators.pattern('^[0-9]*$')], disabled: true],
       hoursValue: new FormControl({ value: '', disabled: true }, [Validators.required, Validators.pattern('^[0-9]*$')]),
@@ -123,11 +123,11 @@ export class SpaceDetailPage implements OnInit, OnDestroy {
       this.bookingButtonText = 'Book Again'
     }
 
-        const url = `https://maps.google.com/maps?q=41.8781136,-87.6297982&z=10&output=embed`;   
+        const url = `https://maps.google.com/maps?q=41.8781136,-87.6297982&z=10&output=embed`;
         this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-    
-    
-    
+
+
+
 
   }
 
@@ -147,17 +147,17 @@ export class SpaceDetailPage implements OnInit, OnDestroy {
     const url = `https://maps.google.com/maps?q=${this.place.lat},${this.place.lng}&z=10&output=embed`;
     this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
 
-    this.fromTab2 ? this.bookingButtonText = 'Book Again' : this.bookingButtonText = 'Click to book space';
+    this.fromTab2 ? this.bookingButtonText = 'Book Again' : this.bookingButtonText = 'Click to book spot';
 
 
     if(this.place?.spaceRules == null) {
       this.getSpaceById();
     }
-    
+
     this.generateValidTimes();
 
-    this.calculateHours(); 
-   
+    this.calculateHours();
+
   }
 
 
@@ -174,18 +174,18 @@ export class SpaceDetailPage implements OnInit, OnDestroy {
     //     place: this.place,
     //   },
     // });
-  
+
     // await modal.present();
 
     let navigationExtras: NavigationExtras = {
       state: {
-        place: this.place, 
+        place: this.place,
       },
     };
 
     this.router.navigateByUrl('/payment-page', navigationExtras);
 
-  
+
   }
 
 
@@ -209,7 +209,7 @@ export class SpaceDetailPage implements OnInit, OnDestroy {
   //   const selectedDateTime = new Date(`2000-01-01T${selectedTime}`); // Use a common date for comparison
   //   const startDateTime = new Date(`2000-01-01T${this.place.visitStartTime}`);
   //   const endDateTime = new Date(`2000-01-01T${this.place.visitEndTime}`);
-  
+
   //   return selectedDateTime >= startDateTime && selectedDateTime <= endDateTime;
   // }
 
@@ -219,7 +219,7 @@ export class SpaceDetailPage implements OnInit, OnDestroy {
     try {
       const loading = await this.loadingController.create();
       await loading.present();
-  
+
       if (this.spaceId) {
         const spaceData = {"spaceId" : this.spaceId};
         this._apiService.getSpaceBySpaceId(spaceData).subscribe(
@@ -228,14 +228,14 @@ export class SpaceDetailPage implements OnInit, OnDestroy {
             this.place = response;
             const url = `https://maps.google.com/maps?q=${this.place.lat},${this.place.lng}&z=10&output=embed`;
             this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-        
-            this.fromTab2 ? this.bookingButtonText = 'Book Again' : this.bookingButtonText = 'Click to book space';
-            // this.bookingButtonText = 'Click to book space'
+
+            this.fromTab2 ? this.bookingButtonText = 'Book Again' : this.bookingButtonText = 'Click to book spot';
+            // this.bookingButtonText = 'Click to book spot'
           },
           (error: any) => {
             console.error(error);
             loading.dismiss();
-            this.showToast('Unable to fetch spaces');             
+            this.showToast('Unable to fetch any spots');
             // this.showErrorAlert('Unexpected error occurred');
           }
         );
@@ -258,10 +258,10 @@ export class SpaceDetailPage implements OnInit, OnDestroy {
       Saturday: 6,
       Anyday: 7
     };
-  
+
     // Map each day string to its corresponding number
     const numbersArray = days.map(day => daysMap[day]);
-  
+
     return numbersArray;
   }
 
@@ -275,7 +275,7 @@ export class SpaceDetailPage implements OnInit, OnDestroy {
         cssClass: 'centered-toast',
       });
       toast.present();
-  
+
     }, 3000);
 
   }
@@ -297,10 +297,10 @@ export class SpaceDetailPage implements OnInit, OnDestroy {
 //         }
 //         else {
 //           const token: any = await this.stripeService.pay(amount);
-//           const response: any = await this.stripeService.sendTokenToBackend(token, amount);  
+//           const response: any = await this.stripeService.sendTokenToBackend(token, amount);
 //           loading.dismiss();
 //           console.log('Response is ' + response);
-  
+
 //           if (response.startsWith('Payment successful')) {
 //               this.showSuccessAlert('Payment successful');
 //               this.bookSpace();
@@ -310,7 +310,7 @@ export class SpaceDetailPage implements OnInit, OnDestroy {
 //           }
 
 //         }
-  
+
 //       } catch (error) {
 //           // Handle payment error
 //           loading.dismiss();
@@ -321,7 +321,7 @@ export class SpaceDetailPage implements OnInit, OnDestroy {
 //       }
 //   }
 // }
-  
+
 
   async showSuccessAlert(message: any) {
     const alert = await this.alertController.create({
@@ -347,7 +347,7 @@ export class SpaceDetailPage implements OnInit, OnDestroy {
 
 
 async bookSpace(id: any, status: any) {
-  const spaceData = {"spaceId" : this.spaceId, "bookingStatus" : "BOOKED", "duration" : this.hoursForm.get('hoursValue')!.value, "userId" : this.userDetails?.userId, 
+  const spaceData = {"spaceId" : this.spaceId, "bookingStatus" : "BOOKED", "duration" : this.hoursForm.get('hoursValue')!.value, "userId" : this.userDetails?.userId,
   "startDateTime" : this.hoursForm.get('startDateTime')!.value,
   "endDateTime" : this.hoursForm.get('endDateTime')!.value,
   "chargeId" : id, "chargeIdStatus" : status};
@@ -367,7 +367,7 @@ async bookSpace(id: any, status: any) {
     },
     (error: any) => {
       console.error(error);
-      this.showToast('Unable to book space');             
+      this.showToast('Unable to book spot');
     }
   );
 }
@@ -398,7 +398,7 @@ async openImageModal(imageUrl: string) {
         place: this.place,
       },
     });
-  
+
     await modal.present();
   }
 
@@ -413,7 +413,7 @@ async openImageModal(imageUrl: string) {
         place: this.place,
       },
     });
-  
+
     await modal.present();
   }
 
@@ -427,7 +427,7 @@ async openImageModal(imageUrl: string) {
       const endDate = new Date(this.endDateTime);
       const timeDifference = endDate.getTime() - startDate.getTime();
       this.hoursDifference = Math.ceil(timeDifference / (1000 * 60 * 60));
-      
+
       if(this.hoursDifference <= 0) {
         this.showToast('Please enter a valid duration');
       }
@@ -438,16 +438,16 @@ async openImageModal(imageUrl: string) {
         this.rentCharges = this.place?.chargePerDay * this.hoursDifference || 0;
         this.serviceCharges = this.rentCharges * 0.1;
         this.totalFees = this.rentCharges + this.serviceCharges;
-  
-        this.showToast('Space will be booked for '+this.hoursDifference+' hours');
+
+        this.showToast('Spot will be booked for '+this.hoursDifference+' hours');
       }
       else {
 
         this.rentCharges = this.place?.chargePerDay * this.hoursDifference || 0;
         this.serviceCharges = this.rentCharges * 0.1;
         this.totalFees = this.rentCharges + this.serviceCharges;
-  
-        this.showToast('Space will be booked for '+this.hoursDifference+' hour');
+
+        this.showToast('Spot will be booked for '+this.hoursDifference+' hour');
       }
 
 
@@ -468,7 +468,7 @@ async openImageModal(imageUrl: string) {
   async confirmDelete() {
     const alert = await this.alertController.create({
       header: 'Confirm Deletion',
-      message: 'Are you sure you want to delete this space?',
+      message: 'Are you sure you want to delete this spot?',
       buttons: [
         {
           text: 'Cancel',
@@ -482,9 +482,9 @@ async openImageModal(imageUrl: string) {
         }
       ]
     });
-  
+
     await alert.present();
-  
+
   }
 
 
@@ -497,21 +497,21 @@ async openImageModal(imageUrl: string) {
     this._apiService.removeSpace(spaceData).subscribe(
       (response: any) => {
         if(response == 'Deleted') {
-        loading.dismiss();           
-        this.router.navigateByUrl('/tabs', { replaceUrl: true }); 
-        this.showToast('Space deleted successfully');   
+        loading.dismiss();
+        this.router.navigateByUrl('/tabs', { replaceUrl: true });
+        this.showToast('Spot deleted successfully');
       }
       else {
-        loading.dismiss(); 
-        this.showToast('Unable to delete space. Try again later');             
+        loading.dismiss();
+        this.showToast('Unable to delete spot. Try again later');
 
-      }                
+      }
 
       },
       (error: any) => {
         console.error(error);
         loading.dismiss();
-        this.showToast('Unable to delete space');             
+        this.showToast('Unable to delete spot');
       }
     );
 
@@ -532,29 +532,29 @@ async openImageModal(imageUrl: string) {
     this._apiService.generateCharges(paymentData).subscribe(
       (response: any) => {
         if(response != null) {
-        loading.dismiss();  
-        // this.showToast('Checkout page to be opened'); 
-        const checkoutUrl = 'https://checkout.opennode.com/' + response;      
+        loading.dismiss();
+        // this.showToast('Checkout page to be opened');
+        const checkoutUrl = 'https://checkout.opennode.com/' + response;
         this.openExternalURL(checkoutUrl);
 
         // this.trackIdInterval = setInterval(() => {
         //   this.trackId(response);
-        // }, 7000);  
+        // }, 7000);
         this.startIntervalOperation(10000, response);
 
 
 
       }
       else {
-        loading.dismiss(); 
-        this.showToast('Unable to generate checkout ID. Try again later');             
-      }                
+        loading.dismiss();
+        this.showToast('Unable to generate checkout ID. Try again later');
+      }
 
       },
       (error: any) => {
         console.error(error);
         loading.dismiss();
-        this.showToast('Unable to generate checkout ID. Try again later');             
+        this.showToast('Unable to generate checkout ID. Try again later');
       }
     );
   }
@@ -563,25 +563,25 @@ async openImageModal(imageUrl: string) {
     if (this.intervalSubscription) {
       this.intervalSubscription.unsubscribe();
     }
-  
+
     const completionSubject = new Subject<void>();
     let intervalsCompleted = 0;
-  
+
     this.intervalSubscription = interval(intervalTime).pipe(
       takeUntil(completionSubject),
     ).subscribe(() => {
       intervalsCompleted++;
       this.trackId(id);
-  
+
       if (intervalsCompleted >= 20) {
-        completionSubject.next(); 
+        completionSubject.next();
         completionSubject.complete();
       }
     });
-  
+
     completionSubject.subscribe(() => {
       this.showToast('We did not receive any payment from you. Please try again');
-      this.bookingButtonText = 'Click to book space';
+      this.bookingButtonText = 'Click to book spot';
       if (this.intervalSubscription) {
         this.intervalSubscription.unsubscribe();
       }
@@ -597,7 +597,7 @@ async openImageModal(imageUrl: string) {
   }
 
   async trackId(id: string) {
-    
+
 
     try{
 
@@ -611,12 +611,12 @@ async openImageModal(imageUrl: string) {
 
       const paymentData = {"id" : id};
       this._apiService.trackCharges(paymentData).subscribe(
-        (response: any) => {   
+        (response: any) => {
           if (response === 'paid') {
             this.intervalSubscription?.unsubscribe();
             this.bookSpace(id, response);
-            this.showSuccessAlert("Transfer successful and space booked. Thank you for booking");
-          }     
+            this.showSuccessAlert("Transfer successful and spot booked. Thank you for booking");
+          }
           loading.dismiss();
           this.bookingButtonText = response;
         },
@@ -655,7 +655,7 @@ async openImageModal(imageUrl: string) {
   //         console.error('PayPal payment error:', err);
   //       }
   //     }).render('#paypal-button-container');
-      
+
   //     this.isPayPalButtonRendered = true;
   //   }
 
