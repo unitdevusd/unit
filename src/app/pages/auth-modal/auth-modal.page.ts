@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController, LoadingController, ModalController } from '@ionic/angular';
+import { ApiService } from 'src/app/services/api-service.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { UserService } from 'src/app/services/user.service';
 
@@ -20,11 +21,15 @@ export class AuthModalPage implements OnInit {
     private loadingController: LoadingController,
     private alertController: AlertController,
     private modalController: ModalController,
+    private apiService: ApiService
   ) { 
     this.userDetails = userService.getUserDetails();
     this.email = this.userDetails.email;
   }
 
+  ionViewWillEnter() {
+    this.sendOtp();
+  }
   ngOnInit() {
   }
 
@@ -33,23 +38,42 @@ export class AuthModalPage implements OnInit {
 
   }
 
+  async sendOtp() {
+
+    const loading = await this.loadingController.create();
+    await loading.present();
+    const loginData = {"email" : this.userService.encrypt(this.email)};
+
+    this.apiService.validateEmail(loginData).subscribe(
+      (response: any) => {
+        loading.dismiss();
+        this.showErrorAlert(response.message);
+      },
+      (error: any) => {
+        console.error(error);
+        loading.dismiss();
+        this.showErrorAlert('Unexpected error occurred');
+      }
+    );
+  }
+
 async validate() {
 
   try {
     const loading = await this.loadingController.create();
     await loading.present();
 
-      const loginData = {"email" : this.email, "password" : this.password};
+      const loginData = {"email" : this.email, "otp" : this.password};
 
-      await this.authService.authenticateUser(loginData).subscribe(
+      await this.authService.validateOtp(loginData).subscribe(
         (response: any) => {
           loading.dismiss();
 
-          if (response.email) {
+          if (response.code == '00') {
             this.modalController.dismiss({ updatedUser: response });
 
           } else {
-            this.showErrorAlert('Wrong Password.');    
+            this.showErrorAlert(response.message);    
           }
         },
         (error: any) => {
@@ -65,7 +89,7 @@ async validate() {
 
 async showErrorAlert(message: any) {
   const alert = await this.alertController.create({
-    header: 'Error',
+    header: 'Success',
     message: message,
     buttons: ['OK']
   });

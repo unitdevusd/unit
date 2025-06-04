@@ -1,0 +1,75 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Withdrawals</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large"></ion-title>
+      <div class="title-and-logo">
+        <div class="logo">
+          <img src="../../../../assets/imgs/unit-logo.png" alt="Logo" style="width: 50px; height: auto; margin-bottom: 10px;" />
+        </div>
+        <ion-title>
+          {{ role === 'ADMIN' ? 'Manage Withdrawals' : '' }}
+        </ion-title>   
+       </div>
+  
+    </ion-toolbar>
+  </ion-header>
+
+  <ng-container *ngIf="withdrawalItems && withdrawalItems.length > 0">
+  <ion-list>
+    <ion-item class="card-item" *ngFor="let item of withdrawalItems">
+      <ion-grid class="card-grid">
+        <ion-card class="card_features ion-no-padding">
+          
+          <div class="icon-container">
+            <ion-icon name="person-circle" size="large" color="primary"></ion-icon>
+          </div>
+          
+          <ion-card-header>
+            <ion-card-subtitle>
+              {{ item.initiatorUser }} — ${{ item.amount }}
+            </ion-card-subtitle>
+            
+            <ion-card-title>
+              <ng-container *ngIf="item.completed == 'N'; else completedLabel">
+                <ion-buttons>
+                  <ion-button color="success" (click)="approve(item, 'Y')">
+                    <ion-icon slot="icon-only" name="checkmark-circle"></ion-icon>
+                  </ion-button>
+                  <ion-button color="danger" (click)="approve(item, 'R')">
+                    <ion-icon slot="icon-only" name="close-circle"></ion-icon>
+                  </ion-button>
+                </ion-buttons>
+              </ng-container>
+
+              <ng-template #completedLabel>
+                <ion-chip color="tertiary">
+                  <ion-label>Completed</ion-label>
+                </ion-chip>
+              </ng-template>
+            </ion-card-title>
+          </ion-card-header>
+          
+          <ion-card-content class="no-padding">
+          </ion-card-content>
+          
+        </ion-card>
+      </ion-grid>
+    </ion-item>
+  </ion-list>
+</ng-container>
+
+<ng-container *ngIf="withdrawalItems && withdrawalItems.length == 0">
+  <div class="empty-state">
+    <img class="img-spacetype-unit" src="../../../../assets/imgs/emptyList.png" />
+    <!-- <ion-icon style="font-size: 40px;" name="cube-outline" size="large" color="medium"></ion-icon> -->
+    <p>No withdrawal items available</p>
+  </div>
+</ng-container>
+  
+</ion-content>

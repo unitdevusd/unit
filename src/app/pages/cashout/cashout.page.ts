@@ -111,6 +111,11 @@ export class CashoutPage implements OnInit {
 
   async authenticate() {
 
+    if(this.withdrawalAmount > this.balance || !this.withdrawalAmount || !this.accountDetail) {
+      this.showToast('Amount must be less than account balance');
+      return;
+    }
+
     const modal = await this.modalController.create({
       component: AuthModalPage,
       breakpoints: [0, 9],
@@ -127,10 +132,7 @@ export class CashoutPage implements OnInit {
 
     if (data && data.updatedUser) {
       this.showToast('Successfully validated');
-      console.log(this.accountDetail);
-      console.log(this.withdrawalAmount);
       this.processPayment(this.accountDetail)
-
     }
   }
 
@@ -183,17 +185,15 @@ export class CashoutPage implements OnInit {
       "email" : this.userId,
       "amount" : this.withdrawalAmount
     };
-    console.log(paymentData);
     const loading = await this.loadingController.create();
     await loading.present();
 
     this.apiService.makePayment(paymentData).subscribe(
       (response: any) => {
         loading.dismiss();
-        console.log(response);
 
         if (response.code === '00') {
-          this.showSuccessAlert("Your cashout request is currently being processed. Please expect an email");
+          this.showSuccessAlert(response.message);
           this.router.navigateByUrl('/tabs');
         }
         else {

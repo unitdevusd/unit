@@ -10,8 +10,8 @@ import { JwtService } from './jwt.service';
 export class ApiService {
 
   jsonData: any;
-  private baseUrl = 'https://unit-session.com/';
-  // private baseUrl = 'http://localhost:8088/';
+  // private baseUrl = 'https://unit-session.com/';
+  private baseUrl = 'http://localhost:8088/';
   private viewSpaces = this.baseUrl+'spaces/getSpaces';
   private cancelBookingUrl = this.baseUrl+'spaces/cancel-booking'
   private bookedspacesforhosturl = this.baseUrl+'spaces/getbookedspacesforhost';
@@ -49,6 +49,9 @@ export class ApiService {
   private rateSpaceUrl = this.baseUrl+'spaces/rate-space';
   private crewNameUrl = this.baseUrl+'users/create-crew';
   private searchSpacesUrl = this.baseUrl+'spaces/search';
+  private withdrawalRequestsUrl = this.baseUrl+'crypto/withdrawals/requests';
+  private approveUrl = this.baseUrl+'crypto/withdraw/approve';
+  private verifyEmailUrl = this.baseUrl+'users/verify/user/email';
 
 
   constructor(public http: HttpClient, private jwtService: JwtService) { }
@@ -145,6 +148,20 @@ export class ApiService {
       })
     );
   }
+
+
+  validateEmail(payload: any): Observable<any> {
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+
+        return this.http.post(this.verifyEmailUrl, payload, { headers });
+      })
+    );
+  }
+
 
   // viewAllSpacesByUser(payload: any): Observable<any> {
   //   return this.http.post(this.viewSpaces, payload);
@@ -399,6 +416,25 @@ export class ApiService {
       })
     );
   }
+
+  getWithdrawalRequests(payload: any): Observable<any> {
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+  
+        const params = this.convertPayloadToParams(payload);
+  
+        return this.http.get(this.withdrawalRequestsUrl, { headers, params });
+      }),
+      catchError(error => {
+        console.error('Error fetching spaces:', error);
+        throw error; 
+      })
+    );
+  }
+
   
   private convertPayloadToParams(payload: any): { [key: string]: string } {
     const params: { [key: string]: string } = {};
@@ -705,6 +741,18 @@ export class ApiService {
         });
 
         return this.http.post(this.rateSpaceUrl, payload, { headers });
+      })
+    );
+  }
+
+  approveRequests(payload: any): Observable<any> {
+    return from(this.jwtService.getJwt()).pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+
+        return this.http.post(this.approveUrl, payload, { headers });
       })
     );
   }

@@ -402,6 +402,7 @@ initPayPalButton(amount: any) {
     return;
   }
 
+  // this.bookSpace('42311647XV020574X', 'paid');
   if (!this.isPayPalButtonRendered) {
     paypal.Buttons({
       createOrder: (_data: any, actions: any) => {
