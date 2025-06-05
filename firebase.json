@@ -1,6 +1,5 @@
 {
   "hosting": {
-    "site": "unit-session",
     "public": "www",
     "ignore": [
       "firebase.json",
