@@ -8,7 +8,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class InactivityService {
 
-  private inactivityTimeout: number = 1 * 60 * 1000; // 10 minutes
+  private inactivityTimeout: number = 1 * 60 * 1000;
   private timeoutSubject = new Subject<void>();
   private timer$ = timer(this.inactivityTimeout);
 

@@ -334,6 +334,16 @@
 
   }
 
+  .custom-clickable-search-icon {
+    cursor: pointer;
+    font-size: 20px;
+    margin-right: 12px;
+  }
+
+  .custom-searchbar .search-icon {
+    display: none;
+  }
+
   .logo img {
     width: 32px;
     height: 32px; 
