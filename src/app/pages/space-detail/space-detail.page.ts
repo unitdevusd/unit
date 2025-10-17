@@ -15,6 +15,8 @@ import { Plugins, Capacitor } from '@capacitor/core';
 import { finalize, take, takeUntil } from 'rxjs/operators';
 import { Browser } from '@capacitor/browser';
 import { PaymentModalPage } from '../payment-modal/payment-modal.page';
+import { Share } from '@capacitor/share';
+
 
 // const { Browser } = Plugins;
 
@@ -631,6 +633,15 @@ async openImageModal(imageUrl: string) {
     }
 
   }
+
+  shareSpot() {
+  Share.share({
+    title: 'Check out this spot!',
+    text: 'I found this amazing spot!',
+    url: window.location.href,
+    dialogTitle: 'Share this Spot'
+  });
+}
 
   // initPayPalButton() {
   //   if (!this.isPayPalButtonRendered) {

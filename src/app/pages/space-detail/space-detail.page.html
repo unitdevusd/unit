@@ -15,6 +15,13 @@
         </div>
 
         <ion-icon slot="end" name="trash" style="color: black;" size="large" (click)="confirmDelete()" *ngIf="role === 'ADMIN'"></ion-icon>
+         <ion-icon
+    slot="end"
+    name="share-social-outline"
+    style="color: white; margin-left: 16px;"
+    size="large"
+    (click)="shareSpot()"
+  ></ion-icon>
   </ion-toolbar>
 </ion-header>
 
@@ -40,7 +47,7 @@
 
       <ion-card-content style="padding-top: 0px; padding-bottom: 4px;">
         <!-- <app-star-rating [rating]="3.5"></app-star-rating> -->
-        <ion-note style="color: #212121; font-size: 11px;">Available spots: {{ place.size.replace('People', 'Dancers') }}</ion-note>
+        <ion-note style="color: #212121; font-size: 11px;">Available spots: {{ place?.size?.replace('People', 'Dancers') }}</ion-note>
       </ion-card-content>
 
 
