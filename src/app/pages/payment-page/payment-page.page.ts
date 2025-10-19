@@ -64,15 +64,18 @@ export class PaymentPagePage implements OnInit {
     if (navigationState && navigationState.place) {
       this.place = navigationState.place;
     }
-    console.log(this.place);
 
-    this.place.timeSlots = this.place.timeSlots.map((slot: { date: string; }) => ({
+
+    this.place.timeSlots = this.place?.timeSlots.map((slot: { date: string; }) => ({
       ...slot,
       date: this.formatDateToISO(slot.date),
     }));
-    this.dateExample = this.isDateEnabled(this.place.timeSlots[0]?.date) ? this.place.timeSlots[0]?.date : '';
+    // this.dateExample = this.isDateEnabled(this.place.timeSlots[0].date) ? this.place.timeSlots[0].date : '';
 
-    this.filteredTimeSlots = this.place.timeSlots.filter(
+    const validSlot = this.place.timeSlots.find((slot: { date: string; }) => this.isDateEnabled(slot.date));
+    this.dateExample = validSlot?.date || '';
+
+    this.filteredTimeSlots = this.place?.timeSlots.filter(
       (timeSlot: TimeSlot) => timeSlot.date === this.dateExample
     );
 
@@ -99,11 +102,45 @@ export class PaymentPagePage implements OnInit {
       document.body.appendChild(script);
   }
 
+// formatDateToISO(dateString: string): string {
+//   console.log('Datestring is '+dateString)
+//   const [month, day, year] = dateString.split('/');
+//   const isoDate = new Date(Date.UTC(+year, +month - 1, +day));
+//   return isoDate.toISOString().split('T')[0];
+// }
+
 formatDateToISO(dateString: string): string {
-  const [month, day, year] = dateString.split('/');
-  const isoDate = new Date(Date.UTC(+year, +month - 1, +day));
-  return isoDate.toISOString().split('T')[0];
+  if (!dateString) return '';
+
+  // Case 1: Handle MM/DD/YYYY (contains '/')
+  if (dateString.includes('/')) {
+    const [month, day, year] = dateString.split('/');
+
+    // Validate parts
+    if (!month || !day || !year || isNaN(+month) || isNaN(+day) || isNaN(+year)) {
+      console.error('Invalid slash-format date:', dateString);
+      return '';
+    }
+
+    const isoDate = new Date(Date.UTC(+year, +month - 1, +day));
+    if (isNaN(isoDate.getTime())) {
+      console.error('Invalid parsed date from slashes:', dateString);
+      return '';
+    }
+
+    return isoDate.toISOString().split('T')[0]; // 'YYYY-MM-DD'
+  }
+
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) {
+    console.error('Invalid date:', dateString);
+    return '';
+  }
+
+  return date.toISOString().split('T')[0];
 }
+
+
 
 selectTimeSlot(event: any, timeSlot: TimeSlot) {
   console.log(timeSlot);
@@ -122,6 +159,7 @@ selectTimeSlot(event: any, timeSlot: TimeSlot) {
 }
 
 onDateChange() {
+  console.log('Selected date:', this.dateExample);
   this.filteredTimeSlots = this.place.timeSlots.filter(
     (timeSlot: TimeSlot) => timeSlot.date === this.dateExample
   );

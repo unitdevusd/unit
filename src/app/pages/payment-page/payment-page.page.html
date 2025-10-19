@@ -69,7 +69,7 @@
               ></ion-checkbox>
 
               <ion-label>
-                <h3>{{ timeSlot.startTime }} - {{ timeSlot.endTime }}</h3>
+                <h3>{{ timeSlot?.startTime }} - {{ timeSlot?.endTime }}</h3>
                 <p *ngIf="!timeSlot.active" class="booked-message">This time slot has been sold out.</p>
               </ion-label>
             </ion-item>

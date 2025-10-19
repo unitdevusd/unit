@@ -220,17 +220,16 @@ export class ApiService {
   }
 
   getSpaceBySpaceId(payload: any): Observable<any> {
-    // return this.http.post(this.findSpace, payload);
-    return from(this.jwtService.getJwt()).pipe(
-      switchMap(token => {
-        const headers = new HttpHeaders({
-          'Authorization': `Bearer ${token}`
-        });
+    return this.http.post(this.findSpace, payload);
+    // return from(this.jwtService.getJwt()).pipe(
+    //   switchMap(token => {
+    //     const headers = new HttpHeaders({
+    //       'Authorization': `Bearer ${token}`
+    //     });
 
-        // Make the POST request with formData and headers
-        return this.http.post(this.findSpace, payload, { headers });
-      })
-    );
+    //     return this.http.post(this.findSpace, payload, { headers });
+    //   })
+    // );
 
     
   }

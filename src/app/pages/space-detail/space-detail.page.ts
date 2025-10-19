@@ -16,6 +16,8 @@ import { finalize, take, takeUntil } from 'rxjs/operators';
 import { Browser } from '@capacitor/browser';
 import { PaymentModalPage } from '../payment-modal/payment-modal.page';
 import { Share } from '@capacitor/share';
+import { Meta } from '@angular/platform-browser';
+
 
 
 // const { Browser } = Plugins;
@@ -105,6 +107,7 @@ export class SpaceDetailPage implements OnInit, OnDestroy {
     private alertController: AlertController,
     private navCtrl: NavController,
     private platform: Platform,
+    private meta: Meta,
   ) {
     this.hoursForm = this.formBuilder.group({
       // hoursValue: ['', [Validators.required, Validators.pattern('^[0-9]*$')], disabled: true],
@@ -117,7 +120,7 @@ export class SpaceDetailPage implements OnInit, OnDestroy {
     // this.startDateTime = new Date().toISOString();
     // this.endDateTime = new Date().toISOString();
     this.userDetails = this.userService.getUserDetails();
-    this.role = this.userDetails?.role;
+    this.role = this.userDetails?.role || 'TENANT';
     this.userId = this.userDetails?.userId;
     this.spaceId = this.route.snapshot.paramMap.get('spaceId');
     this.fromTab2 = history.state.fromTab2;
@@ -140,21 +143,21 @@ export class SpaceDetailPage implements OnInit, OnDestroy {
     }
 
   async ngOnInit() {
-
     this.place = history.state.place;
-    this.floorTypeUrl = '../../../../assets/floors/'+this.place.spaceType+'.png';
+     if(this.place == null || this.place?.spaceRules == null) {
+       await this.getSpaceById();
+    }
+    // this.visitStartTime = history.state.visitStartTime || "00:00"
+    this.visitStartTime = this.place?.visitStartTime || "00:00"
 
-    this.visitStartTime = history.state.visitStartTime || "00:00"
-    this.visitEndTime = this.place.visitEndTime || "23:00";
-    const url = `https://maps.google.com/maps?q=${this.place.lat},${this.place.lng}&z=10&output=embed`;
+    this.visitEndTime = this.place?.visitEndTime || "23:00";
+    const url = `https://maps.google.com/maps?q=${this.place?.lat},${this.place?.lng}&z=10&output=embed`;
     this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
 
     this.fromTab2 ? this.bookingButtonText = 'Book Again' : this.bookingButtonText = 'Click to book spot';
 
 
-    if(this.place?.spaceRules == null) {
-      this.getSpaceById();
-    }
+   
 
     this.generateValidTimes();
 
@@ -167,6 +170,11 @@ export class SpaceDetailPage implements OnInit, OnDestroy {
 
 
   async openPaymentModal() {
+    if(this.userDetails?.userId == null) {
+      await this.showSuccessAlert('Please login/signup to proceed with booking');
+      this.router.navigateByUrl('/login');
+      return;
+    }
     // const modal = await this.modalController.create({
     //   component: PaymentModalPage,
     //   breakpoints: [0,1],
@@ -637,38 +645,23 @@ async openImageModal(imageUrl: string) {
   shareSpot() {
   Share.share({
     title: 'Check out this spot!',
-    text: 'I found this amazing spot!',
+    text: 'I found this dope spot!',
     url: window.location.href,
     dialogTitle: 'Share this Spot'
   });
 }
 
-  // initPayPalButton() {
-  //   if (!this.isPayPalButtonRendered) {
-  //     paypal.Buttons({
-  //       createOrder: (_data: any, actions: any) => {
-  //         return actions.order.create({
-  //           purchase_units: [{
-  //             amount: {
-  //               value: 200
-  //             }
-  //           }]
-  //         });
-  //       },
-  //       onApprove: (data: any, actions: any) => {
-  //         return actions.order.capture().then((details: any) => {
-  //           this.showToast('Payment successful');
-  //           this.bookSpace(details.id, 'paid');
-  //         });
-  //       },
-  //       onError: (err: any) => {
-  //         this.showToast(err);
-  //         console.error('PayPal payment error:', err);
-  //       }
-  //     }).render('#paypal-button-container');
+// shareSpot() {
+//   const shareUrl = `https://unit-session.com/spaces/share/space-detail/${this.place.spaceId}`;
 
-  //     this.isPayPalButtonRendered = true;
-  //   }
+//   Share.share({
+//     title: `Check out this spot: ${this.place.spotName}`,
+//     text: this.place.description || 'I found this dope spot!',
+//     url: shareUrl, 
+//     dialogTitle: 'Share this Spot'
+//   });
+// }
 
-  // }
+
+
 }
