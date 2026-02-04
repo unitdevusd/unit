@@ -80,6 +80,10 @@ public signupForm!: FormGroup;
 
   async createUser() {
     try {
+      if(!this.signupForm.valid) {
+        this.signupForm.markAllAsTouched(); 
+        return;
+      }
       const loading = await this.loadingController.create();
       await loading.present();
   

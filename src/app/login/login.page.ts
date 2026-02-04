@@ -318,13 +318,18 @@ export class LoginPage implements OnInit {
 
 
   googleLogin() {
-    if (this.platform.is('mobile')) {
-      if (this.platform.is('capacitor')) {
+    // if (this.platform.is('mobile')) {
+    //   if (this.platform.is('capacitor')) {
+    //     this.nativeGoogleLogin();
+    //   } 
+    // } else {
+    //   this.webGoogleLogin();
+    // }
+    if (this.platform.is('capacitor')) {
         this.nativeGoogleLogin();
-      } 
-    } else {
-      this.webGoogleLogin();
-    }
+      } else {
+        this.webGoogleLogin();
+      }
   }
 
   async nativeGoogleLogin() {
